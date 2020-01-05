@@ -8,10 +8,6 @@ module.exports = {
   sourceDir: 'extension',
   artifactsDir: 'build',
   verbose: true,
-  run: {
-    firefox: 'nightly',
-    startUrl: ['about:debugging', 'http://example.com/'],
-  },
   sign: {
     apiKey: api.apiKey || '',
     apiSecret: api.apiSecret || '',

@@ -1,14 +1,8 @@
-## Webextension Boilerplate
+## Spotify Lyrics (WIP)
 
-build:
+<img src="./screenshot/Screen Shot 2020-01-05 at 23.19.31.png">
 
-- webpack
-- ts-loader
-- typescript
-- eslint
-- prettier
-
-## development
+## Sevelopment
 
 ```bash
 # step 1
@@ -17,7 +11,3 @@ npm run watch
 # step 2
 npm run start
 ```
-
-## publish
-
-Publishing Firefox extension requires apikey, save to apikey.js

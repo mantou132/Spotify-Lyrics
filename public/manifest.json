@@ -1,9 +1,13 @@
 {
-  "name": "webextension-boilerplate",
+  "name": "spotify lyrics",
   "version": "0.0.1",
   "manifest_version": 2,
-  "description": "webextension boilerplate",
-  "background": {
-    "scripts": ["background.js"]
-  }
+  "description": "spotify web player lyrics plugin, lyric display on PIP window.",
+  "content_scripts": [
+    {
+      "matches": ["*://open.spotify.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ]
 }

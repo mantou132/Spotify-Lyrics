@@ -5,10 +5,14 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   entry: {
-    background: './src/background.ts',
+    content: './src/content',
   },
   module: {
     rules: [
+      {
+        test: /\.inject.js$/i,
+        use: 'raw-loader',
+      },
       {
         test: /\.ts?$/,
         use: 'ts-loader',
