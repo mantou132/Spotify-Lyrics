@@ -1,0 +1,50 @@
+{
+  "name": "spotify-lyrics",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "lint": "tsc --noEmit && eslint --ext .ts --fix src/",
+    "start": "web-ext --config web-ext.config.js run",
+    "build": "webpack --mode=development",
+    "build:xpi": "npm run build && web-ext --config web-ext.config.js sign",
+    "build:zip": "npm run build && web-ext --config web-ext.config.js build",
+    "watch": "npm run build -- --watch"
+  },
+  "author": "mantou132",
+  "license": "ISC",
+  "dependencies": {
+    "webextension-polyfill-ts": "^0.9.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.6.1",
+    "@typescript-eslint/parser": "^2.6.1",
+    "babel-eslint": "^10.0.3",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.0.5",
+    "eslint": "^6.6.0",
+    "eslint-config-prettier": "^6.5.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-prettier": "^3.1.1",
+    "file-loader": "^4.2.0",
+    "husky": "^2.7.0",
+    "lint-staged": "^8.2.1",
+    "prettier": "^1.19.0",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.2",
+    "url-loader": "^2.2.0",
+    "web-ext": "^3.2.1",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "npm run lint",
+      "git add"
+    ]
+  }
+}

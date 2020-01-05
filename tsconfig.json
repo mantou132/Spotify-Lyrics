@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "alwaysStrict": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "sourceMap": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "target": "es6",
+    "lib": ["es2020", "dom", "DOM.Iterable"],
+    "typeRoots": ["node_modules/@types", "src/types"]
+  },
+  "include": ["src"]
+}

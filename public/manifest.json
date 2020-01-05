@@ -1,0 +1,9 @@
+{
+  "name": "webextension-boilerplate",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "webextension boilerplate",
+  "background": {
+    "scripts": ["background.js"]
+  }
+}

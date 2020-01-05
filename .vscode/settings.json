@@ -1,0 +1,13 @@
+{
+  "editor.formatOnSave": false,
+  "typescript.validate.enable": true,
+  "typescript.format.enable": false,
+  "javascript.validate.enable": true,
+  "javascript.format.enable": false,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "eslint.options": { "ignorePath": ".gitignore" },
+  "eslint.validate": ["javascript", "typescript", "typescriptreact"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
+}

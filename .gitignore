@@ -1,0 +1,11 @@
+/node_modules/
+
+# Compiler output
+/build/
+/extension/
+apikey.js
+
+.DS_Store
+logs
+*.log
+npm-debug.log*
