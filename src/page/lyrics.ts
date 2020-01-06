@@ -19,7 +19,9 @@ async function fetchLyric(s: string) {
     const { result }: SearchResult = await (
       await fetch(`${API}?${new URLSearchParams({ type: 'search', search_type: '1', s })}`)
     ).json();
+    // TODO: Optimize song matching
     const songId = result?.songs?.[0]?.id;
+    if (!songId) return '';
     const { lrc }: SongResult = await (
       await fetch(`${API}?${new URLSearchParams({ type: 'lyric', id: String(songId) })}`)
     ).json();
