@@ -1,8 +1,5 @@
-import pagejs from './page.inject.js';
-
-// Is there a more elegant way?
 window.addEventListener('DOMContentLoaded', () => {
   const script = document.createElement('script');
-  script.innerHTML = `(() => {${pagejs}})()`;
+  script.innerHTML = `__PAGE_JS__`;
   document.head.append(script);
 });

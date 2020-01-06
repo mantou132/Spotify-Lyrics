@@ -29,7 +29,6 @@
     "husky": "^2.7.0",
     "lint-staged": "^8.2.1",
     "prettier": "^1.19.0",
-    "raw-loader": "^4.0.0",
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.2",
     "url-loader": "^2.2.0",

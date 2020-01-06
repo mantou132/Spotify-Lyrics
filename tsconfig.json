@@ -8,7 +8,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "target": "es6",
+    "target": "es5",
     "lib": ["es2020", "dom", "DOM.Iterable"],
     "typeRoots": ["node_modules/@types", "src/types"]
   },
