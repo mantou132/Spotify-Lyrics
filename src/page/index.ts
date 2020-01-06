@@ -19,10 +19,12 @@ const HEIGHT = 640;
 
 const weakMap = new WeakMap<MediaStream, CanvasCaptureMediaStreamTrack>();
 const lyricCanvas = document.createElement('canvas');
-const lyricTrack = lyricCanvas.captureStream().getVideoTracks()[0];
+const ctx = lyricCanvas.getContext('2d');
+// Firefox Issue: NS_ERROR_NOT_INITIALIZED
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1572422
+const lyricTrack = lyricCanvas.captureStream().getVideoTracks()[0] as CanvasCaptureMediaStreamTrack;
 lyricCanvas.width = WIDTH;
 lyricCanvas.height = HEIGHT;
-const ctx = lyricCanvas.getContext('2d');
 if (ctx) {
   const update = () => {
     const url = `data:image/svg+xml,${encodeURIComponent(generateSVG(lyric, audio?.currentTime))}`;
@@ -51,3 +53,13 @@ if (ctx) {
 } else {
   throw new Error('lytics canvas context fail');
 }
+// debug
+// window.onload = () => {
+//   Object.assign(lyricTrack.canvas.style, {
+//     width: '300px',
+//     height: '300px',
+//     position: 'absolute',
+//     zIndex: 123123123123123,
+//   });
+//   document.body.append(lyricTrack.canvas);
+// };

@@ -15,7 +15,8 @@ const style = css`
     text-align: center;
   }
   body {
-    mask-image: linear-gradient(to bottom, transparent 8%, black 35%, black 65%, transparent 92%);
+    /* https://bugs.chromium.org/p/chromium/issues/detail?id=432153 */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 8%, black 35%, black 65%, transparent 92%);
     width: 100%;
     height: 100%;
     display: flex;

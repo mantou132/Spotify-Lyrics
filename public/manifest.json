@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "manifest_version": 2,
   "description": "spotify web player lyrics plugin, lyric display on PIP window.",
+  "web_accessible_resources": [
+    "page.js"
+  ],
   "content_scripts": [
     {
       "matches": ["*://open.spotify.com/*"],

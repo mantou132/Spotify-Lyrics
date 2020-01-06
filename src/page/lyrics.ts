@@ -51,19 +51,19 @@ export async function updateLyric({ name, artist }: Query) {
       // ["[03:10]", "[03:10]", "永远高唱我歌"]
       const matchResult = line.match(/(\[.*?\])|([^\[\]]+)/g) || [line];
       const textIndex = matchResult.findIndex(slice => !slice.endsWith(']'));
-      let text = '';
+      let text = ' ';
       if (textIndex > -1) {
         text = matchResult.splice(textIndex, 1)[0];
       }
       return matchResult.map(slice => {
         const result = new Line();
         const [key, value] = slice.match(/[^\[\]]+/g)?.[0].split(':') || [];
-        const [min, sec] = [parseInt(key), parseInt(value)];
+        const [min, sec] = [parseFloat(key), parseFloat(value)];
         if (!isNaN(min)) {
           result.startTime = min * 60 + sec;
           result.text = text;
         } else {
-          result.text = value;
+          result.text = `${key}-${value}`;
         }
         return result;
       });
