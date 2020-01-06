@@ -18,6 +18,7 @@ const WIDTH = 640;
 const HEIGHT = 640;
 
 const weakMap = new WeakMap<MediaStream, CanvasCaptureMediaStreamTrack>();
+const contentWeakMap = new WeakMap<CanvasCaptureMediaStreamTrack, string>();
 const lyricCanvas = document.createElement('canvas');
 const ctx = lyricCanvas.getContext('2d');
 // Firefox Issue: NS_ERROR_NOT_INITIALIZED
@@ -28,19 +29,30 @@ lyricCanvas.height = HEIGHT;
 if (ctx) {
   const update = () => {
     const url = `data:image/svg+xml,${encodeURIComponent(generateSVG(lyric, audio?.currentTime))}`;
+    if (video?.srcObject && video.srcObject instanceof MediaStream) {
+      if (!weakMap.get(video.srcObject)) {
+        // song change
+        // change coverTrack
+        const stream = new MediaStream([lyricTrack]);
+        const coverTrack = video.srcObject.getVideoTracks()[0] as CanvasCaptureMediaStreamTrack;
+        weakMap.set(stream, coverTrack);
+        video.srcObject = stream;
+      }
+      if (contentWeakMap.get(weakMap.get(video.srcObject) as CanvasCaptureMediaStreamTrack) === url) {
+        // not need update
+        return requestAnimationFrame(update);
+      }
+    }
     const img = new Image(WIDTH, HEIGHT);
     img.src = url;
     img.onload = () => {
       ctx.clearRect(0, 0, WIDTH, HEIGHT);
       if (video?.srcObject && video.srcObject instanceof MediaStream) {
-        let coverTrck = weakMap.get(video.srcObject);
-        if (!coverTrck) {
-          const stream = new MediaStream([lyricTrack]);
-          coverTrck = video.srcObject.getVideoTracks()[0] as CanvasCaptureMediaStreamTrack;
-          weakMap.set(stream, coverTrck);
-          video.srcObject = stream;
+        const coverTrack = weakMap.get(video.srcObject);
+        if (coverTrack) {
+          ctx.drawImage(coverTrack.canvas, 0, 0, WIDTH, HEIGHT);
+          contentWeakMap.set(coverTrack, url);
         }
-        ctx.drawImage(coverTrck.canvas, 0, 0, WIDTH, HEIGHT);
         if (lyric.length > 0) {
           ctx.drawImage(img, 0, 0, WIDTH, HEIGHT);
         }
