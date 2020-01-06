@@ -12,6 +12,9 @@ declare global {
   interface CanvasCaptureMediaStreamTrack extends MediaStreamTrack {
     canvas: HTMLCanvasElement;
   }
+  interface Document {
+    pictureInPictureElement: HTMLVideoElement;
+  }
 }
 
 const WIDTH = 640;
@@ -36,7 +39,18 @@ if (ctx) {
         const stream = new MediaStream([lyricTrack]);
         const coverTrack = video.srcObject.getVideoTracks()[0] as CanvasCaptureMediaStreamTrack;
         weakMap.set(stream, coverTrack);
-        video.srcObject = stream;
+        if (document.pictureInPictureElement) {
+          video.srcObject = stream;
+        } else {
+          video.addEventListener(
+            'enterpictureinpicture',
+            () => {
+              // Black screen after modification, unless playback starts
+              if (video) video.srcObject = stream;
+            },
+            { once: true },
+          );
+        }
       }
       if (contentWeakMap.get(weakMap.get(video.srcObject) as CanvasCaptureMediaStreamTrack) === url) {
         // not need update
