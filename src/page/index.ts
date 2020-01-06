@@ -1,7 +1,7 @@
 import generateSVG from './svg';
 import songObserver from './song';
 import { video, audio } from './element';
-import { lyric, updateLyric } from './lyrics';
+import { lyric, updateLyric, Lyric } from './lyrics';
 
 songObserver(updateLyric);
 
@@ -13,7 +13,7 @@ declare global {
     canvas: HTMLCanvasElement;
   }
   interface Document {
-    pictureInPictureElement: HTMLVideoElement;
+    pictureInPictureElement: HTMLVideoElement | null;
   }
 }
 
@@ -22,6 +22,7 @@ const HEIGHT = 640;
 
 const weakMap = new WeakMap<MediaStream, CanvasCaptureMediaStreamTrack>();
 const contentWeakMap = new WeakMap<CanvasCaptureMediaStreamTrack, string>();
+const lyricWeakMap = new WeakMap<CanvasCaptureMediaStreamTrack, Lyric>();
 const lyricCanvas = document.createElement('canvas');
 const ctx = lyricCanvas.getContext('2d');
 // Firefox Issue: NS_ERROR_NOT_INITIALIZED
@@ -31,31 +32,33 @@ lyricCanvas.width = WIDTH;
 lyricCanvas.height = HEIGHT;
 if (ctx) {
   const update = () => {
-    const url = `data:image/svg+xml,${encodeURIComponent(generateSVG(lyric, audio?.currentTime))}`;
-    if (video?.srcObject && video.srcObject instanceof MediaStream) {
-      if (!weakMap.get(video.srcObject)) {
-        // song change
-        // change coverTrack
-        const stream = new MediaStream([lyricTrack]);
-        const coverTrack = video.srcObject.getVideoTracks()[0] as CanvasCaptureMediaStreamTrack;
-        weakMap.set(stream, coverTrack);
-        if (document.pictureInPictureElement) {
-          video.srcObject = stream;
-        } else {
-          video.addEventListener(
-            'enterpictureinpicture',
-            () => {
-              // Black screen after modification, unless playback starts
-              if (video) video.srcObject = stream;
-            },
-            { once: true },
-          );
-        }
+    if (!video || !(video.srcObject instanceof MediaStream)) return requestAnimationFrame(update);
+    if (!weakMap.get(video.srcObject)) {
+      // song change
+      // change coverTrack
+      const stream = new MediaStream([lyricTrack]);
+      const coverTrack = video.srcObject.getVideoTracks()[0] as CanvasCaptureMediaStreamTrack;
+      weakMap.set(stream, coverTrack);
+      if (document.pictureInPictureElement) {
+        video.srcObject = stream;
+      } else {
+        video.addEventListener(
+          'enterpictureinpicture',
+          () => {
+            // Black screen after modification, unless playback starts
+            if (video) video.srcObject = stream;
+          },
+          { once: true },
+        );
       }
-      if (contentWeakMap.get(weakMap.get(video.srcObject) as CanvasCaptureMediaStreamTrack) === url) {
-        // not need update
-        return requestAnimationFrame(update);
-      }
+    }
+    const coverTrack = weakMap.get(video.srcObject) as CanvasCaptureMediaStreamTrack;
+    const url = `data:image/svg+xml,${encodeURIComponent(
+      generateSVG(lyricWeakMap.get(coverTrack) || lyric, audio?.currentTime),
+    )}`;
+    if (contentWeakMap.get(coverTrack) === url) {
+      // not need update
+      return requestAnimationFrame(update);
     }
     const img = new Image(WIDTH, HEIGHT);
     img.src = url;
@@ -68,6 +71,7 @@ if (ctx) {
           contentWeakMap.set(coverTrack, url);
         }
         if (lyric.length > 0) {
+          if (coverTrack) lyricWeakMap.set(coverTrack, lyric);
           ctx.drawImage(img, 0, 0, WIDTH, HEIGHT);
         }
       }
