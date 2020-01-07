@@ -1,8 +1,8 @@
 {
-  "name": "spotify lyrics",
-  "version": "0.0.1",
+  "name": "Spotify Lyrics",
+  "version": "0.0.2",
   "manifest_version": 2,
-  "description": "spotify web player lyrics plugin, lyric display on PIP window.",
+  "description": "Spotify Web Player lyrics plugin, Lyric display in PIP window.",
   "web_accessible_resources": [
     "page.js"
   ],
