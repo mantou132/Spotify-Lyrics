@@ -19,10 +19,12 @@ declare global {
 
 const WIDTH = 640;
 const HEIGHT = 640;
+const INTERVAL = 80;
 
 const weakMap = new WeakMap<MediaStream, CanvasCaptureMediaStreamTrack>();
 const contentWeakMap = new WeakMap<CanvasCaptureMediaStreamTrack, string>();
 const lyricWeakMap = new WeakMap<CanvasCaptureMediaStreamTrack, Lyric>();
+const prevTimeWeakMap = new WeakMap<CanvasCaptureMediaStreamTrack, number>();
 const lyricCanvas = document.createElement('canvas');
 const ctx = lyricCanvas.getContext('2d');
 // Firefox Issue: NS_ERROR_NOT_INITIALIZED
@@ -32,64 +34,40 @@ lyricCanvas.width = WIDTH;
 lyricCanvas.height = HEIGHT;
 if (ctx) {
   const update = () => {
-    if (!video || !(video.srcObject instanceof MediaStream)) return requestAnimationFrame(update);
+    if (!video || !audio || !(video.srcObject instanceof MediaStream) || !document.pictureInPictureElement) {
+      return setTimeout(update, INTERVAL);
+    }
     if (!weakMap.get(video.srcObject)) {
       // song change
       // change coverTrack
-      const stream = new MediaStream([lyricTrack]);
       const coverTrack = video.srcObject.getVideoTracks()[0] as CanvasCaptureMediaStreamTrack;
-      weakMap.set(stream, coverTrack);
-      if (document.pictureInPictureElement) {
-        video.srcObject = stream;
-      } else {
-        video.addEventListener(
-          'enterpictureinpicture',
-          () => {
-            // Black screen after modification, unless playback starts
-            if (video) video.srcObject = stream;
-          },
-          { once: true },
-        );
-      }
+      const stream = new MediaStream([lyricTrack]);
+      video.srcObject = stream;
+      weakMap.set(video.srcObject, coverTrack);
     }
     const coverTrack = weakMap.get(video.srcObject) as CanvasCaptureMediaStreamTrack;
+    const prevTime = prevTimeWeakMap.get(coverTrack) || 0;
     const url = `data:image/svg+xml,${encodeURIComponent(
-      generateSVG(lyricWeakMap.get(coverTrack) || lyric, audio?.currentTime),
+      generateSVG(lyricWeakMap.get(coverTrack) || lyric, audio.currentTime > prevTime ? audio.currentTime : prevTime),
     )}`;
-    if (contentWeakMap.get(coverTrack) === url) {
-      // not need update
-      return requestAnimationFrame(update);
-    }
+    prevTimeWeakMap.set(coverTrack, audio.currentTime);
     const img = new Image(WIDTH, HEIGHT);
     img.src = url;
     img.onload = () => {
       ctx.clearRect(0, 0, WIDTH, HEIGHT);
       if (video?.srcObject && video.srcObject instanceof MediaStream) {
-        const coverTrack = weakMap.get(video.srcObject);
-        if (coverTrack) {
-          ctx.drawImage(coverTrack.canvas, 0, 0, WIDTH, HEIGHT);
-          contentWeakMap.set(coverTrack, url);
-        }
+        ctx.drawImage(coverTrack.canvas, 0, 0, WIDTH, HEIGHT);
+        contentWeakMap.set(coverTrack, url);
         if (lyric.length > 0) {
           if (coverTrack) lyricWeakMap.set(coverTrack, lyric);
           ctx.drawImage(img, 0, 0, WIDTH, HEIGHT);
         }
       }
-      requestAnimationFrame(update);
+      setTimeout(update, INTERVAL);
     };
-    img.onerror = () => requestAnimationFrame(update);
+    img.onerror = () => setTimeout(update, INTERVAL);
   };
   update();
 } else {
   throw new Error('lytics canvas context fail');
 }
-// debug
-// window.onload = () => {
-//   Object.assign(lyricTrack.canvas.style, {
-//     width: '300px',
-//     height: '300px',
-//     position: 'absolute',
-//     zIndex: 123123123123123,
-//   });
-//   document.body.append(lyricTrack.canvas);
-// };
