@@ -4,13 +4,13 @@ const TRACK_ARTIST_SELECTOR = '.track-info__artists';
 
 export interface Query {
   name: string;
-  artist: string;
+  artists: string;
 }
 
 function getQueryObj(element: Element): Query {
   const name = element.querySelector(TRACK_NAME_SELECTOR)?.textContent;
-  const artist = element.querySelector(TRACK_ARTIST_SELECTOR)?.textContent;
-  return { name: name || '', artist: artist || '' };
+  const artists = element.querySelector(TRACK_ARTIST_SELECTOR)?.textContent;
+  return { name: name || '', artists: artists || '' };
 }
 
 const weakMap = new WeakMap<Element, MutationObserver>();

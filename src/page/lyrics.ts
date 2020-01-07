@@ -1,9 +1,18 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { Query } from './song';
 
+interface Artist {
+  name: string;
+}
+interface Song {
+  id: number;
+  name: string;
+  artists: Artist[];
+}
+
 interface SearchResult {
   result?: {
-    songs?: { id?: number }[];
+    songs?: Song[];
   };
 }
 
@@ -13,17 +22,51 @@ interface SongResult {
   };
 }
 
-const API = 'https://api.imjad.cn/cloudmusic/';
-async function fetchLyric(s: string) {
+// https://github.com/Binaryify/NeteaseCloudMusicApi
+const getApiHost = () => fetch('https://xianqiao.wang/netease-cloud-music-api-host').then(res => res.text());
+
+async function fetchLyric(query: Query) {
+  const { name, artists } = query;
   try {
-    const { result }: SearchResult = await (
-      await fetch(`${API}?${new URLSearchParams({ type: 'search', search_type: '1', s })}`)
-    ).json();
-    // TODO: Optimize song matching
-    const songId = result?.songs?.[0]?.id;
-    if (!songId) return '';
+    const apiHost = await getApiHost();
+    const searchQuery = new URLSearchParams({ type: '1 ', keywords: `${artists} ${name}`, limit: '100' });
+    const { result }: SearchResult = await (await fetch(`${apiHost}/search?${searchQuery}`)).json();
+    const songs = result?.songs || [];
+    // Optimize song matching
+    let songId = 0;
+    let rank = 0;
+    songs.forEach(song => {
+      let currentRank = 0;
+      if (song.name === name) {
+        currentRank += 1000;
+      } else if (song.name.toLowerCase() === name.toLowerCase()) {
+        currentRank += 100;
+      } else if (song.name.includes(name) || name.includes(song.name)) {
+        currentRank += 10;
+      }
+      const queryArtistsArr = artists.split(',').sort();
+      const artistsArr = song.artists.map(e => e.name).sort();
+      if (queryArtistsArr.join(',') === artistsArr.join(',')) {
+        currentRank += 1000;
+      } else if (new Set([...queryArtistsArr, ...artistsArr]).size < queryArtistsArr.length + artistsArr.length) {
+        currentRank += 100;
+      } else if (
+        new Set([...queryArtistsArr.map(e => e.toLowerCase()), ...artistsArr.map(e => e.toLowerCase())]).size <
+        queryArtistsArr.length + artistsArr.length
+      ) {
+        currentRank += 10;
+      }
+      if (currentRank > 20 && currentRank > rank) {
+        rank = currentRank;
+        songId = song.id;
+      }
+    });
+    if (!songId) {
+      console.log('||||:', { query, songs, rank });
+      return '';
+    }
     const { lrc }: SongResult = await (
-      await fetch(`${API}?${new URLSearchParams({ type: 'lyric', id: String(songId) })}`)
+      await fetch(`${apiHost}/lyric?${new URLSearchParams({ id: String(songId) })}`)
     ).json();
     return lrc?.lyric || '';
   } catch {
@@ -39,9 +82,9 @@ class Line {
 export type Lyric = Line[];
 
 export let lyric: Lyric = [];
-export async function updateLyric({ name, artist }: Query) {
+export async function updateLyric(query: Query) {
   lyric = [];
-  const lyricStr = await fetchLyric(`${name}-${artist}`);
+  const lyricStr = await fetchLyric(query);
   if (!lyricStr) return;
   const lines = lyricStr.split('\n').map(line => line.trim());
   lyric = lines
@@ -65,7 +108,7 @@ export async function updateLyric({ name, artist }: Query) {
           result.startTime = min * 60 + sec;
           result.text = text;
         } else {
-          result.text = `${key}-${value}`;
+          result.text = `${key}:${value}`;
         }
         return result;
       });
