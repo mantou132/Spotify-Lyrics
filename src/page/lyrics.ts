@@ -1,5 +1,8 @@
 /* eslint-disable @typescript-eslint/camelcase */
+import { MessageCallType } from '../common';
+
 import { Query } from './song';
+import { contentScriptCall } from './utils';
 
 interface Artist {
   name: string;
@@ -25,8 +28,19 @@ interface SongResult {
 // https://github.com/Binaryify/NeteaseCloudMusicApi
 const getApiHost = () => fetch('https://xianqiao.wang/netease-cloud-music-api-host').then(res => res.text());
 
+const getSimplified = async (s: string) => {
+  // Firefox issue: not support Unicode property escapes
+  if (/\p{sc=Han}/gu.test(s)) {
+    return await contentScriptCall(MessageCallType.GET_SIMPLIFIED, s);
+  } else {
+    return '';
+  }
+};
+
 async function fetchLyric(query: Query) {
   const { name, artists } = query;
+  const simplifiedName = await getSimplified(name);
+  const simplifiedArtists = await getSimplified(artists);
   try {
     const apiHost = await getApiHost();
     const searchQuery = new URLSearchParams({ type: '1 ', keywords: `${artists} ${name}`, limit: '100' });
@@ -41,6 +55,8 @@ async function fetchLyric(query: Query) {
         currentRank += 1000;
       } else if (song.name.toLowerCase() === name.toLowerCase()) {
         currentRank += 100;
+      } else if (simplifiedName && song.name === simplifiedName) {
+        currentRank += 100;
       } else if (song.name.includes(name) || name.includes(song.name)) {
         currentRank += 10;
       }
@@ -48,6 +64,14 @@ async function fetchLyric(query: Query) {
       const artistsArr = song.artists.map(e => e.name).sort();
       if (queryArtistsArr.join(',') === artistsArr.join(',')) {
         currentRank += 1000;
+      } else if (
+        simplifiedArtists &&
+        simplifiedArtists
+          .split(',')
+          .sort()
+          .join(',') === artistsArr.join(',')
+      ) {
+        currentRank += 100;
       } else if (new Set([...queryArtistsArr, ...artistsArr]).size < queryArtistsArr.length + artistsArr.length) {
         currentRank += 100;
       } else if (
