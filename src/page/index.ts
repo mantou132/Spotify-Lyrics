@@ -22,9 +22,9 @@ const HEIGHT = 640;
 const INTERVAL = 80;
 
 const weakMap = new WeakMap<MediaStream, CanvasCaptureMediaStreamTrack>();
-const contentWeakMap = new WeakMap<CanvasCaptureMediaStreamTrack, string>();
 const lyricWeakMap = new WeakMap<CanvasCaptureMediaStreamTrack, Lyric>();
 const prevTimeWeakMap = new WeakMap<CanvasCaptureMediaStreamTrack, number>();
+let errorLyric: Lyric;
 const lyricCanvas = document.createElement('canvas');
 const ctx = lyricCanvas.getContext('2d');
 // Firefox Issue: NS_ERROR_NOT_INITIALIZED
@@ -47,27 +47,32 @@ if (ctx) {
     }
     const coverTrack = weakMap.get(video.srcObject) as CanvasCaptureMediaStreamTrack;
     const prevTime = prevTimeWeakMap.get(coverTrack) || 0;
+    const currentLyric = lyricWeakMap.get(coverTrack) || lyric;
     const url = `data:image/svg+xml,${encodeURIComponent(
-      generateSVG(lyricWeakMap.get(coverTrack) || lyric, audio.currentTime > prevTime ? audio.currentTime : prevTime),
+      generateSVG(currentLyric, audio.currentTime > prevTime ? audio.currentTime : prevTime),
     )}`;
     prevTimeWeakMap.set(coverTrack, audio.currentTime);
     const img = new Image(WIDTH, HEIGHT);
-    img.src = url;
     img.onload = () => {
       ctx.clearRect(0, 0, WIDTH, HEIGHT);
-      if (video?.srcObject && video.srcObject instanceof MediaStream) {
-        ctx.drawImage(coverTrack.canvas, 0, 0, WIDTH, HEIGHT);
-        contentWeakMap.set(coverTrack, url);
-        if (lyric.length > 0) {
-          if (coverTrack) lyricWeakMap.set(coverTrack, lyric);
-          ctx.drawImage(img, 0, 0, WIDTH, HEIGHT);
-        }
+      ctx.drawImage(coverTrack.canvas, 0, 0, WIDTH, HEIGHT);
+      if (lyric.length > 0) {
+        lyricWeakMap.set(coverTrack, lyric);
+        ctx.drawImage(img, 0, 0, WIDTH, HEIGHT);
       }
       setTimeout(update, INTERVAL);
     };
-    img.onerror = () => setTimeout(update, INTERVAL);
+    img.onerror = () => {
+      if (errorLyric !== currentLyric) {
+        console.error('error lyric:', currentLyric);
+        errorLyric = currentLyric;
+      }
+      ctx.drawImage(coverTrack.canvas, 0, 0, WIDTH, HEIGHT);
+      setTimeout(update, INTERVAL);
+    };
+    img.src = url;
   };
   update();
 } else {
-  throw new Error('lytics canvas context fail');
+  throw new Error('lyric canvas context fail');
 }

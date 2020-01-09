@@ -60,12 +60,16 @@ export default function generateSVG(lyric: Lyric = [], currentTime = 0) {
     }
   });
   lyric.forEach(({ text }, index) => {
+    const safeHTML = text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
     if (index < currentIndex) {
-      before += `<p>${text}</p>`;
+      before += `<p>${safeHTML}</p>`;
     } else if (index > currentIndex) {
-      after += `<p>${text}</p>`;
+      after += `<p>${safeHTML}</p>`;
     } else {
-      current = `<p>${text}</p>`;
+      current = `<p>${safeHTML}</p>`;
     }
   });
   return svg`
