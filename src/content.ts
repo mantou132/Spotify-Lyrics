@@ -11,9 +11,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
 async function getSimplified(s: string) {
   type Module = typeof import('chinese-conv');
-  const {
-    default: { sify },
-  }: Module = await import(/* webpackIgnore: true */ browser.runtime.getURL('chinese-conv.js'));
+  // Cannot use https://dev.jspm.io/chinese-conv
+  // Firefox issue: https://bugzilla.mozilla.org/show_bug.cgi?id=1536094
+  // Chrome issue: CSP error despite `content_security_policy` set
+  const module: Module = await import(/* webpackIgnore: true */ browser.runtime.getURL('chinese-conv.js'));
+  const { sify } = module.default;
   return sify(s);
 }
 
