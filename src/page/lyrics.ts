@@ -103,11 +103,11 @@ async function fetchLyric(query: Query) {
       ) {
         currentRank += 10;
       }
+      if (currentRank > 10 && currentRank > rank) {
+        songId = song.id;
+      }
       if (currentRank > rank) {
         rank = currentRank;
-      }
-      if (currentRank > 10) {
-        songId = song.id;
       }
     });
     if (!songId) {
