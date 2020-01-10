@@ -44,6 +44,9 @@ if (ctx) {
       const stream = new MediaStream([lyricTrack]);
       video.srcObject = stream;
       weakMap.set(video.srcObject, coverTrack);
+      if (video.paused) {
+        video.play();
+      }
     }
     const coverTrack = weakMap.get(video.srcObject) as CanvasCaptureMediaStreamTrack;
     const prevTime = prevTimeWeakMap.get(coverTrack) || 0;
