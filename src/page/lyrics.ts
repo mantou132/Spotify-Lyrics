@@ -43,6 +43,15 @@ const getText = (s: string) => {
   return s.length > 2 ? text : s;
 };
 
+// Exclude deductions
+const getHalfSizeText = (s: string) => {
+  return s
+    .replace(/，/g, ',')
+    .replace(/。/g, '.')
+    .replace(/、/g, ',')
+    .replace(/‘|’/g, "'");
+};
+
 async function fetchLyric(query: Query) {
   const { name, artists } = query;
   const simplifiedName = await getSimplified(name);
@@ -63,6 +72,14 @@ async function fetchLyric(query: Query) {
         currentRank += 100;
       } else if (simplifiedName && song.name === simplifiedName) {
         currentRank += 100;
+      } else if (
+        getHalfSizeText(song.name) === getHalfSizeText(name) ||
+        getHalfSizeText(song.name) === getHalfSizeText(simplifiedName)
+      ) {
+        currentRank += 10;
+        if (getHalfSizeText(song.name).length > 2) {
+          currentRank += 10;
+        }
       } else if (getText(song.name) === getText(name)) {
         currentRank += 10;
       }
@@ -89,7 +106,7 @@ async function fetchLyric(query: Query) {
       if (currentRank > rank) {
         rank = currentRank;
       }
-      if (currentRank > 20) {
+      if (currentRank > 10) {
         songId = song.id;
       }
     });
