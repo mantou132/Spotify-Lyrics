@@ -37,6 +37,12 @@ const getSimplified = async (s: string) => {
   }
 };
 
+// Exclude deductions
+const getText = (s: string) => {
+  const text = s.replace(/\(|（.*）|\)/, '').trim();
+  return s.length > 2 ? text : s;
+};
+
 async function fetchLyric(query: Query) {
   const { name, artists } = query;
   const simplifiedName = await getSimplified(name);
@@ -46,9 +52,9 @@ async function fetchLyric(query: Query) {
     const searchQuery = new URLSearchParams({ type: '1 ', keywords: `${artists} ${name}`, limit: '100' });
     const { result }: SearchResult = await (await fetch(`${apiHost}/search?${searchQuery}`)).json();
     const songs = result?.songs || [];
-    // Optimize song matching
+    // TODO: Support pinyin matching
     let songId = 0;
-    let rank = 0;
+    let rank = 0; // Maximum score
     songs.forEach(song => {
       let currentRank = 0;
       if (song.name === name) {
@@ -57,7 +63,7 @@ async function fetchLyric(query: Query) {
         currentRank += 100;
       } else if (simplifiedName && song.name === simplifiedName) {
         currentRank += 100;
-      } else if (song.name.includes(name) || name.includes(song.name)) {
+      } else if (getText(song.name) === getText(name)) {
         currentRank += 10;
       }
       const queryArtistsArr = artists.split(',').sort();
@@ -80,13 +86,15 @@ async function fetchLyric(query: Query) {
       ) {
         currentRank += 10;
       }
-      if (currentRank > 20 && currentRank > rank) {
+      if (currentRank > rank) {
         rank = currentRank;
+      }
+      if (currentRank > 20) {
         songId = song.id;
       }
     });
     if (!songId) {
-      console.log('||||:', { query, songs, rank });
+      console.log('Not matched:', { query, songs, rank });
       return '';
     }
     const { lrc }: SongResult = await (
