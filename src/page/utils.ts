@@ -1,5 +1,11 @@
 import { MessageCallType, ExtensionMessage, ExtReplyPrefix, ExtMessageType } from '../common';
 
+export function raw(arr: TemplateStringsArray, ...args: any[]) {
+  return arr.reduce((prev, current, index) => prev + (args[index - 1] || '') + current);
+}
+export const svg = raw;
+export const css = raw;
+
 let id = 0;
 export function contentScriptCall(call: MessageCallType, data: any) {
   ++id;

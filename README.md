@@ -21,6 +21,11 @@ If you have any questions, please submit an [issue](https://github.com/mantou132
 * Firefox does not currently support [PiP WebAPI](https://bugzilla.mozilla.org/show_bug.cgi?id=1463402)
 * Chrome [70+](https://caniuse.com/#feat=picture-in-picture)
 
+## Recommend
+
+* [Install PWA](https://support.google.com/chrome/answer/9658361)
+* Use Spotify [Theme](https://userstyles.org/styles/168705/spotify)
+
 ## Development
 
 ```bash

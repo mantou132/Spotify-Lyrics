@@ -1,10 +1,5 @@
 import { Lyric } from './lyrics';
-
-function raw(arr: TemplateStringsArray, ...args: any[]) {
-  return arr.reduce((prev, current, index) => prev + (args[index - 1] || '') + current);
-}
-const svg = raw;
-const css = raw;
+import { svg, css } from './utils';
 
 const style = css`
   :root {

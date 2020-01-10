@@ -3,6 +3,8 @@ import songObserver from './song';
 import { video, audio } from './element';
 import { lyric, updateLyric, Lyric } from './lyrics';
 
+import './misc';
+
 songObserver(updateLyric);
 
 declare global {
