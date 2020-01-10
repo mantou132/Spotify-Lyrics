@@ -8,7 +8,7 @@ If you have any questions, please submit an [issue](https://github.com/mantou132
 
 <img src="./screenshot/screenshot2.jpg">
 
-## How To Work
+## How It Work
 
 1. [Listen](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) for `.track_info` element.
 2. Search for songs and download lyrics using [`NeteaseCloudMusicApi`](https://github.com/Binaryify/NeteaseCloudMusicApi).
