@@ -13,6 +13,7 @@
   "author": "mantou132",
   "license": "ISC",
   "dependencies": {
+    "chinese-conv": "^1.0.1",
     "webextension-polyfill-ts": "^0.9.1"
   },
   "devDependencies": {

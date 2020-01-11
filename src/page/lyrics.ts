@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import { MessageCallType } from '../common';
+import sify from 'chinese-conv/tongwen/tongwen-ts';
 
 import { Query } from './song';
-import { contentScriptCall } from './utils';
 
 interface Artist {
   name: string;
@@ -28,10 +27,10 @@ interface SongResult {
 // https://github.com/Binaryify/NeteaseCloudMusicApi
 const getApiHost = () => fetch('https://xianqiao.wang/netease-cloud-music-api-host').then(res => res.text());
 
-const getSimplified = async (s: string) => {
+const getSimplified = (s: string) => {
   // Firefox issue: not support Unicode property escapes
   if (/\p{sc=Han}/gu.test(s)) {
-    return await contentScriptCall(MessageCallType.GET_SIMPLIFIED, s);
+    return sify(s);
   } else {
     return '';
   }
@@ -54,8 +53,8 @@ const getHalfSizeText = (s: string) => {
 
 async function fetchLyric(query: Query) {
   const { name, artists } = query;
-  const simplifiedName = await getSimplified(name);
-  const simplifiedArtists = await getSimplified(artists);
+  const simplifiedName = getSimplified(name);
+  const simplifiedArtists = getSimplified(artists);
   try {
     const apiHost = await getApiHost();
     const searchQuery = new URLSearchParams({ type: '1 ', keywords: `${artists} ${name}`, limit: '100' });

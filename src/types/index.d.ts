@@ -1,4 +1,4 @@
-declare module 'chinese-conv' {
-  const ex: { sify: (s: string) => string };
-  export default ex;
+declare module 'chinese-conv/tongwen/tongwen-ts' {
+  const TS: (s: string) => string;
+  export default TS;
 }

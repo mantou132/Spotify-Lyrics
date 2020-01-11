@@ -4,11 +4,7 @@
   "manifest_version": 2,
   "description": "Spotify Web Player lyrics plugin, lyric display in PiP(album cover) window.",
   "web_accessible_resources": [
-    "page.js",
-    "chinese-conv.js",
-    "chinese-conv@1.0.1/tongwen/tongwen-ts.dew.js",
-    "chinese-conv@1.0.1/tongwen/tongwen-st.dew.js",
-    "chinese-conv@1.0.1/dist/index.dew.js"
+    "page.js"
   ],
   "content_scripts": [
     {
