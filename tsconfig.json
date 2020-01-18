@@ -9,7 +9,8 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es5",
+    "experimentalDecorators": true,
+    "target": "es6",
     "lib": ["es2020", "dom", "DOM.Iterable"],
     "typeRoots": ["node_modules/@types", "src/types"]
   },

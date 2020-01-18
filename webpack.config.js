@@ -11,6 +11,7 @@ module.exports = {
   entry: {
     content: './src/content',
     page: './src/page',
+    popup: './src/popup',
   },
   module: {
     rules: [

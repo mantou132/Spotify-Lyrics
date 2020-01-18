@@ -2,13 +2,14 @@
 import sify from 'chinese-conv/tongwen/tongwen-ts';
 
 import config from '../config';
+import { Message, Event } from '../consts';
 
 import { Query } from './song';
 
-interface Artist {
+export interface Artist {
   name: string;
 }
-interface Song {
+export interface Song {
   id: number;
   name: string;
   artists: Artist[];
@@ -18,6 +19,11 @@ interface SearchResult {
   result?: {
     songs?: Song[];
   };
+}
+
+export interface SharedData {
+  list: Song[];
+  id: number;
 }
 
 interface SongResult {
@@ -53,6 +59,12 @@ const getHalfSizeText = (s: string) => {
     .replace(/、/g, ',')
     .replace(/‘|’/g, "'");
 };
+
+const sharedData: SharedData = { list: [], id: 0 };
+function sendShareDate() {
+  const msg: Message = { type: Event.SEND_SONGS, data: sharedData };
+  window.postMessage(msg, '*');
+}
 
 async function fetchLyric(query: Query) {
   const { name, artists } = query;
@@ -112,6 +124,9 @@ async function fetchLyric(query: Query) {
         rank = currentRank;
       }
     });
+    sharedData.list = songs;
+    sharedData.id = songId;
+    sendShareDate();
     if (!songId) {
       console.log('Not matched:', { query, songs, rank });
       return '';
@@ -124,6 +139,12 @@ async function fetchLyric(query: Query) {
     return '';
   }
 }
+
+window.addEventListener('message', ({ data }: MessageEvent) => {
+  if (data?.type === Event.GET_SONGS) {
+    sendShareDate();
+  }
+});
 
 class Line {
   startTime: number | null = null;

@@ -14,6 +14,7 @@
   "author": "mantou132",
   "license": "ISC",
   "dependencies": {
+    "@mantou/gem": "^0.3.6",
     "chinese-conv": "^1.0.1",
     "webextension-polyfill-ts": "^0.9.1"
   },
@@ -32,7 +33,7 @@
     "lint-staged": "^8.2.1",
     "prettier": "^1.19.0",
     "ts-loader": "^6.2.1",
-    "typescript": "^3.7.2",
+    "typescript": "^3.7.5",
     "url-loader": "^2.2.0",
     "web-ext": "^4.1.0",
     "webpack": "^4.41.5",
