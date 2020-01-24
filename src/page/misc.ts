@@ -3,9 +3,7 @@ import { css } from './utils';
 // remove AD
 const style = document.createElement('style');
 style.innerHTML = css`
-  .NavBar__download-item,
-  .Root__ads-container,
-  #main ~ div {
+  [role='main'] ~ div {
     display: none;
   }
 `;
