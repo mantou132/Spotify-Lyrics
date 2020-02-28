@@ -16,15 +16,11 @@ function getQueryObj(element: Element): Query {
 const weakMap = new WeakMap<Element, MutationObserver>();
 
 export default function songObserver(callback: (query: Query) => any) {
-  let trackInfo: Element | null = null;
-  const observer = new MutationObserver(() => {
+  const checkElement = () => {
     const element = document.querySelector(TRACK_INFO_SELECTOR);
-    if (!element) {
-      if (trackInfo) {
-        const ob = weakMap.get(trackInfo);
-        ob?.disconnect();
-      }
-    } else if (!weakMap.has(element)) {
+
+    if (element && !weakMap.has(element)) {
+      // init observer
       callback(getQueryObj(element));
       const observer = new MutationObserver(() => {
         callback(getQueryObj(element));
@@ -32,7 +28,10 @@ export default function songObserver(callback: (query: Query) => any) {
       observer.observe(element, { childList: true, characterData: true, subtree: true, attributes: true });
       weakMap.set(element, observer);
     }
-    trackInfo = element;
-  });
-  observer.observe(document.body, { childList: true });
+  };
+  checkElement();
+
+  // allow `document.body` rerender
+  const observer = new MutationObserver(checkElement);
+  observer.observe(document.body, { childList: true, subtree: true });
 }
