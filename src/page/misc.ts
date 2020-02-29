@@ -2,7 +2,7 @@ import { css } from './utils';
 
 // remove AD
 const style = document.createElement('style');
-style.innerHTML = css`
+style.textContent = css`
   .NavBarFooter, /* download link and cover picture */
   [role='banner'],
   [role='main'] ~ div {
