@@ -3,15 +3,17 @@ import { svg, css } from './utils';
 
 const style = css`
   :root {
-    background: #000000a0;
+    background: #000000b0;
     color: white;
+    text-align: left;
     font-family: sans-serif;
-    font-size: 36px;
-    text-align: center;
+    font-weight: bold;
+    font-size: 48px;
   }
   body {
     /* https://bugs.chromium.org/p/chromium/issues/detail?id=432153 */
     -webkit-mask-image: linear-gradient(to bottom, transparent 8%, black 35%, black 65%, transparent 92%);
+    mask-image: linear-gradient(to bottom, transparent 8%, black 35%, black 65%, transparent 92%);
     width: 100%;
     height: 100%;
     display: flex;
@@ -32,7 +34,7 @@ const style = css`
   .before,
   .after {
     opacity: 0.35;
-    font-size: 0.8em;
+    font-size: 0.75em;
     position: absolute;
     width: 100%;
   }

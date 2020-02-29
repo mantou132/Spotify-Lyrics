@@ -156,7 +156,7 @@ export async function updateLyric(query: Query) {
           result.startTime = min * 60 + sec;
           result.text = text;
         } else {
-          result.text = `${key}:${value}`;
+          result.text = `${key?.toUpperCase()}: ${value}`;
         }
         return result;
       });
