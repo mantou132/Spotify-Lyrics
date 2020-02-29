@@ -3,7 +3,7 @@ import { css } from './utils';
 // remove AD
 const style = document.createElement('style');
 style.innerHTML = css`
-  .NavBar__download-item,
+  .NavBarFooter, /* download link and cover picture */
   [role='banner'],
   [role='main'] ~ div {
     display: none;

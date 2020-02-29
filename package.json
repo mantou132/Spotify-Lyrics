@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "lint": "tsc --noEmit && eslint --ext .ts --fix src/",
-    "start": "web-ext --config web-ext.config.js run -t chromium --start-url open.spotify.com",
+    "start": "web-ext --config web-ext.config.js run --start-url open.spotify.com",
+    "start:chromium": "npm run start -- -t chromium",
     "build": "webpack --mode=development",
     "build:xpi": "npm run build && web-ext --config web-ext.config.js sign",
     "build:zip": "npm run build && web-ext --config web-ext.config.js build",
@@ -33,7 +34,7 @@
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.2",
     "url-loader": "^2.2.0",
-    "web-ext": "^4.0.0",
+    "web-ext": "^4.1.0",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10"
   },

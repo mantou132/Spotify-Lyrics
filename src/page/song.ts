@@ -31,7 +31,7 @@ export default function songObserver(callback: (query: Query) => any) {
   };
   checkElement();
 
-  // allow `document.body` rerender
+  // allow `document.documentElement` rerender
   const observer = new MutationObserver(checkElement);
-  observer.observe(document.body, { childList: true, subtree: true });
+  observer.observe(document.documentElement, { childList: true, subtree: true });
 }

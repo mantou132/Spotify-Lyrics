@@ -29,9 +29,13 @@ const getApiHost = () => fetch('https://xianqiao.wang/netease-cloud-music-api-ho
 
 const getSimplified = (s: string) => {
   // Firefox issue: not support Unicode property escapes
-  if (/\p{sc=Han}/gu.test(s)) {
-    return sify(s);
-  } else {
+  try {
+    if (new RegExp('\\p{sc=Han}', 'gu').test(s)) {
+      return sify(s);
+    } else {
+      return '';
+    }
+  } catch {
     return '';
   }
 };

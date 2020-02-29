@@ -1,6 +1,6 @@
 ## Spotify Lyrics
 
-Install Extension: [Chrome](https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod) | Firefox(Coming Soon)
+Install Extension: [Chrome](https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod) | [Firefox](https://addons.mozilla.org/en-US/firefox/addon/spotify-lyrics/)
 
 When you open the PiP(album cover) window, the lyrics are automatically displayed in it.
 
@@ -23,17 +23,24 @@ If you have any questions, please submit an [issue](https://github.com/mantou132
 
 ## Recommend
 
-* [Install PWA](https://support.google.com/chrome/answer/9658361)
-* Use Spotify [Theme](https://userstyles.org/styles/168705/spotify)
+* [Install as PWA](https://support.google.com/chrome/answer/9658361)(only Chrome)
 
 ## Development
 
+Requirement: [Node.js](https://nodejs.org)
+
 ```bash
-# step 1
+# install dependencies
+npm install
+# Compile Typescript to JavaScript
 npm run watch
-# open a new terminal
-# step 2
+# Enter the development mode by executing the following command in a new terminal
 npm run start
+```
+
+Build:
+```bash
+npm run build:zip
 ```
 
 ## TODO

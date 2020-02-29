@@ -3,6 +3,7 @@ import songObserver from './song';
 import { video, audio } from './element';
 import { lyric, updateLyric, Lyric } from './lyrics';
 
+import './pip';
 import './misc';
 
 songObserver(updateLyric);
@@ -11,11 +12,11 @@ declare global {
   interface HTMLCanvasElement {
     captureStream: (frameRate?: number) => MediaStream;
   }
-  interface CanvasCaptureMediaStreamTrack extends MediaStreamTrack {
+  interface CanvasCaptureMediaStream extends MediaStream {
     canvas: HTMLCanvasElement;
   }
-  interface Document {
-    pictureInPictureElement: HTMLVideoElement | null;
+  interface CanvasCaptureMediaStreamTrack extends MediaStreamTrack {
+    canvas: HTMLCanvasElement;
   }
 }
 
@@ -43,6 +44,10 @@ if (ctx) {
       // song change
       // change coverTrack
       const coverTrack = video.srcObject.getVideoTracks()[0] as CanvasCaptureMediaStreamTrack;
+      if (!coverTrack.canvas) {
+        // Firefox Issue: https://bugzilla.mozilla.org/show_bug.cgi?id=1231131
+        coverTrack.canvas = (video.srcObject as CanvasCaptureMediaStream).canvas;
+      }
       const stream = new MediaStream([lyricTrack]);
       video.srcObject = stream;
       weakMap.set(video.srcObject, coverTrack);
