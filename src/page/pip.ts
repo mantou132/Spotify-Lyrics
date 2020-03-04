@@ -27,7 +27,7 @@ if (!document.pictureInPictureEnabled) {
   HTMLVideoElement.prototype.requestPictureInPicture = function() {
     const container = document.querySelector(PIP_CONTAINER);
     if (container) {
-      this.setAttribute('style', 'width: 100%;');
+      this.setAttribute('style', 'width: 100%; position: relative;');
       container.append(this);
       document.pictureInPictureElement = this;
       return Promise.resolve();

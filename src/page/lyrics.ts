@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import sify from 'chinese-conv/tongwen/tongwen-ts';
 
+import config from '../config';
+
 import { Query } from './song';
 
 interface Artist {
@@ -23,9 +25,6 @@ interface SongResult {
     lyric?: string;
   };
 }
-
-// https://github.com/Binaryify/NeteaseCloudMusicApi
-const getApiHost = () => fetch('https://xianqiao.wang/netease-cloud-music-api-host').then(res => res.text());
 
 const getSimplified = (s: string) => {
   // Firefox issue: not support Unicode property escapes
@@ -60,9 +59,9 @@ async function fetchLyric(query: Query) {
   const simplifiedName = getSimplified(name);
   const simplifiedArtists = getSimplified(artists);
   try {
-    const apiHost = await getApiHost();
+    const { API_HOST } = await config;
     const searchQuery = new URLSearchParams({ type: '1 ', keywords: `${artists} ${name}`, limit: '100' });
-    const { result }: SearchResult = await (await fetch(`${apiHost}/search?${searchQuery}`)).json();
+    const { result }: SearchResult = await (await fetch(`${API_HOST}/search?${searchQuery}`)).json();
     const songs = result?.songs || [];
     // TODO: Support pinyin matching
     let songId = 0;
@@ -118,7 +117,7 @@ async function fetchLyric(query: Query) {
       return '';
     }
     const { lrc }: SongResult = await (
-      await fetch(`${apiHost}/lyric?${new URLSearchParams({ id: String(songId) })}`)
+      await fetch(`${API_HOST}/lyric?${new URLSearchParams({ id: String(songId) })}`)
     ).json();
     return lrc?.lyric || '';
   } catch {

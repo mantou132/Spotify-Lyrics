@@ -1,0 +1,6 @@
+{
+  "API_HOST": "https://music.linkorg.club",
+  "TRACK_INFO_SELECTOR": "[role=contentinfo]",
+  "TRACK_NAME_SELECTOR": "[role=contentinfo] > div:nth-child(2) > div:nth-child(1)",
+  "TRACK_ARTIST_SELECTOR": "[role=contentinfo] > div:nth-child(2) > div:nth-child(2)"
+}

@@ -1,36 +1,36 @@
-const TRACK_INFO_SELECTOR = '[role="contentinfo"]';
-const TRACK_NAME_SELECTOR = 'div:nth-child(2) > div:nth-child(1)';
-const TRACK_ARTIST_SELECTOR = 'div:nth-child(2) > div:nth-child(2)';
+import config from '../config';
 
 export interface Query {
   name: string;
   artists: string;
 }
 
-function getQueryObj(element: Element): Query {
-  const name = element.querySelector(TRACK_NAME_SELECTOR)?.textContent;
-  const artists = element.querySelector(TRACK_ARTIST_SELECTOR)?.textContent;
-  return { name: name || '', artists: artists || '' };
-}
-
 const weakMap = new WeakMap<Element, MutationObserver>();
 
-export default function songObserver(callback: (query: Query) => any) {
+export default async function songObserver(callback: (query: Query) => any) {
+  const { TRACK_INFO_SELECTOR, TRACK_NAME_SELECTOR, TRACK_ARTIST_SELECTOR } = await config;
+
+  const getQueryObj = (): Query => {
+    const name = document.querySelector(TRACK_NAME_SELECTOR)?.textContent;
+    const artists = document.querySelector(TRACK_ARTIST_SELECTOR)?.textContent;
+    return { name: name || '', artists: artists || '' };
+  };
+
   const checkElement = () => {
     const element = document.querySelector(TRACK_INFO_SELECTOR);
 
     if (element && !weakMap.has(element)) {
       // init observer
-      callback(getQueryObj(element));
+      callback(getQueryObj());
       const observer = new MutationObserver(() => {
-        callback(getQueryObj(element));
+        callback(getQueryObj());
       });
       observer.observe(element, { childList: true, characterData: true, subtree: true, attributes: true });
       weakMap.set(element, observer);
     }
   };
-  checkElement();
 
+  checkElement();
   // allow `document.documentElement` rerender
   const observer = new MutationObserver(checkElement);
   observer.observe(document.documentElement, { childList: true, subtree: true });

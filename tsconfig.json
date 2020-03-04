@@ -7,6 +7,7 @@
     "sourceMap": true,
     "module": "esnext",
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "target": "es5",
     "lib": ["es2020", "dom", "DOM.Iterable"],
