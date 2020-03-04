@@ -1,6 +1,6 @@
-const TRACK_INFO_SELECTOR = '.track-info';
-const TRACK_NAME_SELECTOR = '.track-info__name';
-const TRACK_ARTIST_SELECTOR = '.track-info__artists';
+const TRACK_INFO_SELECTOR = '[role="contentinfo"]';
+const TRACK_NAME_SELECTOR = 'div:nth-child(2) > div:nth-child(1)';
+const TRACK_ARTIST_SELECTOR = 'div:nth-child(2) > div:nth-child(2)';
 
 export interface Query {
   name: string;

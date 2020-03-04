@@ -1,10 +1,12 @@
 import { css } from './utils';
 
-// remove AD
 const style = document.createElement('style');
 style.textContent = css`
-  .NavBarFooter, /* download link and cover picture */
+  /* download link */
+  .NavBar__download-item,
+  /* icon */
   [role='banner'],
+  /* ad */
   [role='main'] ~ div {
     display: none;
   }

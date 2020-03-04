@@ -16,6 +16,14 @@ interface Document {
 if (!document.pictureInPictureEnabled) {
   document.pictureInPictureEnabled = true;
 
+  const style = document.createElement('style');
+  style.textContent = `
+    [role='contentinfo'] > div:nth-child(1) > button {
+      display: none;
+    }
+  `;
+  document.head.append(style);
+
   HTMLVideoElement.prototype.requestPictureInPicture = function() {
     const container = document.querySelector(PIP_CONTAINER);
     if (container) {
