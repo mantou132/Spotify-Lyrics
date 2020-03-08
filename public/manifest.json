@@ -6,6 +6,13 @@
   "web_accessible_resources": [
     "page.js"
   ],
+  "permissions": [
+    "activeTab",
+    "tabs"
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
   "content_scripts": [
     {
       "matches": ["*://open.spotify.com/*"],
@@ -13,8 +20,9 @@
       "run_at": "document_start"
     }
   ],
-  "browser_action": {
-    "default_popup": "popup.html"
+  "page_action": {
+    "default_popup": "popup.html",
+    "default_icon": "icons/48.png"
   },
   "icons": {
     "48": "icons/48.png",

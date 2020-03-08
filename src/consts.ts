@@ -6,4 +6,5 @@ export interface Message<T = any> {
 export enum Event {
   GET_SONGS = 'get-songs',
   SEND_SONGS = 'send-songs',
+  SELECT_SONG = 'select-song',
 }

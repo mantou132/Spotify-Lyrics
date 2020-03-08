@@ -1,7 +1,10 @@
+import { Event } from '../consts';
+
 import generateSVG from './svg';
-import songObserver from './song';
+import songObserver, { Query } from './song';
+import { setSongId } from './store';
 import { video, audio } from './element';
-import { lyric, updateLyric, Lyric } from './lyrics';
+import { lyric, updateLyric, Lyric, sendMatchedData } from './lyrics';
 
 import './pip';
 import './misc';
@@ -86,3 +89,21 @@ if (ctx) {
 } else {
   throw new Error('lyric canvas context fail');
 }
+
+window.addEventListener('message', async ({ data }: MessageEvent) => {
+  if (data?.type === Event.GET_SONGS) {
+    sendMatchedData();
+  }
+  if (data?.type === Event.SELECT_SONG && video && video.srcObject) {
+    const info = data.data as Query & { id: number };
+    const { id, name, artists } = info;
+    await setSongId(info);
+    const coverTrack = weakMap.get(video.srcObject as CanvasCaptureMediaStream);
+    lyricWeakMap.delete(coverTrack as CanvasCaptureMediaStreamTrack);
+    if (id) {
+      updateLyric(id as number);
+    } else {
+      updateLyric({ name, artists });
+    }
+  }
+});

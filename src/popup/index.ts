@@ -16,7 +16,7 @@ render(
         font-family: sans-serif;
       }
     </style>
-    <song-list>No lyrics currently available</song-list>
+    <song-list>No songs currently available</song-list>
   `,
   document.body,
 );

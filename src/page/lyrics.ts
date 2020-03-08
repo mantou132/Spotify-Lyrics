@@ -5,6 +5,7 @@ import config from '../config';
 import { Message, Event } from '../consts';
 
 import { Query } from './song';
+import { getSongId } from './store';
 
 export interface Artist {
   name: string;
@@ -24,6 +25,8 @@ interface SearchResult {
 export interface SharedData {
   list: Song[];
   id: number;
+  name: string;
+  artists: string;
 }
 
 interface SongResult {
@@ -60,23 +63,24 @@ const getHalfSizeText = (s: string) => {
     .replace(/‘|’/g, "'");
 };
 
-const sharedData: SharedData = { list: [], id: 0 };
-function sendShareDate() {
+const sharedData: SharedData = { list: [], id: 0, name: '', artists: '' };
+export function sendMatchedData(data?: Partial<SharedData>) {
+  if (data) Object.assign(sharedData, data);
   const msg: Message = { type: Event.SEND_SONGS, data: sharedData };
   window.postMessage(msg, '*');
 }
 
-async function fetchLyric(query: Query) {
-  const { name, artists } = query;
+async function searchSong(query: Query) {
+  const { name = '', artists = '' } = query;
   const simplifiedName = getSimplified(name);
   const simplifiedArtists = getSimplified(artists);
+  const { API_HOST } = await config;
+  const searchQuery = new URLSearchParams({ type: '1 ', keywords: `${artists} ${name}`, limit: '100' });
+  let songId = 0;
+  let songs: Song[] = [];
   try {
-    const { API_HOST } = await config;
-    const searchQuery = new URLSearchParams({ type: '1 ', keywords: `${artists} ${name}`, limit: '100' });
     const { result }: SearchResult = await (await fetch(`${API_HOST}/search?${searchQuery}`)).json();
-    const songs = result?.songs || [];
-    // TODO: Support pinyin matching
-    let songId = 0;
+    songs = result?.songs || [];
     let rank = 0; // Maximum score
     songs.forEach(song => {
       let currentRank = 0;
@@ -124,13 +128,21 @@ async function fetchLyric(query: Query) {
         rank = currentRank;
       }
     });
-    sharedData.list = songs;
-    sharedData.id = songId;
-    sendShareDate();
+    const saveId = await getSongId(query);
+    if (saveId) songId = saveId;
     if (!songId) {
       console.log('Not matched:', { query, songs, rank });
-      return '';
     }
+  } finally {
+    sendMatchedData({ list: songs, id: songId, name, artists });
+    return songId;
+  }
+}
+
+async function fetchLyric(songId: number) {
+  const { API_HOST } = await config;
+  if (!songId) return '';
+  try {
     const { lrc }: SongResult = await (
       await fetch(`${API_HOST}/lyric?${new URLSearchParams({ id: String(songId) })}`)
     ).json();
@@ -140,12 +152,6 @@ async function fetchLyric(query: Query) {
   }
 }
 
-window.addEventListener('message', ({ data }: MessageEvent) => {
-  if (data?.type === Event.GET_SONGS) {
-    sendShareDate();
-  }
-});
-
 class Line {
   startTime: number | null = null;
   text = '';
@@ -154,9 +160,17 @@ class Line {
 export type Lyric = Line[];
 
 export let lyric: Lyric = [];
-export async function updateLyric(query: Query) {
+export async function updateLyric(query: Query | number) {
   lyric = [];
-  const lyricStr = await fetchLyric(query);
+  let songId = 0;
+  if (typeof query === 'number') {
+    songId = query;
+    sendMatchedData({ id: songId });
+  } else {
+    songId = await searchSong(query);
+  }
+  if (!songId) return;
+  const lyricStr = await fetchLyric(songId);
   if (!lyricStr) return;
   const lines = lyricStr.split('\n').map(line => line.trim());
   lyric = lines
@@ -178,7 +192,7 @@ export async function updateLyric(query: Query) {
         const [min, sec] = [parseFloat(key), parseFloat(value)];
         if (!isNaN(min)) {
           result.startTime = min * 60 + sec;
-          result.text = text;
+          result.text = text?.trim();
         } else {
           result.text = `${key?.toUpperCase()}: ${value}`;
         }

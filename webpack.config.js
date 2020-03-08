@@ -12,6 +12,7 @@ module.exports = {
     content: './src/content',
     page: './src/page',
     popup: './src/popup',
+    background: './src/background',
   },
   module: {
     rules: [

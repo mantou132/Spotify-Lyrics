@@ -6,9 +6,25 @@ import { Event, Message } from '../consts';
 import { SharedData } from '../page/lyrics';
 
 export const store = createStore<SharedData>({
+  name: '',
+  artists: '',
   list: [],
   id: 0,
 });
+
+export function sendMessage(msg: Message) {
+  browser.tabs.query({ active: true, currentWindow: true }).then(([tab]) => {
+    if (tab?.id) browser.tabs.sendMessage(tab.id, msg);
+  });
+}
+
+export function changeSong(id: number) {
+  const data: Message = {
+    type: Event.SELECT_SONG,
+    data: { id, name: store.name, artists: store.artists },
+  };
+  sendMessage(data);
+}
 
 browser.runtime.onMessage.addListener((msg: Message) => {
   if (msg?.type === Event.SEND_SONGS) {
@@ -16,5 +32,4 @@ browser.runtime.onMessage.addListener((msg: Message) => {
   }
 });
 
-const getLyricsMsg: Message = { type: Event.GET_SONGS };
-browser.runtime.sendMessage(getLyricsMsg);
+sendMessage({ type: Event.GET_SONGS });

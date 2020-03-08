@@ -15,8 +15,5 @@ window.addEventListener('message', ({ data }) => {
 });
 
 browser.runtime.onMessage.addListener((msg: Message) => {
-  const { type } = msg;
-  if (type === Event.GET_SONGS) {
-    window.postMessage(msg, '*');
-  }
+  window.postMessage(msg, '*');
 });
