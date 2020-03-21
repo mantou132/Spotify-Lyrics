@@ -9,21 +9,21 @@ render(
         --background-rgb: 18, 18, 18;
         --text-rgb: 255, 255, 255;
       }
-      :root {
-        overflow: auto;
-      }
-      body,
-      app-root {
+      body {
         box-sizing: border-box;
+        border: 1px solid rgba(var(--text-rgb), 0.1);
         width: 20rem;
         height: 30rem;
         margin: 0;
-        overflow: auto;
+        overflow: hidden;
         font-family: spotify-circular, Helvetica Neue, Helvetica, Arial, Hiragino Kaku Gothic Pro, Meiryo, MS Gothic,
           sans-serif;
         font-size: 16px;
         background: rgb(var(--background-rgb));
         color: rgb(var(--text-rgb));
+      }
+      app-root {
+        height: 100%;
       }
       @font-face {
         font-family: spotify-circular;
