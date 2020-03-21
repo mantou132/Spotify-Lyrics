@@ -25,7 +25,7 @@ export default async function songObserver(callback: (query: Query) => any) {
       const observer = new MutationObserver(() => {
         callback(getQueryObj());
       });
-      observer.observe(element, { childList: true, characterData: true, subtree: true, attributes: true });
+      observer.observe(element, { childList: true, characterData: true, subtree: true });
       weakMap.set(element, observer);
     }
   };
