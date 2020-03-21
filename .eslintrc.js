@@ -15,6 +15,8 @@ module.exports = {
   rules: {
     // https://github.com/benmosher/eslint-plugin-import/blob/HEAD/docs/rules/order.md
     'import/order': ['error', { 'newlines-between': 'always-and-inside-groups' }],
+    'import/namespace': 0,
+    'import/named': 0,
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/explicit-member-accessibility': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',

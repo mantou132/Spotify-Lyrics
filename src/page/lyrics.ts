@@ -10,10 +10,14 @@ import { getSongId } from './store';
 export interface Artist {
   name: string;
 }
+export interface Album {
+  name: string;
+}
 export interface Song {
   id: number;
   name: string;
   artists: Artist[];
+  album: Album;
 }
 
 interface SearchResult {
@@ -23,10 +27,14 @@ interface SearchResult {
 }
 
 export interface SharedData {
-  list: Song[];
-  id: number;
+  // current track name
   name: string;
+  // current track artists
   artists: string;
+  // track list
+  list: Song[];
+  // selected track
+  id: number;
 }
 
 interface SongResult {

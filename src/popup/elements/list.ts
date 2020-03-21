@@ -4,41 +4,22 @@ import './item';
 import { store, changeSong } from '../store';
 
 @connectStore(store)
-@customElement('song-list')
+@customElement('app-track-list')
 export class SongList extends GemElement {
   render() {
     if (store.list.length === 0) {
-      return html`
-        <slot></slot>
-      `;
+      return null;
     }
     return html`
       <style>
-        :host {
-          width: 100%;
-          height: 100%;
-          overflow: auto;
-        }
-        div {
-          font-style: italic;
-        }
-        song-item,
-        div {
-          padding: 0.2em 0.5em;
-          border-bottom: 1px solid #ccc;
-        }
-        song-item:hover {
-          background: #eee;
+        app-track-item:hover {
+          background: rgba(var(--text-rgb), 0.1);
         }
       </style>
-      <div>
-        If your lyrics are not displayed or wrong, you can manually select the correct track to reload the lyrics
-      </div>
-      <div><button @click=${() => changeSong(0)}>Auto select</button></div>
       ${store.list.map(
         song =>
           html`
-            <song-item @click=${() => changeSong(song.id)} .song=${song}></song-item>
+            <app-track-item @click=${() => changeSong(song.id)} .song=${song}></app-track-item>
           `,
       )}
     `;

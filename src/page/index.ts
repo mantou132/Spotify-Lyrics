@@ -103,6 +103,7 @@ window.addEventListener('message', async ({ data }: MessageEvent) => {
     if (id) {
       updateLyric(id as number);
     } else {
+      // auto select
       updateLyric({ name, artists });
     }
   }
