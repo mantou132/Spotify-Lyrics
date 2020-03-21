@@ -1,4 +1,6 @@
-## Spotify Lyrics
+[![Build Status](https://travis-ci.org/mantou132/Spotify-Lyrics.svg?branch=master)](https://travis-ci.org/mantou132/Spotify-Lyrics)
+
+# Spotify Lyrics
 
 Install Extension: [Chrome](https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod) | [Firefox](https://addons.mozilla.org/en-US/firefox/addon/spotify-lyrics/)
 
