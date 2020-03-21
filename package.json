@@ -14,30 +14,30 @@
   "author": "mantou132",
   "license": "ISC",
   "dependencies": {
-    "@mantou/gem": "^0.3.6",
+    "@mantou/gem": "^0.4.1",
     "chinese-conv": "^1.0.1",
     "webextension-polyfill-ts": "^0.9.1"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^2.14.0",
-    "@typescript-eslint/parser": "^2.14.0",
-    "babel-eslint": "^10.0.3",
+    "@typescript-eslint/eslint-plugin": "^2.24.0",
+    "@typescript-eslint/parser": "^2.24.0",
+    "babel-eslint": "^10.1.0",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.1.1",
-    "eslint": "^6.6.0",
-    "eslint-config-prettier": "^6.5.0",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-prettier": "^3.1.1",
-    "file-loader": "^4.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "file-loader": "^4.3.0",
     "husky": "^2.7.0",
     "lint-staged": "^8.2.1",
-    "prettier": "^1.19.0",
+    "prettier": "^1.19.1",
     "ts-loader": "^6.2.1",
     "typescript": "^3.7.5",
-    "url-loader": "^2.2.0",
+    "url-loader": "^2.3.0",
     "web-ext": "^4.1.0",
-    "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10"
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11"
   },
   "husky": {
     "hooks": {
