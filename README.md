@@ -34,9 +34,7 @@ Requirement: [Node.js](https://nodejs.org)
 ```bash
 # install dependencies
 npm install
-# Compile Typescript to JavaScript
-npm run watch
-# Enter the development mode by executing the following command in a new terminal
+# start develop
 npm run start
 ```
 

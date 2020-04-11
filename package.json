@@ -1,15 +1,16 @@
 {
   "name": "spotify-lyrics",
-  "version": "0.0.2",
+  "version": "0.0.18",
   "description": "",
   "scripts": {
     "lint": "tsc --noEmit && eslint --ext .ts --fix src/",
-    "start": "web-ext --config web-ext.config.js run --start-url open.spotify.com",
-    "start:chromium": "npm run start -- -t chromium",
+    "serve": "web-ext --config web-ext.config.js run --start-url open.spotify.com",
+    "serve:chromium": "npm run serve -- -t chromium",
+    "watch": "npm run build -- --watch",
+    "start": "concurrently npm:watch npm:serve:chromium",
     "build": "webpack --mode=development",
     "build:xpi": "npm run build && web-ext --config web-ext.config.js sign",
-    "build:zip": "npm run build && web-ext --config web-ext.config.js build",
-    "watch": "npm run build -- --watch"
+    "build:zip": "npm run build && web-ext --config web-ext.config.js build"
   },
   "author": "mantou132",
   "license": "ISC",
@@ -23,6 +24,7 @@
     "@typescript-eslint/parser": "^2.24.0",
     "babel-eslint": "^10.1.0",
     "clean-webpack-plugin": "^3.0.0",
+    "concurrently": "^5.1.0",
     "copy-webpack-plugin": "^5.1.1",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.0",
