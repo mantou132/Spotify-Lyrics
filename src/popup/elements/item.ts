@@ -24,7 +24,7 @@ export class SongItem extends GemElement {
           color: rgba(var(--text-rgb), 1);
         }
         .track-info {
-          line-height: 1.2;
+          line-height: 1.375;
           flex-grow: 1;
           display: flex;
           flex-direction: column;

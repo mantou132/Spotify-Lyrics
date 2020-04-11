@@ -33,7 +33,10 @@ export class SongList extends GemElement {
         .main {
           overflow: auto;
           flex-grow: 1;
-          scrollbar-width: thin;
+          scrollbar-width: none;
+        }
+        .main::-webkit-scrollbar {
+          display: none;
         }
         .notice {
           padding: 0.75rem 0;
@@ -51,18 +54,22 @@ export class SongList extends GemElement {
           border-top: 1px solid rgba(var(--text-rgb), 0.1);
         }
         .footer button {
-          background: rgba(var(--text-rgb), 0.1);
+          background: rgba(var(--primary-rgb), 0.9);
+          color: rgba(var(--text-rgb), 1);
+          transition: all 33ms cubic-bezier(0.3, 0, 0, 1);
           padding: 0.75rem 2rem;
           line-height: 1;
+          border-radius: 5rem;
           border: none;
           font-family: inherit;
           color: rgba(var(--text-rgb), 1);
+          text-transform: uppercase;
         }
-        .footer button:hover {
-          background: rgba(var(--text-rgb), 0.2);
-        }
+        .footer button:hover,
         .footer button:focus {
+          background: rgba(var(--primary-rgb), 1);
           outline: none;
+          transform: scale(1.06);
         }
       </style>
       <div class="main">

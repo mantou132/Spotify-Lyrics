@@ -6,6 +6,7 @@ render(
   html`
     <style>
       :root {
+        --primary-rgb: 30, 215, 96;
         --background-rgb: 18, 18, 18;
         --text-rgb: 255, 255, 255;
       }
