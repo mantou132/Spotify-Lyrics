@@ -3,6 +3,8 @@ const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
+const isProd = process.env.ENV === 'production';
+
 /**
  * @type {import('webpack/declarations/WebpackOptions').WebpackOptions}
  */
@@ -38,5 +40,5 @@ module.exports = {
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
     new CopyWebpackPlugin([{ from: './public', to: './' }]),
   ],
-  devtool: 'source-map',
+  devtool: isProd ? false : 'source-map',
 };
