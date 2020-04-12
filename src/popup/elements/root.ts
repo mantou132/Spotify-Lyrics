@@ -2,10 +2,15 @@ import { html, customElement, connectStore, GemElement } from '@mantou/gem';
 
 import './list';
 import { store, changeSong } from '../store';
+import { events, sendEvent } from '../../common/ga';
 
 @connectStore(store)
 @customElement('app-root')
 export class SongList extends GemElement {
+  autoSelect = () => {
+    sendEvent(events.autoSelectTrack);
+    changeSong(0);
+  };
   render() {
     if (store.list.length === 0) {
       return html`
@@ -54,22 +59,30 @@ export class SongList extends GemElement {
           border-top: 1px solid rgba(var(--text-rgb), 0.1);
         }
         .footer button {
+          cursor: pointer;
           background: rgba(var(--primary-rgb), 0.9);
           color: rgba(var(--text-rgb), 1);
           transition: all 33ms cubic-bezier(0.3, 0, 0, 1);
-          padding: 0.75rem 2rem;
+          padding: 0.8rem 2rem;
           line-height: 1;
           border-radius: 5rem;
           border: none;
           font-family: inherit;
           color: rgba(var(--text-rgb), 1);
           text-transform: uppercase;
+          font-size: 0.75rem;
+          font-weight: 700;
+          letter-spacing: 0.11rem;
         }
-        .footer button:hover,
-        .footer button:focus {
+        .footer button:hover {
           background: rgba(var(--primary-rgb), 1);
-          outline: none;
           transform: scale(1.06);
+        }
+        .footer button:active {
+          transform: scale(1);
+        }
+        .footer button:focus {
+          outline: none;
         }
       </style>
       <div class="main">
@@ -78,7 +91,7 @@ export class SongList extends GemElement {
         </div>
         <app-track-list class="list"></app-track-list>
       </div>
-      <div class="footer"><button @click=${() => changeSong(0)}>Auto select</button></div>
+      <div class="footer"><button @click=${this.autoSelect}>Auto select</button></div>
     `;
   }
 }

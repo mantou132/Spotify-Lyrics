@@ -1,4 +1,4 @@
-import { Event } from '../consts';
+import { Event } from '../common/consts';
 
 import generateSVG from './svg';
 import songObserver, { Query } from './song';

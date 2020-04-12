@@ -1,7 +1,7 @@
 import { browser } from 'webextension-polyfill-ts';
 import { createStore, updateStore } from '@mantou/gem';
 
-import { Event, Message } from '../consts';
+import { Event, Message } from '../common/consts';
 
 import { SharedData } from '../page/lyrics';
 

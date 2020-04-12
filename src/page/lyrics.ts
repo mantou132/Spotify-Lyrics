@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import sify from 'chinese-conv/tongwen/tongwen-ts';
 
-import config from '../config';
-import { Message, Event } from '../consts';
+import config from '../common/config';
+import { Message, Event } from '../common/consts';
+import { events, sendEvent } from '../common/ga';
 
 import { Query } from './song';
 import { getSongId } from './store';
@@ -79,6 +80,7 @@ export function sendMatchedData(data?: Partial<SharedData>) {
 }
 
 async function searchSong(query: Query) {
+  sendEvent(events.searchLyrics);
   const { name = '', artists = '' } = query;
   const simplifiedName = getSimplified(name);
   const simplifiedArtists = getSimplified(artists);
@@ -140,6 +142,7 @@ async function searchSong(query: Query) {
     if (saveId) songId = saveId;
     if (!songId) {
       console.log('Not matched:', { query, songs, rank });
+      sendEvent(events.notMatch, { el: 'TrackInfo', ev: `${artists} ${name}` });
     }
   } finally {
     sendMatchedData({ list: songs, id: songId, name, artists });
