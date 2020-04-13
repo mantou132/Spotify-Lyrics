@@ -10,9 +10,9 @@ class Config {
 
 async function getConfig() {
   try {
-    return (await fetch('https://raw.githubusercontent.com/mantou132/Spotify-Lyrics/master/src/config.json').then(res =>
-      res.json(),
-    )) as Config;
+    return (await fetch(
+      'https://raw.githubusercontent.com/mantou132/Spotify-Lyrics/master/src/common/config.json',
+    ).then(res => res.json())) as Config;
   } catch {
     return new Config();
   }
