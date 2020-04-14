@@ -1,9 +1,10 @@
 const path = require('path');
 
+const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-const isProd = process.env.ENV === 'production';
+const isProd = process.env.NODE_ENV === 'production';
 
 /**
  * @type {import('webpack/declarations/WebpackOptions').WebpackOptions}
@@ -39,6 +40,9 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
     new CopyWebpackPlugin([{ from: './public', to: './' }]),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    }),
   ],
   devtool: isProd ? false : 'source-map',
 };

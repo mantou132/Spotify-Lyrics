@@ -8,7 +8,7 @@
     "serve:chromium": "npm run serve -- -t chromium",
     "watch": "webpack --watch",
     "start": "concurrently npm:watch npm:serve:chromium",
-    "build": "cross-env ENV=production webpack",
+    "build": "cross-env NODE_ENV=production webpack",
     "build:xpi": "npm run build && web-ext --config web-ext.config.js sign",
     "build:zip": "npm run build && web-ext --config web-ext.config.js build"
   },

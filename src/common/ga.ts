@@ -8,7 +8,7 @@ const postReq = (params: Record<string, string>) => {
 
 const gaRequiredPayload = {
   v: '1',
-  tid: process.env.ENV === 'production' ? 'UA-163443161-1' : 'UA-88601817-2',
+  tid: process.env.NODE_ENV === 'production' ? 'UA-163443161-1' : 'UA-88601817-2',
   cid: '555',
 };
 

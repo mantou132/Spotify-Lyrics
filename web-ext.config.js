@@ -6,7 +6,6 @@ try {
 console.log(api);
 module.exports = {
   sourceDir: 'extension',
-  ignoreFiles: ['*.map'],
   artifactsDir: 'build',
   verbose: true,
   sign: {
