@@ -16,6 +16,7 @@ export class SongList extends GemElement {
       return html`
         <style>
           :host {
+            box-sizing: border-box;
             display: flex;
             align-items: center;
             justify-content: center;
