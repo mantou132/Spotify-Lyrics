@@ -8,7 +8,7 @@ When you open the PiP(album cover) window, the lyrics are automatically displaye
 
 If you have any questions, please submit an [issue](https://github.com/mantou132/Spotify-Lyrics/issues).
 
-<img src="./screenshot/screenshot2.jpg">
+![screenshot](./screenshot/screenshot3.jpg)
 
 ## How It Work
 
