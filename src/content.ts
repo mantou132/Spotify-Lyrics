@@ -10,7 +10,9 @@ document.documentElement.append(script);
 
 window.addEventListener('message', ({ data }) => {
   if (data?.type === Event.SEND_SONGS) {
-    browser.runtime.sendMessage(data);
+    browser.runtime.sendMessage(data).catch(() => {
+      //
+    });
   }
 });
 
