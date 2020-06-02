@@ -7,7 +7,6 @@
     "page.js"
   ],
   "permissions": [
-    "activeTab",
     "tabs"
   ],
   "background": {
