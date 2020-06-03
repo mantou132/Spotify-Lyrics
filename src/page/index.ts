@@ -11,18 +11,6 @@ import './misc';
 
 songObserver(updateLyric);
 
-declare global {
-  interface HTMLCanvasElement {
-    captureStream: (frameRate?: number) => MediaStream;
-  }
-  interface CanvasCaptureMediaStream extends MediaStream {
-    canvas: HTMLCanvasElement;
-  }
-  interface CanvasCaptureMediaStreamTrack extends MediaStreamTrack {
-    canvas: HTMLCanvasElement;
-  }
-}
-
 const INTERVAL = 80;
 
 const weakMap = new WeakMap<MediaStream, CanvasCaptureMediaStreamTrack>();

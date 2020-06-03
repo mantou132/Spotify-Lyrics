@@ -26,6 +26,8 @@ export default async function songObserver(callback: (query: Query) => any) {
 
     if (element && !weakMap.has(element)) {
       const cover = document.querySelector(ALBUM_COVER_SELECTOR) as HTMLImageElement;
+      // https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
+      cover.crossOrigin = 'anonymous';
       const coverCanvas = document.createElement('canvas');
       coverCanvas.width = WIDTH;
       coverCanvas.height = HEIGHT;
@@ -37,6 +39,7 @@ export default async function songObserver(callback: (query: Query) => any) {
       const coverTrack = coverCanvas.captureStream().getVideoTracks()[0] as CanvasCaptureMediaStreamTrack;
       const stream = new MediaStream([coverTrack]);
       video.srcObject = stream;
+      (video.srcObject as CanvasCaptureMediaStream).canvas = coverCanvas;
       cover.addEventListener('load', () => {
         ctx.drawImage(cover, -blur * 2, -blur * 2, WIDTH + 4 * blur, HEIGHT + 4 * blur);
       });

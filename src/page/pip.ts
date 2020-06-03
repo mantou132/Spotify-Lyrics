@@ -1,21 +1,11 @@
 // https://w3c.github.io/picture-in-picture
 // https://bugzilla.mozilla.org/show_bug.cgi?id=pip
+import config from '../common/config';
 
-const PIP_CONTAINER = '.navBar';
-
-interface HTMLVideoElement {
-  requestPictureInPicture: () => Promise<unknown>;
-}
-
-interface Document {
-  pictureInPictureEnabled: boolean;
-  pictureInPictureElement: HTMLVideoElement | null;
-  exitPictureInPicture: () => Promise<void>;
-}
-
-if (!document.pictureInPictureEnabled) {
+if (document.pictureInPictureEnabled === undefined) {
   document.pictureInPictureEnabled = true;
 
+  // sync write
   const style = document.createElement('style');
   style.textContent = `
     [role='contentinfo'] > div:nth-child(1) > button {
@@ -24,21 +14,25 @@ if (!document.pictureInPictureEnabled) {
   `;
   document.head.append(style);
 
-  HTMLVideoElement.prototype.requestPictureInPicture = function() {
-    const container = document.querySelector(PIP_CONTAINER);
+  HTMLVideoElement.prototype.requestPictureInPicture = async function() {
+    const { LYRICS_CONTAINER_SELECTOR } = await config;
+    const container = document.querySelector(LYRICS_CONTAINER_SELECTOR);
     if (container) {
       this.setAttribute('style', 'width: 100%; position: relative;');
       container.append(this);
       document.pictureInPictureElement = this;
-      return Promise.resolve();
+      this.dispatchEvent(new CustomEvent('enterpictureinpicture'));
+      return;
     } else {
-      throw Promise.reject(new Error());
+      throw new Error();
     }
   };
 
-  document.exitPictureInPicture = function() {
-    document.pictureInPictureElement?.remove();
+  document.exitPictureInPicture = async function() {
+    const video = document.pictureInPictureElement;
+    video?.remove();
     document.pictureInPictureElement = null;
-    return Promise.resolve();
+    video?.dispatchEvent(new CustomEvent('leavepictureinpicture'));
+    return;
   };
 }

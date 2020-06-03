@@ -3,6 +3,7 @@ import config from './config.json';
 // fallback
 class Config {
   API_HOST = config.API_HOST;
+  LYRICS_CONTAINER_SELECTOR = config.LYRICS_CONTAINER_SELECTOR;
   ALBUM_COVER_SELECTOR = config.ALBUM_COVER_SELECTOR;
   TRACK_INFO_SELECTOR = config.TRACK_INFO_SELECTOR;
   TRACK_NAME_SELECTOR = config.TRACK_NAME_SELECTOR;
