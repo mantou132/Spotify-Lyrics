@@ -1,6 +1,6 @@
 {
   "name": "Spotify Lyrics",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "manifest_version": 2,
   "description": "Spotify Web Player lyrics plugin, lyric display in picture-in-picture window.",
   "web_accessible_resources": [
