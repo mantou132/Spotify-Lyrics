@@ -33,14 +33,12 @@ export default async function songObserver(callback: (query: Query) => any) {
       coverCanvas.height = HEIGHT;
       const ctx = coverCanvas.getContext('2d');
       if (!ctx) return;
-      ctx.imageSmoothingEnabled = false;
-      const blur = 10;
-      ctx.filter = `blur(${blur}px)`;
-      const coverTrack = coverCanvas.captureStream().getVideoTracks()[0] as CanvasCaptureMediaStreamTrack;
-      const stream = new MediaStream([coverTrack]);
+      const stream = coverCanvas.captureStream();
       video.srcObject = stream;
-      (video.srcObject as CanvasCaptureMediaStream).canvas = coverCanvas;
       cover.addEventListener('load', () => {
+        ctx.imageSmoothingEnabled = false;
+        const blur = 10;
+        ctx.filter = `blur(${blur}px)`;
         ctx.drawImage(cover, -blur * 2, -blur * 2, WIDTH + 4 * blur, HEIGHT + 4 * blur);
 
         // https://github.com/mantou132/Spotify-Lyrics/issues/26#issuecomment-638019333
