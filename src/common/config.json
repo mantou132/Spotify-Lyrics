@@ -1,6 +1,8 @@
 {
   "API_HOST": "https://music.linkorg.club",
   "TRACK_INFO_SELECTOR": "[role=contentinfo]",
+  "ALBUM_COVER_SELECTOR": "[role=contentinfo] > div:nth-child(1) img",
   "TRACK_NAME_SELECTOR": "[role=contentinfo] > div:nth-child(2) > div:nth-child(1)",
-  "TRACK_ARTIST_SELECTOR": "[role=contentinfo] > div:nth-child(2) > div:nth-child(2)"
+  "TRACK_ARTIST_SELECTOR": "[role=contentinfo] > div:nth-child(2) > div:nth-child(2)",
+  "BTN_WRAPPER_SELECTOR": "[role=contentinfo] > div:nth-child(3)"
 }

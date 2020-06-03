@@ -2,7 +2,7 @@
   "name": "Spotify Lyrics",
   "version": "0.0.20",
   "manifest_version": 2,
-  "description": "Spotify Web Player lyrics plugin, lyric display in PiP(album cover) window.",
+  "description": "Spotify Web Player lyrics plugin, lyric display in picture-in-picture window.",
   "web_accessible_resources": [
     "page.js"
   ],

@@ -4,18 +4,18 @@
 
 Install Extension: [Chrome](https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod) | [Firefox](https://addons.mozilla.org/en-US/firefox/addon/spotify-lyrics/)
 
-When you open the PiP(album cover) window, the lyrics are automatically displayed in it.
+Add lyrics button, when activated, the lyrics are displayed in the picture-in-picture window.
 
 If you have any questions, please submit an [issue](https://github.com/mantou132/Spotify-Lyrics/issues).
 
 ![screenshot](./screenshot/screenshot3.jpg)
 
-## How It Work
+## How To Work
 
-1. [Listen](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) for `.track_info` element.
+1. [Listen](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) for track info element.
 2. Search for songs and download lyrics using [`NeteaseCloudMusicApi`](https://github.com/Binaryify/NeteaseCloudMusicApi).
 3. Rendering lyrics to `<canvas>` using [SVG](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/foreignObject).
-4. [Capture](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/captureStream) video stream from `<canvas>` and merge onto original cover stream.
+4. [Capture](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/captureStream) video stream from `<canvas>` and merge cover stream.
 5. Update lyrics scroll position with a [loop](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout).
 
 ## Compatibility

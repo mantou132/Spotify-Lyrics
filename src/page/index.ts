@@ -1,7 +1,7 @@
 import { Event } from '../common/consts';
 
 import generateSVG from './svg';
-import songObserver, { Query } from './song';
+import songObserver, { Query, WIDTH, HEIGHT } from './observer';
 import { setSongId } from './store';
 import { video, audio } from './element';
 import { lyric, updateLyric, Lyric, sendMatchedData } from './lyrics';
@@ -23,8 +23,6 @@ declare global {
   }
 }
 
-const WIDTH = 640;
-const HEIGHT = 640;
 const INTERVAL = 80;
 
 const weakMap = new WeakMap<MediaStream, CanvasCaptureMediaStreamTrack>();

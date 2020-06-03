@@ -5,7 +5,7 @@ import config from '../common/config';
 import { Message, Event } from '../common/consts';
 import { events, sendEvent } from '../common/ga';
 
-import { Query } from './song';
+import { Query } from './observer';
 import { getSongId } from './store';
 
 export interface Artist {

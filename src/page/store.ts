@@ -1,4 +1,4 @@
-import { Query } from './song';
+import { Query } from './observer';
 
 const KEY = 'spotify.lyrics.extension';
 
