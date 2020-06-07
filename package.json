@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "@mantou/gem": "^0.4.1",
+    "@types/wicg-mediasession": "^1.0.4",
     "chinese-conv": "^1.0.1",
     "webextension-polyfill-ts": "^0.9.1"
   },

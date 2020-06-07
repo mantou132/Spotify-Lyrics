@@ -7,6 +7,19 @@ document.createElement = function<K extends keyof HTMLElementTagNameMap>(tagName
   if (tagName === 'video') {
     if (!audio) {
       audio = element as HTMLAudioElement;
+      if (navigator.mediaSession) {
+        const mediaSession = navigator.mediaSession;
+        audio.addEventListener('play', () => {
+          video.play().catch(() => {
+            //
+          });
+          mediaSession.playbackState = 'playing';
+        });
+        audio.addEventListener('pause', () => {
+          video.pause();
+          mediaSession.playbackState = 'paused';
+        });
+      }
     }
   }
   return element;
