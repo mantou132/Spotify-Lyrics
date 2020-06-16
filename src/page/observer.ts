@@ -1,7 +1,7 @@
 import config from '../common/config';
 
 import { video } from './element';
-import { insetLyricsBtn } from './btn';
+import { insetLyricsBtn, LYRICS_CLASSNAME } from './btn';
 
 export const WIDTH = 640;
 export const HEIGHT = 640;
@@ -13,7 +13,13 @@ export interface Query {
 const weakMap = new WeakMap<Element, MutationObserver>();
 
 export default async function songObserver(callback: (query: Query) => any) {
-  const { ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR, TRACK_NAME_SELECTOR, TRACK_ARTIST_SELECTOR } = await config;
+  const {
+    ALBUM_COVER_SELECTOR,
+    TRACK_INFO_SELECTOR,
+    TRACK_NAME_SELECTOR,
+    TRACK_ARTIST_SELECTOR,
+    BTN_WRAPPER_SELECTOR,
+  } = await config;
 
   const getQueryObj = (): Query => {
     const name = document.querySelector(TRACK_NAME_SELECTOR)?.textContent;
@@ -22,9 +28,10 @@ export default async function songObserver(callback: (query: Query) => any) {
   };
 
   const checkElement = () => {
-    const element = document.querySelector(TRACK_INFO_SELECTOR);
+    const infoElement = document.querySelector(TRACK_INFO_SELECTOR);
+    if (!infoElement) return;
 
-    if (element && !weakMap.has(element)) {
+    if (!weakMap.has(infoElement)) {
       const cover = document.querySelector(ALBUM_COVER_SELECTOR) as HTMLImageElement;
       // https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
       cover.crossOrigin = 'anonymous';
@@ -57,8 +64,12 @@ export default async function songObserver(callback: (query: Query) => any) {
       const observer = new MutationObserver(() => {
         callback(getQueryObj());
       });
-      observer.observe(element, { childList: true, characterData: true, subtree: true });
-      weakMap.set(element, observer);
+      observer.observe(infoElement, { childList: true, characterData: true, subtree: true });
+      weakMap.set(infoElement, observer);
+    } else if (infoElement.querySelector(BTN_WRAPPER_SELECTOR) && !infoElement.querySelector(`.${LYRICS_CLASSNAME}`)) {
+      // https://github.com/mantou132/Spotify-Lyrics/issues/30
+      insetLyricsBtn();
+      callback(getQueryObj());
     }
   };
 
