@@ -1,5 +1,5 @@
 {
-  "API_HOST": "https://music.linkorg.club",
+  "API_HOST": "https://music.xianqiao.wang/neteaseapi",
   "LYRICS_CONTAINER_SELECTOR": ".Root__nav-bar nav",
   "TRACK_INFO_SELECTOR": "[role=contentinfo]",
   "ALBUM_COVER_SELECTOR": "[role=contentinfo] > div:nth-child(1) img",
