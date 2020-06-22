@@ -42,22 +42,26 @@ export default async function songObserver(callback: (query: Query) => any) {
       if (!ctx) return;
       const stream = coverCanvas.captureStream();
       video.srcObject = stream;
+      // May load multiple times in a short time
+      // Need to remember the last cover image
+      let largeImage: HTMLImageElement;
       cover.addEventListener('load', () => {
         // https://github.com/mantou132/Spotify-Lyrics/issues/26#issuecomment-638019333
         const largeUrl = cover.src.replace('00004851', '0000b273');
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.addEventListener('load', () => {
+        largeImage = new Image();
+        largeImage.crossOrigin = 'anonymous';
+        largeImage.addEventListener('load', function() {
+          if (this !== largeImage) return;
           ctx.filter = `blur(0px)`;
-          ctx.drawImage(img, 0, 0, WIDTH, HEIGHT);
+          ctx.drawImage(largeImage, 0, 0, WIDTH, HEIGHT);
         });
-        img.addEventListener('error', () => {
+        largeImage.addEventListener('error', () => {
           ctx.imageSmoothingEnabled = false;
           const blur = 10;
           ctx.filter = `blur(${blur}px)`;
           ctx.drawImage(cover, -blur * 2, -blur * 2, WIDTH + 4 * blur, HEIGHT + 4 * blur);
         });
-        img.src = largeUrl;
+        largeImage.src = largeUrl;
       });
       insetLyricsBtn();
       // init observer
