@@ -72,6 +72,10 @@ const getHalfSizeText = (s: string) => {
     .replace(/‘|’/g, "'");
 };
 
+const removeSongFeat = (s: string) => {
+  return s.replace(/\(feat\..*\)$/i, '');
+};
+
 const sharedData: SharedData = { list: [], id: 0, name: '', artists: '' };
 export function sendMatchedData(data?: Partial<SharedData>) {
   if (data) Object.assign(sharedData, data);
@@ -85,7 +89,7 @@ async function searchSong(query: Query) {
   const simplifiedName = getSimplified(name);
   const simplifiedArtists = getSimplified(artists);
   const { API_HOST } = await config;
-  const searchQuery = new URLSearchParams({ type: '1 ', keywords: `${artists} ${name}`, limit: '100' });
+  const searchQuery = new URLSearchParams({ type: '1 ', keywords: `${artists} ${removeSongFeat(name)}`, limit: '100' });
   let songId = 0;
   let songs: Song[] = [];
   try {
