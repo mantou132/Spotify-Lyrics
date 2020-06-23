@@ -20,6 +20,8 @@ document.createElement = function<K extends keyof HTMLElementTagNameMap>(tagName
           mediaSession.playbackState = 'paused';
         });
       }
+    } else {
+      // ignore spotify pip video
     }
   }
   return element;

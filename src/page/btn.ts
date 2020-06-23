@@ -20,8 +20,9 @@ style.textContent = `
 document.head.append(style);
 
 export const insetLyricsBtn = async () => {
-  const { BTN_WRAPPER_SELECTOR } = await config;
+  const { BTN_WRAPPER_SELECTOR, PIP_BTN_SELECTOR } = await config;
   const btnWrapper = document.querySelector(BTN_WRAPPER_SELECTOR) as HTMLDivElement;
+  const pipBtn = document.querySelector(PIP_BTN_SELECTOR) as HTMLElement | null;
   const likeBtn = btnWrapper?.children?.[0];
   if (!btnWrapper || !likeBtn) return;
   if (btnWrapper.getElementsByClassName(LYRICS_CLASSNAME).length) return;
@@ -38,14 +39,11 @@ export const insetLyricsBtn = async () => {
   });
   lyricsBtn.addEventListener('click', () => {
     if (document.pictureInPictureElement) {
-      document.exitPictureInPicture().catch(() => {
-        //
-      });
+      document.exitPictureInPicture().catch(console.error);
     } else {
-      video.requestPictureInPicture().catch(() => {
-        //
-      });
+      video.requestPictureInPicture().catch(console.error);
     }
   });
   btnWrapper.append(lyricsBtn);
+  if (pipBtn) pipBtn.hidden = true;
 };
