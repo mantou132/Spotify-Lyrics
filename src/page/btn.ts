@@ -1,6 +1,6 @@
 import config from '../common/config';
 
-import { video } from './element';
+import { video, audio } from './element';
 
 export const LYRICS_CLASSNAME = 'spoticon-lyrics-16';
 const LYRICS_ACTIVE_CLASSNAME = 'active';
@@ -41,7 +41,13 @@ export const insetLyricsBtn = async () => {
     if (document.pictureInPictureElement) {
       document.exitPictureInPicture().catch(console.error);
     } else {
-      video.requestPictureInPicture().catch(console.error);
+      video
+        .requestPictureInPicture()
+        .then(() => {
+          // automatically pause when the video is removed from the DOM tree
+          if (!audio?.paused) video.play();
+        })
+        .catch(console.error);
     }
   });
   btnWrapper.append(lyricsBtn);
