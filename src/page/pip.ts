@@ -2,9 +2,8 @@
 // https://bugzilla.mozilla.org/show_bug.cgi?id=pip
 import config from '../common/config';
 
-if (document.pictureInPictureEnabled === undefined) {
-  document.pictureInPictureEnabled = true;
-
+// https://github.com/mantou132/Spotify-Lyrics/issues/31
+if (!document.pictureInPictureEnabled) {
   // sync write
   const style = document.createElement('style');
   style.textContent = `
@@ -13,6 +12,19 @@ if (document.pictureInPictureEnabled === undefined) {
     }
   `;
   document.head.append(style);
+
+  Object.defineProperties(document, {
+    pictureInPictureElement: {
+      configurable: true,
+      enumerable: true,
+      writable: true,
+    },
+    exitPictureInPicture: {
+      configurable: true,
+      enumerable: true,
+      writable: true,
+    },
+  });
 
   HTMLVideoElement.prototype.requestPictureInPicture = async function() {
     const { LYRICS_CONTAINER_SELECTOR } = await config;
