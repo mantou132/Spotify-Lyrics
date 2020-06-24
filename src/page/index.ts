@@ -1,15 +1,13 @@
 import { Event } from '../common/consts';
 
 import generateSVG from './svg';
-import songObserver, { Query, WIDTH, HEIGHT } from './observer';
+import { Query, WIDTH, HEIGHT } from './observer';
 import { setSongId } from './store';
 import { video, audio } from './element';
 import { lyric, updateLyric, Lyric, sendMatchedData } from './lyrics';
 
 import './pip';
 import './misc';
-
-songObserver(updateLyric);
 
 const INTERVAL = 80;
 

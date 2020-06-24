@@ -1,7 +1,7 @@
-import { css } from './utils';
+import { appendStyle, css } from './utils';
 
-const style = document.createElement('style');
-style.textContent = css`
+// sync write
+appendStyle(css`
   /* download link */
   .NavBar__download-item,
   /* icon */
@@ -10,8 +10,7 @@ style.textContent = css`
   [role='main'] ~ div {
     display: none;
   }
-`;
-document.head.append(style);
+`);
 
 // Add PWA support
 navigator.serviceWorker.getRegistration().then(reg => {

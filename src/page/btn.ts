@@ -1,12 +1,12 @@
 import config from '../common/config';
 
 import { video, audio } from './element';
+import { appendStyle, css } from './utils';
 
-export const LYRICS_CLASSNAME = 'spoticon-lyrics-16';
+const LYRICS_CLASSNAME = 'spoticon-lyrics-16';
 const LYRICS_ACTIVE_CLASSNAME = 'active';
 
-const style = document.createElement('style');
-style.textContent = `
+appendStyle(css`
   .${LYRICS_CLASSNAME}::before {
     content: '\\f345';
     font-size: 16px;
@@ -16,16 +16,25 @@ style.textContent = `
   .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME}::before {
     color: #1db954;
   }
-`;
-document.head.append(style);
+`);
+
+config.then(({ PIP_BTN_SELECTOR }) => {
+  appendStyle(css`
+    ${PIP_BTN_SELECTOR} {
+      display: none;
+    }
+  `);
+});
 
 export const insetLyricsBtn = async () => {
-  const { BTN_WRAPPER_SELECTOR, PIP_BTN_SELECTOR } = await config;
+  const { BTN_WRAPPER_SELECTOR } = await config;
+
   const btnWrapper = document.querySelector(BTN_WRAPPER_SELECTOR) as HTMLDivElement;
-  const pipBtn = document.querySelector(PIP_BTN_SELECTOR) as HTMLElement | null;
   const likeBtn = btnWrapper?.children?.[0];
   if (!btnWrapper || !likeBtn) return;
+
   if (btnWrapper.getElementsByClassName(LYRICS_CLASSNAME).length) return;
+
   btnWrapper.style.display = 'flex';
   const lyricsBtn = likeBtn.cloneNode(true) as HTMLButtonElement;
   lyricsBtn.classList.add(LYRICS_CLASSNAME);
@@ -51,5 +60,4 @@ export const insetLyricsBtn = async () => {
     }
   });
   btnWrapper.append(lyricsBtn);
-  if (pipBtn) pipBtn.hidden = true;
 };

@@ -1,10 +1,12 @@
 import config from '../common/config';
 
 import { video } from './element';
-import { insetLyricsBtn, LYRICS_CLASSNAME } from './btn';
+import { insetLyricsBtn } from './btn';
+import { updateLyric } from './lyrics';
 
 export const WIDTH = 640;
 export const HEIGHT = 640;
+
 export interface Query {
   name: string;
   artists: string;
@@ -12,24 +14,22 @@ export interface Query {
 
 const weakMap = new WeakMap<Element, MutationObserver>();
 
-export default async function songObserver(callback: (query: Query) => any) {
-  const {
-    ALBUM_COVER_SELECTOR,
-    TRACK_INFO_SELECTOR,
-    TRACK_NAME_SELECTOR,
-    TRACK_ARTIST_SELECTOR,
-    BTN_WRAPPER_SELECTOR,
-  } = await config;
-
+config.then(({ ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR, TRACK_NAME_SELECTOR, TRACK_ARTIST_SELECTOR }) => {
   const getQueryObj = (): Query => {
     const name = document.querySelector(TRACK_NAME_SELECTOR)?.textContent;
     const artists = document.querySelector(TRACK_ARTIST_SELECTOR)?.textContent;
     return { name: name || '', artists: artists || '' };
   };
 
+  let infoElement: Element | null = null;
+
   const checkElement = () => {
-    const infoElement = document.querySelector(TRACK_INFO_SELECTOR);
+    // https://github.com/mantou132/Spotify-Lyrics/issues/30
+    insetLyricsBtn();
+    const prevInfoElement = infoElement;
+    infoElement = document.querySelector(TRACK_INFO_SELECTOR);
     if (!infoElement) return;
+    if (!prevInfoElement) updateLyric(getQueryObj());
 
     if (!weakMap.has(infoElement)) {
       const cover = document.querySelector(ALBUM_COVER_SELECTOR) as HTMLImageElement;
@@ -63,23 +63,16 @@ export default async function songObserver(callback: (query: Query) => any) {
         });
         largeImage.src = largeUrl;
       });
-      insetLyricsBtn();
-      // init observer
-      callback(getQueryObj());
-      const observer = new MutationObserver(() => {
-        callback(getQueryObj());
+      const infoEleObserver = new MutationObserver(() => {
+        updateLyric(getQueryObj());
       });
-      observer.observe(infoElement, { childList: true, characterData: true, subtree: true });
-      weakMap.set(infoElement, observer);
-    } else if (infoElement.querySelector(BTN_WRAPPER_SELECTOR) && !infoElement.querySelector(`.${LYRICS_CLASSNAME}`)) {
-      // https://github.com/mantou132/Spotify-Lyrics/issues/30
-      insetLyricsBtn();
-      callback(getQueryObj());
+      infoEleObserver.observe(infoElement, { childList: true, characterData: true, subtree: true });
+      weakMap.set(infoElement, infoEleObserver);
     }
   };
 
   checkElement();
   // allow `document.documentElement` rerender
-  const observer = new MutationObserver(checkElement);
-  observer.observe(document.documentElement, { childList: true, subtree: true });
-}
+  const htmlEleObserver = new MutationObserver(checkElement);
+  htmlEleObserver.observe(document.documentElement, { childList: true, subtree: true });
+});

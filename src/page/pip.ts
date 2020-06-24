@@ -2,16 +2,16 @@
 // https://bugzilla.mozilla.org/show_bug.cgi?id=pip
 import config from '../common/config';
 
+import { appendStyle, css } from './utils';
+
 // https://github.com/mantou132/Spotify-Lyrics/issues/31
 if (!document.pictureInPictureEnabled) {
   // sync write
-  const style = document.createElement('style');
-  style.textContent = `
+  appendStyle(css`
     [role='contentinfo'] > div:nth-child(1) > button {
       display: none;
     }
-  `;
-  document.head.append(style);
+  `);
 
   Object.defineProperties(document, {
     pictureInPictureElement: {
