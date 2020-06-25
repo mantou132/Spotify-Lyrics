@@ -1,4 +1,5 @@
 import { Event } from '../common/consts';
+import { Options } from '../common/options';
 
 import generateSVG from './svg';
 import { Query, WIDTH, HEIGHT } from './observer';
@@ -8,6 +9,7 @@ import { lyric, updateLyric, Lyric, sendMatchedData } from './lyrics';
 
 import './pip';
 import './misc';
+import { optionsPromise } from './options';
 
 const INTERVAL = 80;
 
@@ -22,6 +24,8 @@ const ctx = lyricCanvas.getContext('2d');
 const lyricTrack = lyricCanvas.captureStream().getVideoTracks()[0] as CanvasCaptureMediaStreamTrack;
 lyricCanvas.width = WIDTH;
 lyricCanvas.height = HEIGHT;
+let options: Options;
+
 if (ctx) {
   const update = () => {
     if (!video || !audio || !(video.srcObject instanceof MediaStream) || !document.pictureInPictureElement) {
@@ -43,6 +47,14 @@ if (ctx) {
       }
     }
     const coverTrack = weakMap.get(video.srcObject) as CanvasCaptureMediaStreamTrack;
+
+    if (options['only-cover'] === 'on') {
+      ctx.clearRect(0, 0, WIDTH, HEIGHT);
+      ctx.drawImage(coverTrack.canvas, 0, 0, WIDTH, HEIGHT);
+      setTimeout(update, INTERVAL);
+      return;
+    }
+
     const prevTime = prevTimeWeakMap.get(coverTrack) || 0;
     const currentLyric = lyricWeakMap.get(coverTrack) || lyric;
     const url = `data:image/svg+xml,${encodeURIComponent(
@@ -69,7 +81,11 @@ if (ctx) {
     };
     img.src = url;
   };
-  update();
+
+  optionsPromise.then(opts => {
+    options = opts;
+    update();
+  });
 } else {
   throw new Error('lyric canvas context fail');
 }

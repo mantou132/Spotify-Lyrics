@@ -7,6 +7,7 @@ import { events, sendEvent } from '../common/ga';
 
 import { Query } from './observer';
 import { getSongId } from './store';
+import { optionsPromise } from './options';
 
 export interface Artist {
   name: string;
@@ -184,9 +185,13 @@ export async function updateLyric(query: Query | number) {
   } else {
     songId = await searchSong(query);
   }
+
   if (!songId) return;
   const lyricStr = await fetchLyric(songId);
   if (!lyricStr) return;
+
+  const options = await optionsPromise;
+
   const lines = lyricStr.split('\n').map(line => line.trim());
   lyric = lines
     .map(line => {
@@ -209,7 +214,7 @@ export async function updateLyric(query: Query | number) {
           result.startTime = min * 60 + sec;
           result.text = text?.trim();
         } else {
-          result.text = `${key?.toUpperCase()}: ${value}`;
+          result.text = options['clean-lyrics'] === 'on' ? '' : `${key?.toUpperCase()}: ${value}`;
         }
         return result;
       });

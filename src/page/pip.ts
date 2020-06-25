@@ -3,9 +3,12 @@
 import config from '../common/config';
 
 import { appendStyle, css } from './utils';
+import { optionsPromise } from './options';
 
-// https://github.com/mantou132/Spotify-Lyrics/issues/31
-if (!document.pictureInPictureEnabled) {
+let polyfilled = false;
+const polyfill = () => {
+  if (polyfilled) return;
+  polyfilled = true;
   // sync write
   appendStyle(css`
     [role='contentinfo'] > div:nth-child(1) > button {
@@ -47,4 +50,15 @@ if (!document.pictureInPictureEnabled) {
     video?.dispatchEvent(new CustomEvent('leavepictureinpicture'));
     return;
   };
+};
+
+// https://github.com/mantou132/Spotify-Lyrics/issues/31
+if (!document.pictureInPictureEnabled) {
+  polyfill();
 }
+
+optionsPromise.then(options => {
+  if (options['show-on'] === 'page') {
+    polyfill();
+  }
+});

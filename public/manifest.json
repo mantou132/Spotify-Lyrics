@@ -29,6 +29,11 @@
     "default_popup": "popup.html",
     "default_icon": "icons/48.png"
   },
+  "options_ui": {
+    "page": "options.html",
+    "browser_style": true,
+    "chrome_style": true
+  },
   "icons": {
     "48": "icons/48.png",
     "96": "icons/96.png",

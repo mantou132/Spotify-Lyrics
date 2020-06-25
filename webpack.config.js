@@ -15,6 +15,7 @@ module.exports = {
     content: './src/content',
     page: './src/page',
     popup: './src/popup',
+    options: './src/options',
     background: './src/background',
   },
   module: {
@@ -39,7 +40,7 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
-    new CopyWebpackPlugin([{ from: './public', to: './' }]),
+    new CopyWebpackPlugin({ patterns: [{ from: './public', to: './' }] }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
