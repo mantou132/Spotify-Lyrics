@@ -53,6 +53,7 @@ export class SongList extends GemElement {
         }
         .footer {
           display: flex;
+          flex-shrink: 0;
           justify-content: center;
           align-items: center;
           padding: 0.75rem 0;

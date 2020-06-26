@@ -28,7 +28,9 @@ let options: Options;
 
 if (ctx) {
   const update = () => {
-    if (!video || !audio || !(video.srcObject instanceof MediaStream) || !document.pictureInPictureElement) {
+    // Do not check `document.pictureInPictureElement`
+    // safari enters pip needs a video that is playing
+    if (!video || !audio || !(video.srcObject instanceof MediaStream)) {
       return setTimeout(update, INTERVAL);
     }
     if (!weakMap.get(video.srcObject)) {

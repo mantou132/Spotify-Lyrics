@@ -4,6 +4,15 @@ video.muted = true;
 const createElement: typeof document.createElement = document.createElement.bind(document);
 
 let audio: HTMLAudioElement | null = null;
+
+// safari not support media session, pip contorl video
+video.addEventListener('play', () => {
+  audio?.play();
+});
+video.addEventListener('pause', () => {
+  audio?.pause();
+});
+
 document.createElement = function<K extends keyof HTMLElementTagNameMap>(tagName: K, options: ElementCreationOptions) {
   const element = createElement(tagName, options);
   if (tagName === 'video') {
