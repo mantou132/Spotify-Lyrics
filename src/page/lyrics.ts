@@ -58,13 +58,11 @@ const getSimplified = (s: string) => {
   }
 };
 
-// Exclude deductions
 const getText = (s: string) => {
-  const text = s.replace(/\(|（.*）|\)/, '').trim();
-  return s.length > 2 ? text : s;
+  const text = s.replace(/\(.*\)|（.*）|- .*remix$/i, '').trim();
+  return text.length > 2 ? text : s;
 };
 
-// Exclude deductions
 const getHalfSizeText = (s: string) => {
   return s
     .replace(/，/g, ',')
@@ -74,7 +72,7 @@ const getHalfSizeText = (s: string) => {
 };
 
 const removeSongFeat = (s: string) => {
-  return s.replace(/\(feat\..*\)$/i, '');
+  return s.replace(/\(feat\..*\)$/i, '').trim();
 };
 
 const sharedData: SharedData = { list: [], id: 0, name: '', artists: '' };
@@ -99,27 +97,29 @@ async function searchSong(query: Query) {
     let rank = 0; // Maximum score
     songs.forEach(song => {
       let currentRank = 0;
+
       if (song.name === name) {
-        currentRank += 1000;
+        currentRank += 13;
       } else if (song.name.toLowerCase() === name.toLowerCase()) {
-        currentRank += 100;
+        currentRank += 12;
       } else if (simplifiedName && song.name === simplifiedName) {
-        currentRank += 100;
+        currentRank += 11;
       } else if (
         getHalfSizeText(song.name) === getHalfSizeText(name) ||
         getHalfSizeText(song.name) === getHalfSizeText(simplifiedName)
       ) {
         currentRank += 10;
         if (getHalfSizeText(song.name).length > 2) {
-          currentRank += 10;
+          currentRank += 1;
         }
       } else if (getText(song.name) === getText(name)) {
         currentRank += 10;
       }
+
       const queryArtistsArr = artists.split(',').sort();
       const artistsArr = song.artists.map(e => e.name).sort();
       if (queryArtistsArr.join(',') === artistsArr.join(',')) {
-        currentRank += 1000;
+        currentRank += 9;
       } else if (
         simplifiedArtists &&
         simplifiedArtists
@@ -127,15 +127,16 @@ async function searchSong(query: Query) {
           .sort()
           .join(',') === artistsArr.join(',')
       ) {
-        currentRank += 100;
+        currentRank += 9;
       } else if (new Set([...queryArtistsArr, ...artistsArr]).size < queryArtistsArr.length + artistsArr.length) {
-        currentRank += 100;
+        currentRank += 8;
       } else if (
         new Set([...queryArtistsArr.map(e => e.toLowerCase()), ...artistsArr.map(e => e.toLowerCase())]).size <
         queryArtistsArr.length + artistsArr.length
       ) {
-        currentRank += 10;
+        currentRank += 7;
       }
+
       if (currentRank > 10 && currentRank > rank) {
         songId = song.id;
       }
