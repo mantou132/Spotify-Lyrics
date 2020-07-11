@@ -1,8 +1,11 @@
+import { browser } from 'webextension-polyfill-ts';
 import { html, customElement, connectStore, GemElement } from '@mantou/gem';
 
 import './list';
+
 import { store, changeSong } from '../store';
 import { events, sendEvent } from '../../common/ga';
+import { I18nMsgKeys } from '../../common/consts';
 
 @connectStore(store)
 @customElement('app-root')
@@ -89,11 +92,13 @@ export class SongList extends GemElement {
       </style>
       <div class="main">
         <div class="notice">
-          If your lyrics are not displayed or wrong, you can manually select the correct track to reload the lyrics
+          ${browser.i18n.getMessage(I18nMsgKeys.popupMatchDescription)}
         </div>
         <app-track-list class="list"></app-track-list>
       </div>
-      <div class="footer"><button @click=${this.autoSelect}>Auto select</button></div>
+      <div class="footer">
+        <button @click=${this.autoSelect}>${browser.i18n.getMessage(I18nMsgKeys.popupAutoMatch)}</button>
+      </div>
     `;
   }
 }

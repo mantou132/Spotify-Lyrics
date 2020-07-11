@@ -1,8 +1,9 @@
 {
-  "name": "Spotify Lyrics",
+  "name": "__MSG_extensionName__",
   "version": "0.0.28",
   "manifest_version": 2,
-  "description": "Spotify Web Player lyrics plugin, lyric display in picture-in-picture window.",
+  "description": "__MSG_extensionDescription__",
+  "default_locale": "en",
   "web_accessible_resources": [
     "page.js"
   ],
@@ -30,9 +31,7 @@
     "default_icon": "icons/48.png"
   },
   "options_ui": {
-    "page": "options.html",
-    "browser_style": true,
-    "chrome_style": true
+    "page": "options.html"
   },
   "icons": {
     "48": "icons/48.png",

@@ -1,0 +1,37 @@
+{
+  "extensionName": {
+    "message": "Spotify 同步歌词"
+  },
+
+  "extensionDescription": {
+    "message": "在画中画窗口中显示即时同步的歌词"
+  },
+
+  "popupMissMatch": {
+    "message": "目前没有可用的歌曲"
+  },
+
+  "popupAutoMatch": {
+    "message": "自动匹配"
+  },
+
+  "popupMatchDescription": {
+    "message": "如果您的歌词未显示或显示错误，您可以手动匹配(点击)正确的曲目以重新加载歌词"
+  },
+
+  "optionsSave": {
+    "message": "保存(会刷新 Spotify)"
+  },
+
+  "optionsShowLyrics": {
+    "message": "仅显示封面"
+  },
+
+  "optionsShowCleanLyrics": {
+    "message": "显示干净歌词"
+  },
+
+  "optionsLyricsPosition": {
+    "message": "将歌词显示在哪里？"
+  }
+}

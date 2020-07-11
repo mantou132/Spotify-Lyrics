@@ -2,7 +2,7 @@ import { html, customElement, GemElement, refobject, RefObject } from '@mantou/g
 
 import { browser } from 'webextension-polyfill-ts';
 
-import { LocalStorageKeys, Message, Event as MessageEvent } from '../common/consts';
+import { LocalStorageKeys, Message, Event as MessageEvent, I18nMsgKeys } from '../common/consts';
 import { Options, lyricsPositions } from '../common/options';
 
 const options = Options.init();
@@ -58,24 +58,27 @@ export class OptionsApp extends GemElement<{ changed: boolean }> {
         }
       </style>
       <form ref=${this.formRef.ref} @input=${this.inputHandler} @submit=${this.submitHandler}>
+
         <label class="form-item">
           <input
             type="checkbox"
             name="${'only-cover' as keyof Options}"
             ?checked="${options['only-cover'] === 'on'}">
           </input>
-          Only show cover
+          ${browser.i18n.getMessage(I18nMsgKeys.optionsShowLyrics)}
         </label>
+
         <label class="form-item">
           <input
             type="checkbox"
             name="${'clean-lyrics' as keyof Options}"
             ?checked="${options['clean-lyrics'] === 'on'}">
           </input>
-          Show clean lyrics
+          ${browser.i18n.getMessage(I18nMsgKeys.optionsShowCleanLyrics)}
         </label>
+
         <div class="form-item">
-          <label>Where the lyrics show?</label>
+          <label>${browser.i18n.getMessage(I18nMsgKeys.optionsLyricsPosition)}</label>
           <select name="${'show-on' as keyof Options}">
             ${lyricsPositions.map(
               v => html`
@@ -84,7 +87,13 @@ export class OptionsApp extends GemElement<{ changed: boolean }> {
             )}
           </select>
         </div>
-        <button ?disabled=${!this.state.changed} type="submit">Save(reload spotify)</button>
+
+        <button
+          ?disabled=${!this.state.changed}
+          type="submit">
+          ${browser.i18n.getMessage(I18nMsgKeys.optionsSave)}
+        </button>
+
       </form>
     `;
   }

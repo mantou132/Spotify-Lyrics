@@ -1,4 +1,7 @@
+import { browser } from 'webextension-polyfill-ts';
 import { render, html } from '@mantou/gem';
+
+import { I18nMsgKeys } from '../common/consts';
 
 import './elements/root';
 
@@ -54,7 +57,7 @@ render(
         font-display: swap;
       }
     </style>
-    <app-root>No songs currently available</app-root>
+    <app-root>${browser.i18n.getMessage(I18nMsgKeys.popupMissMatch)}</app-root>
   `,
   document.body,
 );
