@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import sify from 'chinese-conv/tongwen/tongwen-ts';
 
-import config from '../common/config';
 import { Message, Event } from '../common/consts';
 import { events, sendEvent } from '../common/ga';
+
+import config from './config';
 
 import { Query } from './observer';
 import { getSongId } from './store';

@@ -1,7 +1,6 @@
 import { browser } from 'webextension-polyfill-ts';
 
 import { Message, Event } from './common/consts';
-import { Options } from './common/options';
 
 const script = document.createElement('script');
 // Firefox CSP Issue: https://bugzilla.mozilla.org/show_bug.cgi?id=1267027

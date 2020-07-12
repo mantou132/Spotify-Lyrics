@@ -3,7 +3,8 @@ import { html, customElement, GemElement, refobject, RefObject } from '@mantou/g
 import { browser } from 'webextension-polyfill-ts';
 
 import { LocalStorageKeys, Message, Event as MessageEvent, I18nMsgKeys } from '../common/consts';
-import { Options, lyricsPositions } from '../common/options';
+
+import { Options, lyricsPositions } from './store';
 
 const options = Options.init();
 

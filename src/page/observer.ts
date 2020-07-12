@@ -1,4 +1,4 @@
-import config from '../common/config';
+import config from './config';
 
 import { video } from './element';
 import { insetLyricsBtn } from './btn';

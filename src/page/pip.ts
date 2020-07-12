@@ -1,6 +1,6 @@
 // https://w3c.github.io/picture-in-picture
 // https://bugzilla.mozilla.org/show_bug.cgi?id=pip
-import config from '../common/config';
+import config from './config';
 
 import { appendStyle, css } from './utils';
 import { optionsPromise } from './options';

@@ -1,4 +1,4 @@
-import config from '../common/config';
+import config from './config';
 
 import { video, audio } from './element';
 import { appendStyle, css } from './utils';

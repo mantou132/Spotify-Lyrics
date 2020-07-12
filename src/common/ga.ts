@@ -1,3 +1,5 @@
+// https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
+
 const postReq = (params: Record<string, string>) => {
   fetch('https://www.google-analytics.com/collect', {
     method: 'post',

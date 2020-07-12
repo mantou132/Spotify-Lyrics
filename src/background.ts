@@ -1,7 +1,7 @@
 import { browser } from 'webextension-polyfill-ts';
 
 import { Message, Event } from './common/consts';
-import { Options } from './common/options';
+import { Options } from './options/store';
 
 browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (!tab?.id) return;

@@ -1,5 +1,5 @@
 import { Event } from '../common/consts';
-import { Options } from '../common/options';
+import { Options } from '../options/store';
 
 import generateSVG from './svg';
 import { Query, WIDTH, HEIGHT } from './observer';
