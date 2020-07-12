@@ -12,12 +12,14 @@ export class Options {
   'only-cover': CheckboxValue;
   'clean-lyrics': CheckboxValue;
   'show-on': typeof lyricsPositions[number];
+  'cid': string;
 
   constructor(o: Partial<Options> = {}) {
     validateOrigin();
     this['only-cover'] = o['only-cover'] || 'off';
     this['clean-lyrics'] = o['clean-lyrics'] || 'off';
     this['show-on'] = o['show-on'] || 'pip';
+    this.cid = `${Date.now()}-${Math.random()}`;
   }
 
   static init(): Options {
@@ -27,6 +29,7 @@ export class Options {
     if (localOptionsStr) {
       try {
         Object.assign(result, JSON.parse(localOptionsStr));
+        localStorage.setItem(LocalStorageKeys.CONFIG, JSON.stringify(result));
       } catch {
         //
       }

@@ -6,12 +6,13 @@ import './list';
 import { store, changeSong } from '../store';
 import { events, sendEvent } from '../../common/ga';
 import { I18nMsgKeys } from '../../common/consts';
+import { Options } from '../../options/store';
 
 @connectStore(store)
 @customElement('app-root')
 export class SongList extends GemElement {
   autoSelect = () => {
-    sendEvent(events.autoSelectTrack);
+    sendEvent(Options.init().cid, events.autoSelectTrack);
     changeSong(0);
   };
   render() {

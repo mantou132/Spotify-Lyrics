@@ -84,7 +84,8 @@ export function sendMatchedData(data?: Partial<SharedData>) {
 }
 
 async function searchSong(query: Query) {
-  sendEvent(events.searchLyrics);
+  const { cid } = await optionsPromise;
+  sendEvent(cid, events.searchLyrics);
   const { name = '', artists = '' } = query;
   const simplifiedName = getSimplified(name);
   const simplifiedArtists = getSimplified(artists);
@@ -149,7 +150,7 @@ async function searchSong(query: Query) {
     if (saveId) songId = saveId;
     if (!songId) {
       console.log('Not matched:', { query, songs, rank });
-      sendEvent(events.notMatch, { el: 'TrackInfo', ev: `${artists} ${name}` });
+      sendEvent(cid, events.notMatch, { el: 'TrackInfo', ev: `${artists} ${name}` });
     }
   } finally {
     sendMatchedData({ list: songs, id: songId, name, artists });
@@ -159,11 +160,13 @@ async function searchSong(query: Query) {
 
 async function fetchLyric(songId: number) {
   const { API_HOST } = await config;
+  const { cid } = await optionsPromise;
   if (!songId) return '';
   try {
     const { lrc }: SongResult = await (
       await fetch(`${API_HOST}/lyric?${new URLSearchParams({ id: String(songId) })}`)
     ).json();
+    if (!lrc?.lyric) sendEvent(cid, events.noLyrics, { el: 'TrackID', ev: String(songId) });
     return lrc?.lyric || '';
   } catch {
     return '';
