@@ -36,4 +36,7 @@ window.addEventListener('message', ({ data }) => {
         //
       });
   }
+  if (data?.type === Event.POPUP_ACTIVE) {
+    browser.runtime.sendMessage(data);
+  }
 });

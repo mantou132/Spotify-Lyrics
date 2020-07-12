@@ -99,6 +99,8 @@ if (ctx) {
 }
 
 window.addEventListener('message', async ({ data }: MessageEvent) => {
+  if (!document.pictureInPictureElement) return;
+
   if (data?.type === Event.GET_SONGS) {
     sendMatchedData();
   }

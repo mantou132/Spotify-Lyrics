@@ -12,6 +12,7 @@ export enum Event {
   SELECT_SONG = 'select-song',
   GET_OPTIONS = 'get-options',
   SEND_OPTIONS = 'send-options',
+  POPUP_ACTIVE = 'popup-active',
 }
 
 // Store in extension localStorage

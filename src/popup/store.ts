@@ -13,8 +13,11 @@ export const store = createStore<SharedData>({
 });
 
 export function sendMessage(msg: Message) {
-  browser.tabs.query({ active: true, currentWindow: true }).then(([tab]) => {
-    if (tab?.id) browser.tabs.sendMessage(tab.id, msg);
+  browser.tabs.query({ url: '*://open.spotify.com/*' }).then(tabs => {
+    tabs.forEach(tab => {
+      // Only the tab that open the lyrics will response
+      if (tab?.id) browser.tabs.sendMessage(tab.id, msg);
+    });
   });
 }
 
