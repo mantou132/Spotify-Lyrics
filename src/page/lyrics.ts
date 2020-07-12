@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import sify from 'chinese-conv/tongwen/tongwen-ts';
 
 import { Message, Event } from '../common/consts';
@@ -46,19 +45,6 @@ interface SongResult {
   };
 }
 
-const getSimplified = (s: string) => {
-  // Firefox issue: not support Unicode property escapes
-  try {
-    if (new RegExp('\\p{sc=Han}', 'gu').test(s)) {
-      return sify(s);
-    } else {
-      return '';
-    }
-  } catch {
-    return '';
-  }
-};
-
 const getText = (s: string) => {
   const text = s.replace(/\(.*\)|（.*）|- .*remix$/i, '').trim();
   return text.length > 2 ? text : s;
@@ -84,11 +70,11 @@ export function sendMatchedData(data?: Partial<SharedData>) {
 }
 
 async function searchSong(query: Query) {
-  const { cid } = await optionsPromise;
-  sendEvent(cid, events.searchLyrics);
+  const options = await optionsPromise;
+  sendEvent(options.cid, events.searchLyrics);
   const { name = '', artists = '' } = query;
-  const simplifiedName = getSimplified(name);
-  const simplifiedArtists = getSimplified(artists);
+  const simplifiedName = sify(name);
+  const simplifiedArtists = sify(artists);
   const { API_HOST } = await config;
   const searchQuery = new URLSearchParams({ type: '1 ', keywords: `${artists} ${removeSongFeat(name)}`, limit: '100' });
   let songId = 0;
@@ -96,61 +82,64 @@ async function searchSong(query: Query) {
   try {
     const { result }: SearchResult = await (await fetch(`${API_HOST}/search?${searchQuery}`)).json();
     songs = result?.songs || [];
-    let rank = 0; // Maximum score
+    let score = 0;
     songs.forEach(song => {
-      let currentRank = 0;
+      let currentScore = options['strict-mode'] === 'on' ? 0 : 3;
 
       if (song.name === name) {
-        currentRank += 13;
+        currentScore += 10;
       } else if (song.name.toLowerCase() === name.toLowerCase()) {
-        currentRank += 12;
-      } else if (simplifiedName && song.name === simplifiedName) {
-        currentRank += 11;
+        currentScore += 9;
+      } else if (song.name === simplifiedName) {
+        currentScore += 8;
       } else if (
         getHalfSizeText(song.name) === getHalfSizeText(name) ||
         getHalfSizeText(song.name) === getHalfSizeText(simplifiedName)
       ) {
-        currentRank += 10;
+        currentScore += 7;
         if (getHalfSizeText(song.name).length > 2) {
-          currentRank += 1;
+          currentScore += 1;
         }
       } else if (getText(song.name) === getText(name)) {
-        currentRank += 10;
+        currentScore += 7;
       }
 
       const queryArtistsArr = artists.split(',').sort();
       const artistsArr = song.artists.map(e => e.name).sort();
+      const simplifiedQueryArtistsArr = simplifiedArtists.split(',').sort();
+      const simplifiedArtistsArr = song.artists.map(e => sify(e.name)).sort();
+      const l = queryArtistsArr.length + artistsArr.length;
       if (queryArtistsArr.join(',') === artistsArr.join(',')) {
-        currentRank += 9;
+        currentScore += 9;
       } else if (
-        simplifiedArtists &&
         simplifiedArtists
           .split(',')
           .sort()
           .join(',') === artistsArr.join(',')
       ) {
-        currentRank += 9;
-      } else if (new Set([...queryArtistsArr, ...artistsArr]).size < queryArtistsArr.length + artistsArr.length) {
-        currentRank += 8;
+        currentScore += 9;
+      } else if (new Set([...queryArtistsArr, ...artistsArr]).size < l) {
+        currentScore += 8;
       } else if (
-        new Set([...queryArtistsArr.map(e => e.toLowerCase()), ...artistsArr.map(e => e.toLowerCase())]).size <
-        queryArtistsArr.length + artistsArr.length
+        new Set([...queryArtistsArr.map(e => e.toLowerCase()), ...artistsArr.map(e => e.toLowerCase())]).size < l
       ) {
-        currentRank += 7;
+        currentScore += 7;
+      } else if (new Set([...simplifiedQueryArtistsArr, ...simplifiedArtistsArr]).size < l) {
+        currentScore += 7;
       }
 
-      if (currentRank > 10 && currentRank > rank) {
-        songId = song.id;
-      }
-      if (currentRank > rank) {
-        rank = currentRank;
+      if (currentScore > score) {
+        if (currentScore > 10) {
+          songId = song.id;
+        }
+        score = currentScore;
       }
     });
     const saveId = await getSongId(query);
     if (saveId) songId = saveId;
     if (!songId) {
-      console.log('Not matched:', { query, songs, rank });
-      sendEvent(cid, events.notMatch, { el: 'TrackInfo', ev: `${artists} ${name}` });
+      console.log('Not matched:', { query, songs, rank: score });
+      sendEvent(options.cid, events.notMatch, { el: 'TrackInfo', ev: `${artists} ${name}` });
     }
   } finally {
     sendMatchedData({ list: songs, id: songId, name, artists });
@@ -160,13 +149,13 @@ async function searchSong(query: Query) {
 
 async function fetchLyric(songId: number) {
   const { API_HOST } = await config;
-  const { cid } = await optionsPromise;
+  const options = await optionsPromise;
   if (!songId) return '';
   try {
     const { lrc }: SongResult = await (
       await fetch(`${API_HOST}/lyric?${new URLSearchParams({ id: String(songId) })}`)
     ).json();
-    if (!lrc?.lyric) sendEvent(cid, events.noLyrics, { el: 'TrackID', ev: String(songId) });
+    if (!lrc?.lyric) sendEvent(options.cid, events.noLyrics, { el: 'TrackID', ev: String(songId) });
     return lrc?.lyric || '';
   } catch {
     return '';

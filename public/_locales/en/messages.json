@@ -29,6 +29,11 @@
     "description": "Save options"
   },
 
+  "optionsStrictMatchMode": {
+    "message": "Use strict match mode(artists need to match)",
+    "description": "Use song strict matching mode"
+  },
+
   "optionsShowLyrics": {
     "message": "Only show cover",
     "description": "Only show cover option"

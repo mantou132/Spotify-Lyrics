@@ -23,6 +23,10 @@
     "message": "保存(会刷新 Spotify)"
   },
 
+  "optionsStrictMatchMode": {
+    "message": "使用严格匹配模式(艺术家需要匹配)"
+  },
+
   "optionsShowLyrics": {
     "message": "仅显示封面"
   },

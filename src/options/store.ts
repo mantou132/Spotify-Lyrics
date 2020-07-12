@@ -9,6 +9,7 @@ const validateOrigin = () => {
 };
 
 export class Options {
+  'strict-mode': CheckboxValue;
   'only-cover': CheckboxValue;
   'clean-lyrics': CheckboxValue;
   'show-on': typeof lyricsPositions[number];
@@ -16,6 +17,7 @@ export class Options {
 
   constructor(o: Partial<Options> = {}) {
     validateOrigin();
+    this['strict-mode'] = o['strict-mode'] || 'off';
     this['only-cover'] = o['only-cover'] || 'off';
     this['clean-lyrics'] = o['clean-lyrics'] || 'off';
     this['show-on'] = o['show-on'] || 'pip';

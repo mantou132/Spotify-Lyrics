@@ -60,6 +60,15 @@ export class OptionsApp extends GemElement<{ changed: boolean }> {
       </style>
       <form ref=${this.formRef.ref} @input=${this.inputHandler} @submit=${this.submitHandler}>
 
+      <label class="form-item">
+          <input
+            type="checkbox"
+            name="${'strict-mode' as keyof Options}"
+            ?checked="${options['strict-mode'] === 'on'}">
+          </input>
+          ${browser.i18n.getMessage(I18nMsgKeys.optionsStrictMatchMode)}
+        </label>
+
         <label class="form-item">
           <input
             type="checkbox"
