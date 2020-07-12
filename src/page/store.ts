@@ -2,7 +2,7 @@
  * temporary plan: Stored in webpage localStorage
  */
 
-import { Query } from './observer';
+import { Query } from './lyrics';
 
 const KEY = 'spotify.lyrics.extension';
 

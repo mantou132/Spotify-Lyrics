@@ -2,13 +2,13 @@ import { Event } from '../common/consts';
 import { Options } from '../options/store';
 
 import generateSVG from './svg';
-import { Query, WIDTH, HEIGHT } from './observer';
 import { setSongId } from './store';
 import { video, audio } from './element';
-import { lyric, updateLyric, Lyric, sendMatchedData } from './lyrics';
+import { lyric, updateLyric, sendMatchedData, Query, Lyric } from './lyrics';
 
 import './pip';
 import './misc';
+import './observer';
 import { optionsPromise } from './options';
 
 const INTERVAL = 80;
@@ -22,15 +22,21 @@ const ctx = lyricCanvas.getContext('2d');
 // Firefox Issue: NS_ERROR_NOT_INITIALIZED
 // https://bugzilla.mozilla.org/show_bug.cgi?id=1572422
 const lyricTrack = lyricCanvas.captureStream().getVideoTracks()[0] as CanvasCaptureMediaStreamTrack;
-lyricCanvas.width = WIDTH;
-lyricCanvas.height = HEIGHT;
+lyricCanvas.width = video.width;
+lyricCanvas.height = video.height;
 let options: Options;
 
 if (ctx) {
   const update = () => {
     // Do not check `document.pictureInPictureElement`
     // safari enters pip needs a video that is playing
-    if (!video || !audio || !(video.srcObject instanceof MediaStream)) {
+    if (
+      !video ||
+      !audio ||
+      !(video.srcObject instanceof MediaStream) ||
+      // Safari needs to refresh the video all the time to open pip
+      (!document.pictureInPictureElement && !/Version\/.*Safari\/.*/.test(navigator.userAgent))
+    ) {
       return setTimeout(update, INTERVAL);
     }
     if (!weakMap.get(video.srcObject)) {
@@ -51,8 +57,8 @@ if (ctx) {
     const coverTrack = weakMap.get(video.srcObject) as CanvasCaptureMediaStreamTrack;
 
     if (options['only-cover'] === 'on') {
-      ctx.clearRect(0, 0, WIDTH, HEIGHT);
-      ctx.drawImage(coverTrack.canvas, 0, 0, WIDTH, HEIGHT);
+      ctx.clearRect(0, 0, video.width, video.height);
+      ctx.drawImage(coverTrack.canvas, 0, 0, video.width, video.height);
       setTimeout(update, INTERVAL);
       return;
     }
@@ -63,13 +69,13 @@ if (ctx) {
       generateSVG(currentLyric, audio.currentTime > prevTime ? audio.currentTime : prevTime),
     )}`;
     prevTimeWeakMap.set(coverTrack, audio.currentTime);
-    const img = new Image(WIDTH, HEIGHT);
+    const img = new Image(video.width, video.height);
     img.onload = () => {
-      ctx.clearRect(0, 0, WIDTH, HEIGHT);
-      ctx.drawImage(coverTrack.canvas, 0, 0, WIDTH, HEIGHT);
+      ctx.clearRect(0, 0, video.width, video.height);
+      ctx.drawImage(coverTrack.canvas, 0, 0, video.width, video.height);
       if (lyric.length > 0) {
         lyricWeakMap.set(coverTrack, lyric);
-        ctx.drawImage(img, 0, 0, WIDTH, HEIGHT);
+        ctx.drawImage(img, 0, 0, video.width, video.height);
       }
       setTimeout(update, INTERVAL);
     };
@@ -78,7 +84,7 @@ if (ctx) {
         console.error('error lyric:', currentLyric);
         errorLyric = currentLyric;
       }
-      ctx.drawImage(coverTrack.canvas, 0, 0, WIDTH, HEIGHT);
+      ctx.drawImage(coverTrack.canvas, 0, 0, video.width, video.height);
       setTimeout(update, INTERVAL);
     };
     img.src = url;

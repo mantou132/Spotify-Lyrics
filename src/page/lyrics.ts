@@ -5,9 +5,13 @@ import { events, sendEvent } from '../common/ga';
 
 import config from './config';
 
-import { Query } from './observer';
 import { getSongId } from './store';
 import { optionsPromise } from './options';
+
+export interface Query {
+  name: string;
+  artists: string;
+}
 
 export interface Artist {
   name: string;
@@ -170,14 +174,22 @@ class Line {
 export type Lyric = Line[];
 
 export let lyric: Lyric = [];
-export async function updateLyric(query: Query | number) {
+export async function updateLyric(query?: Query | number) {
   lyric = [];
+
+  if (!document.pictureInPictureElement) return;
+
   let songId = 0;
   if (typeof query === 'number') {
     songId = query;
     sendMatchedData({ id: songId });
-  } else {
+  } else if (typeof query === 'object') {
     songId = await searchSong(query);
+  } else {
+    const { TRACK_NAME_SELECTOR, TRACK_ARTIST_SELECTOR } = await config;
+    const name = document.querySelector(TRACK_NAME_SELECTOR)?.textContent || '';
+    const artists = document.querySelector(TRACK_ARTIST_SELECTOR)?.textContent || '';
+    songId = await searchSong({ name, artists });
   }
 
   if (!songId) return;

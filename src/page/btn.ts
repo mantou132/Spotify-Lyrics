@@ -2,6 +2,7 @@ import config from './config';
 
 import { video, audio } from './element';
 import { appendStyle, css } from './utils';
+import { updateLyric } from './lyrics';
 
 const LYRICS_CLASSNAME = 'spoticon-lyrics-16';
 const LYRICS_ACTIVE_CLASSNAME = 'active';
@@ -53,6 +54,7 @@ export const insetLyricsBtn = async () => {
       video
         .requestPictureInPicture()
         .then(() => {
+          updateLyric();
           // automatically pause when the video is removed from the DOM tree
           if (!audio?.paused) video.play();
         })

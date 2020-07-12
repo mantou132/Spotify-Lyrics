@@ -1,5 +1,7 @@
 const video = document.createElement('video');
 video.muted = true;
+video.width = 640;
+video.height = 640;
 
 const createElement: typeof document.createElement = document.createElement.bind(document);
 

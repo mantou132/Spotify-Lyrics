@@ -4,23 +4,9 @@ import { video } from './element';
 import { insetLyricsBtn } from './btn';
 import { updateLyric } from './lyrics';
 
-export const WIDTH = 640;
-export const HEIGHT = 640;
-
-export interface Query {
-  name: string;
-  artists: string;
-}
-
 const weakMap = new WeakMap<Element, MutationObserver>();
 
-config.then(({ ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR, TRACK_NAME_SELECTOR, TRACK_ARTIST_SELECTOR }) => {
-  const getQueryObj = (): Query => {
-    const name = document.querySelector(TRACK_NAME_SELECTOR)?.textContent;
-    const artists = document.querySelector(TRACK_ARTIST_SELECTOR)?.textContent;
-    return { name: name || '', artists: artists || '' };
-  };
-
+config.then(({ ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR }) => {
   let infoElement: Element | null = null;
 
   const checkElement = () => {
@@ -29,15 +15,15 @@ config.then(({ ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR, TRACK_NAME_SELECTOR, T
     const prevInfoElement = infoElement;
     infoElement = document.querySelector(TRACK_INFO_SELECTOR);
     if (!infoElement) return;
-    if (!prevInfoElement) updateLyric(getQueryObj());
+    if (!prevInfoElement) updateLyric();
 
     if (!weakMap.has(infoElement)) {
       const cover = document.querySelector(ALBUM_COVER_SELECTOR) as HTMLImageElement;
       // https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
       cover.crossOrigin = 'anonymous';
       const coverCanvas = document.createElement('canvas');
-      coverCanvas.width = WIDTH;
-      coverCanvas.height = HEIGHT;
+      coverCanvas.width = video.width;
+      coverCanvas.height = video.height;
       const ctx = coverCanvas.getContext('2d');
       if (!ctx) return;
       const stream = coverCanvas.captureStream();
@@ -53,18 +39,18 @@ config.then(({ ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR, TRACK_NAME_SELECTOR, T
         largeImage.addEventListener('load', function() {
           if (this !== largeImage) return;
           ctx.filter = `blur(0px)`;
-          ctx.drawImage(largeImage, 0, 0, WIDTH, HEIGHT);
+          ctx.drawImage(largeImage, 0, 0, video.width, video.height);
         });
         largeImage.addEventListener('error', () => {
           ctx.imageSmoothingEnabled = false;
           const blur = 10;
           ctx.filter = `blur(${blur}px)`;
-          ctx.drawImage(cover, -blur * 2, -blur * 2, WIDTH + 4 * blur, HEIGHT + 4 * blur);
+          ctx.drawImage(cover, -blur * 2, -blur * 2, video.width + 4 * blur, video.height + 4 * blur);
         });
         largeImage.src = largeUrl;
       });
       const infoEleObserver = new MutationObserver(() => {
-        updateLyric(getQueryObj());
+        updateLyric();
       });
       infoEleObserver.observe(infoElement, { childList: true, characterData: true, subtree: true });
       weakMap.set(infoElement, infoEleObserver);
