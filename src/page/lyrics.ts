@@ -77,59 +77,87 @@ async function searchSong(query: Query) {
   const options = await optionsPromise;
   sendEvent(options.cid, events.searchLyrics);
   const { name = '', artists = '' } = query;
-  const simplifiedName = sify(name);
-  const simplifiedArtists = sify(artists);
-  const { API_HOST } = await config;
-  const searchQuery = new URLSearchParams({ type: '1 ', keywords: `${artists} ${removeSongFeat(name)}`, limit: '100' });
+  const queryName = name;
+  const queryName1 = queryName.toLowerCase();
+  const queryName2 = sify(queryName1);
+  const queryName3 = getHalfSizeText(queryName2);
+  const queryName4 = removeSongFeat(queryName3);
+  const queryName5 = getText(queryName3);
+  const queryArtistsArr = artists.split(',').sort();
+  const queryArtistsArr1 = queryArtistsArr.map(e => e.toLowerCase());
+  const queryArtistsArr2 = queryArtistsArr1.map(e => sify(e));
+
   let songId = 0;
   let songs: Song[] = [];
   try {
+    const { API_HOST } = await config;
+    const searchQuery = new URLSearchParams({
+      type: '1 ',
+      keywords: `${sify(artists)} ${queryName4}`,
+      limit: '100',
+    });
     const { result }: SearchResult = await (await fetch(`${API_HOST}/search?${searchQuery}`)).json();
+
     songs = result?.songs || [];
+
     let score = 0;
     songs.forEach(song => {
       let currentScore = options['strict-mode'] === 'on' ? 0 : 3;
 
-      if (song.name === name) {
+      let songName = song.name;
+      if (songName === queryName) {
         currentScore += 10;
-      } else if (song.name.toLowerCase() === name.toLowerCase()) {
-        currentScore += 9;
-      } else if (song.name === simplifiedName) {
-        currentScore += 8;
-      } else if (
-        getHalfSizeText(song.name) === getHalfSizeText(name) ||
-        getHalfSizeText(song.name) === getHalfSizeText(simplifiedName)
-      ) {
-        currentScore += 7;
-        if (getHalfSizeText(song.name).length > 2) {
-          currentScore += 1;
+      } else {
+        songName = songName.toLowerCase();
+        if (songName === queryName1) {
+          currentScore += 9.1;
+        } else {
+          songName = sify(songName);
+          if (songName === queryName2) {
+            currentScore += 9;
+          } else {
+            songName = getHalfSizeText(songName);
+            if (songName === queryName3) {
+              currentScore += 8.1;
+            } else {
+              songName = removeSongFeat(songName);
+              if (songName === queryName4) {
+                currentScore += 8;
+              } else {
+                songName = getText(songName);
+                if (songName === queryName5) {
+                  currentScore += 7;
+                } else if (
+                  (songName.includes(queryName5) || queryName5.includes(songName)) &&
+                  songName.length > 5 &&
+                  queryName5.length > 5
+                ) {
+                  currentScore += 6;
+                }
+              }
+            }
+          }
         }
-      } else if (getText(song.name) === getText(name)) {
-        currentScore += 7;
       }
 
-      const queryArtistsArr = artists.split(',').sort();
-      const artistsArr = song.artists.map(e => e.name).sort();
-      const simplifiedQueryArtistsArr = simplifiedArtists.split(',').sort();
-      const simplifiedArtistsArr = song.artists.map(e => sify(e.name)).sort();
-      const l = queryArtistsArr.length + artistsArr.length;
-      if (queryArtistsArr.join(',') === artistsArr.join(',')) {
-        currentScore += 9;
-      } else if (
-        simplifiedArtists
-          .split(',')
-          .sort()
-          .join(',') === artistsArr.join(',')
-      ) {
-        currentScore += 9;
-      } else if (new Set([...queryArtistsArr, ...artistsArr]).size < l) {
-        currentScore += 8;
-      } else if (
-        new Set([...queryArtistsArr.map(e => e.toLowerCase()), ...artistsArr.map(e => e.toLowerCase())]).size < l
-      ) {
-        currentScore += 7;
-      } else if (new Set([...simplifiedQueryArtistsArr, ...simplifiedArtistsArr]).size < l) {
-        currentScore += 7;
+      let songArtistsArr = song.artists.map(e => e.name).sort();
+      const len = queryArtistsArr.length + songArtistsArr.length;
+      if (queryArtistsArr.join() === songArtistsArr.join()) {
+        currentScore += 6;
+      } else {
+        songArtistsArr = songArtistsArr.map(e => e.toLowerCase());
+        if (queryArtistsArr1.join() === songArtistsArr.join()) {
+          currentScore += 5.3;
+        } else if (new Set([...queryArtistsArr1, ...songArtistsArr]).size < len) {
+          currentScore += 5.2;
+        } else {
+          songArtistsArr = songArtistsArr.map(e => sify(e));
+          if (queryArtistsArr2.join() === songArtistsArr.join()) {
+            currentScore += 5.1;
+          } else if (new Set([...queryArtistsArr2, ...songArtistsArr]).size < len) {
+            currentScore += 5;
+          }
+        }
       }
 
       if (currentScore > score) {
