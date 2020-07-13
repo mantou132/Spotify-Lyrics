@@ -47,6 +47,14 @@ export const events = {
     ec: 'Click',
     ea: 'AutoSelectTrack',
   },
+  openOptionsPage: {
+    ec: 'Window',
+    ea: 'OpenOptionsPage',
+  },
+  openPopupPage: {
+    ec: 'Window',
+    ea: 'OpenPopupPage',
+  },
 };
 
 export function sendEvent(cid: string, e: Event, options?: EventOptionalParams) {

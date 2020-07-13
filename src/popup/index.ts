@@ -3,7 +3,10 @@ import { render, html } from '@mantou/gem';
 
 import { I18nMsgKeys } from '../common/consts';
 
+import { sendEvent, events } from '../common/ga';
+
 import './elements/root';
+import { getOptions } from '../options/store';
 
 render(
   html`
@@ -61,3 +64,5 @@ render(
   `,
   document.body,
 );
+
+sendEvent(getOptions().cid, events.openPopupPage);
