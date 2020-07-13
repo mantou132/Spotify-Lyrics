@@ -1,41 +1,37 @@
-import { LocalStorageKeys } from '../common/consts';
+// Cannot be used in webpage
 
-export const lyricsPositions = ['page', 'pip'] as const;
+import { LocalStorageKeys, Options } from '../common/consts';
 
-type CheckboxValue = 'on' | 'off';
+let optionsCache: Options | null = null;
 
-const validateOrigin = () => {
-  if (location.protocol.startsWith('http')) throw new Error('origin error');
-};
-
-export class Options {
-  'strict-mode': CheckboxValue;
-  'only-cover': CheckboxValue;
-  'clean-lyrics': CheckboxValue;
-  'show-on': typeof lyricsPositions[number];
-  'cid': string;
-
-  constructor(o: Partial<Options> = {}) {
-    validateOrigin();
-    this['strict-mode'] = o['strict-mode'] || 'off';
-    this['only-cover'] = o['only-cover'] || 'off';
-    this['clean-lyrics'] = o['clean-lyrics'] || 'off';
-    this['show-on'] = o['show-on'] || 'pip';
-    this.cid = `${Date.now()}-${Math.random()}`;
+export function getOptions() {
+  if (optionsCache) return optionsCache;
+  optionsCache = {} as Options;
+  optionsCache['strict-mode'] = 'off';
+  optionsCache['only-cover'] = 'off';
+  optionsCache['clean-lyrics'] = 'off';
+  optionsCache['show-on'] = 'pip';
+  optionsCache.cid = `${Date.now()}-${Math.random()}`;
+  const localOptionsStr = localStorage.getItem(LocalStorageKeys.CONFIG);
+  if (localOptionsStr) {
+    try {
+      Object.assign(optionsCache, JSON.parse(localOptionsStr));
+      localStorage.setItem(LocalStorageKeys.CONFIG, JSON.stringify(optionsCache));
+    } catch {}
   }
-
-  static init(): Options {
-    validateOrigin();
-    const result = new Options();
-    const localOptionsStr = localStorage.getItem(LocalStorageKeys.CONFIG);
-    if (localOptionsStr) {
-      try {
-        Object.assign(result, JSON.parse(localOptionsStr));
-        localStorage.setItem(LocalStorageKeys.CONFIG, JSON.stringify(result));
-      } catch {
-        //
-      }
-    }
-    return result;
-  }
+  return optionsCache;
 }
+
+export function updateOptions(value: Partial<Options>) {
+  optionsCache = Object.assign(getOptions(), value);
+  localStorage.setItem(LocalStorageKeys.CONFIG, JSON.stringify(optionsCache));
+}
+
+window.addEventListener('storage', () => {
+  const localOptionsStr = localStorage.getItem(LocalStorageKeys.CONFIG);
+  if (localOptionsStr) {
+    try {
+      optionsCache = Object.assign({}, optionsCache, JSON.parse(localOptionsStr));
+    } catch {}
+  }
+});

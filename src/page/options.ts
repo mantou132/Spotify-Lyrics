@@ -1,5 +1,4 @@
-import { Event, Message } from '../common/consts';
-import { Options } from '../options/store';
+import { Event, Message, Options } from '../common/consts';
 
 export const optionsPromise = new Promise<Options>(res => {
   // get config from content script

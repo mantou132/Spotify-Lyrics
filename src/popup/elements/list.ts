@@ -3,13 +3,13 @@ import { html, customElement, connectStore, GemElement } from '@mantou/gem';
 import './item';
 import { store, changeSong } from '../store';
 import { events, sendEvent } from '../../common/ga';
-import { Options } from '../../options/store';
+import { getOptions } from '../../options/store';
 
 @connectStore(store)
 @customElement('app-track-list')
 export class SongList extends GemElement {
   select = (id: number) => {
-    sendEvent(Options.init().cid, events.selectTrack);
+    sendEvent(getOptions().cid, events.selectTrack);
     changeSong(id);
   };
   render() {

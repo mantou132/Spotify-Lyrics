@@ -20,6 +20,16 @@ export const LocalStorageKeys = {
   CONFIG: 'config',
 };
 
+export const LyricsPositions = ['page', 'pip'] as const;
+type CheckboxValue = 'on' | 'off';
+export interface Options {
+  'strict-mode': CheckboxValue;
+  'only-cover': CheckboxValue;
+  'clean-lyrics': CheckboxValue;
+  'show-on': typeof LyricsPositions[number];
+  cid: string;
+}
+
 type Keys<T> = {
   [K in keyof T]: string;
 };

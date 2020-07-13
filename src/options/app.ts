@@ -2,11 +2,11 @@ import { html, customElement, GemElement, refobject, RefObject } from '@mantou/g
 
 import { browser } from 'webextension-polyfill-ts';
 
-import { LocalStorageKeys, Message, Event as MessageEvent, I18nMsgKeys } from '../common/consts';
+import { Message, Event as MessageEvent, I18nMsgKeys, Options, LyricsPositions } from '../common/consts';
 
-import { Options, lyricsPositions } from './store';
+import { getOptions, updateOptions } from './store';
 
-const options = Options.init();
+const options = getOptions();
 
 // https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent
 type SubmitEvent = Event;
@@ -30,7 +30,7 @@ export class OptionsApp extends GemElement<{ changed: boolean }> {
       value[k as keyof Options] = v as any;
     });
 
-    localStorage.setItem(LocalStorageKeys.CONFIG, JSON.stringify(new Options(value)));
+    updateOptions(value);
 
     this.setState({ changed: false });
 
@@ -90,7 +90,7 @@ export class OptionsApp extends GemElement<{ changed: boolean }> {
         <div class="form-item">
           <label>${browser.i18n.getMessage(I18nMsgKeys.optionsLyricsPosition)}</label>
           <select name="${'show-on' as keyof Options}">
-            ${lyricsPositions.map(
+            ${LyricsPositions.map(
               v => html`
                 <option ?selected=${options['show-on'] === v} value=${v}>${v}</option>
               `,

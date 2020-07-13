@@ -1,5 +1,4 @@
-import { Event } from '../common/consts';
-import { Options } from '../options/store';
+import { Event, Options } from '../common/consts';
 
 import generateSVG from './svg';
 import { setSongId } from './store';
