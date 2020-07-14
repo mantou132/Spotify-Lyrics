@@ -58,6 +58,7 @@ if (!document.pictureInPictureEnabled) {
 }
 
 optionsPromise.then(options => {
+  // Rewrite PIP WebAPI
   if (options['show-on'] === 'page') {
     polyfill();
   }

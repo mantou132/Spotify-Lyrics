@@ -65,4 +65,11 @@ render(
   document.body,
 );
 
+setTimeout(() => {
+  // fix firefox overflow menu
+  if (matchMedia('(min-width: 20.1rem)').matches) {
+    document.body.style.width = '100%';
+  }
+}, 200);
+
 sendEvent(getOptions().cid, events.openPopupPage);

@@ -9,13 +9,20 @@ const createElement: typeof document.createElement = document.createElement.bind
 
 let audio: HTMLAudioElement | null = null;
 
-video.addEventListener('enterpictureinpicture', () => {
-  const msg: Message = { type: Event.POPUP_ACTIVE, data: true };
+const setPopupState = (active: boolean) => {
+  const msg: Message = { type: Event.POPUP_ACTIVE, data: active };
   window.postMessage(msg, '*');
+};
+
+video.addEventListener('enterpictureinpicture', () => {
+  setPopupState(true);
 });
 video.addEventListener('leavepictureinpicture', () => {
-  const msg: Message = { type: Event.POPUP_ACTIVE, data: false };
-  window.postMessage(msg, '*');
+  setPopupState(false);
+});
+// When the lyrics are displayed on the page
+window.addEventListener('beforeunload', () => {
+  if (document.pictureInPictureElement) setPopupState(false);
 });
 
 // safari not support media session, pip contorl video
