@@ -33,7 +33,7 @@ const polyfill = () => {
     const { LYRICS_CONTAINER_SELECTOR } = await config;
     const container = document.querySelector(LYRICS_CONTAINER_SELECTOR);
     if (container) {
-      this.setAttribute('style', 'width: 100%; position: relative;');
+      this.setAttribute('style', 'width: 100%; position: relative; height: auto;');
       container.append(this);
       document.pictureInPictureElement = this;
       this.dispatchEvent(new CustomEvent('enterpictureinpicture'));
