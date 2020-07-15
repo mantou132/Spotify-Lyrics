@@ -28,10 +28,10 @@ config.then(({ PIP_BTN_SELECTOR }) => {
 });
 
 export const insetLyricsBtn = async () => {
-  const { BTN_WRAPPER_SELECTOR } = await config;
+  const { BTN_WRAPPER_SELECTOR, BTN_LIKE_SELECTOR } = await config;
 
   const btnWrapper = document.querySelector(BTN_WRAPPER_SELECTOR) as HTMLDivElement;
-  const likeBtn = btnWrapper?.children?.[0];
+  const likeBtn = document.querySelector(BTN_LIKE_SELECTOR) as HTMLButtonElement;
   if (!btnWrapper || !likeBtn) return;
 
   if (btnWrapper.getElementsByClassName(LYRICS_CLASSNAME).length) return;
