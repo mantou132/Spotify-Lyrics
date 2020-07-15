@@ -32,22 +32,28 @@ config.then(({ ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR }) => {
       // Need to remember the last cover image
       let largeImage: HTMLImageElement;
       cover.addEventListener('load', () => {
-        // https://github.com/mantou132/Spotify-Lyrics/issues/26#issuecomment-638019333
-        const largeUrl = cover.src.replace('00004851', '0000b273');
-        largeImage = new Image();
-        largeImage.crossOrigin = 'anonymous';
-        largeImage.addEventListener('load', function() {
-          if (this !== largeImage) return;
-          ctx.filter = `blur(0px)`;
-          ctx.drawImage(largeImage, 0, 0, video.width, video.height);
-        });
-        largeImage.addEventListener('error', () => {
+        const draw = () => {
           ctx.imageSmoothingEnabled = false;
           const blur = 10;
           ctx.filter = `blur(${blur}px)`;
           ctx.drawImage(cover, -blur * 2, -blur * 2, video.width + 4 * blur, video.height + 4 * blur);
-        });
-        largeImage.src = largeUrl;
+        };
+        // https://github.com/mantou132/Spotify-Lyrics/issues/26#issuecomment-638019333
+        const reg = /00004851(?=\w{24}$)/;
+        if (!reg.test(cover.src)) {
+          draw();
+        } else {
+          const largeUrl = cover.src.replace(reg, '0000b273');
+          largeImage = new Image();
+          largeImage.crossOrigin = 'anonymous';
+          largeImage.addEventListener('load', function() {
+            if (this !== largeImage) return;
+            ctx.filter = `blur(0px)`;
+            ctx.drawImage(largeImage, 0, 0, video.width, video.height);
+          });
+          largeImage.addEventListener('error', draw);
+          largeImage.src = largeUrl;
+        }
       });
       const infoEleObserver = new MutationObserver(() => {
         updateLyric();
