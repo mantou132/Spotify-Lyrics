@@ -15,13 +15,13 @@ const gaRequiredPayload = {
 };
 
 interface EventOptionalParams {
-  el?: string;
-  ev?: string;
+  el?: string; // event label
+  ev?: string; // event value
 }
 
 interface EventRequiredParams {
-  ec: string;
-  ea: string;
+  ec: string; // event category
+  ea: string; // event action
 }
 
 type Event = EventRequiredParams & EventOptionalParams;
@@ -55,6 +55,10 @@ export const events = {
     ec: 'Window',
     ea: 'OpenPopupPage',
   },
+  installAsPWA: {
+    ec: 'UserAgent',
+    ea: 'Install',
+  },
 };
 
 export function sendEvent(cid: string, e: Event, options?: EventOptionalParams) {
@@ -65,4 +69,13 @@ export function sendEvent(cid: string, e: Event, options?: EventOptionalParams) 
     ...e,
     ...options,
   } as Record<string, string>);
+}
+
+export function sendAppInfo(cid: string, isPWA: boolean) {
+  postReq({
+    cid,
+    t: 'screenview',
+    ...gaRequiredPayload,
+    an: isPWA ? 'standalone-pwa' : 'webpage',
+  });
 }
