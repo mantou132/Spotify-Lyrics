@@ -1,7 +1,7 @@
 import sify from 'chinese-conv/tongwen/tongwen-ts';
 
 import { Message, Event } from '../common/consts';
-import { events, sendEvent } from '../common/ga';
+import { sendPageView } from '../common/ga';
 
 import config from './config';
 
@@ -75,8 +75,11 @@ export function sendMatchedData(data?: Partial<SharedData>) {
 
 async function searchSong(query: Query) {
   const options = await optionsPromise;
-  sendEvent(options.cid, events.searchLyrics);
   const { name = '', artists = '' } = query;
+  sendPageView(options.cid, {
+    pathname: '/lyrics/search',
+    search: new URLSearchParams({ name, artists }),
+  });
   const queryName = name;
   const queryName1 = queryName.toLowerCase();
   const queryName2 = sify(queryName1);
@@ -171,7 +174,10 @@ async function searchSong(query: Query) {
     if (saveId) songId = saveId;
     if (!songId) {
       console.log('Not matched:', { query, songs, rank: score });
-      sendEvent(options.cid, events.notMatch, { el: 'TrackInfo', ev: `${artists} ${name}` });
+      sendPageView(options.cid, {
+        pathname: '/lyrics/notmatch',
+        search: new URLSearchParams({ name, artists }),
+      });
     }
   } finally {
     sendMatchedData({ list: songs, id: songId, name, artists });
@@ -187,7 +193,12 @@ async function fetchLyric(songId: number) {
     const { lrc }: SongResult = await (
       await fetch(`${API_HOST}/lyric?${new URLSearchParams({ id: String(songId) })}`)
     ).json();
-    if (!lrc?.lyric) sendEvent(options.cid, events.noLyrics, { el: 'TrackID', ev: String(songId) });
+    if (!lrc?.lyric) {
+      sendPageView(options.cid, {
+        pathname: '/lyrics/notfound',
+        search: new URLSearchParams({ id: String(songId) }),
+      });
+    }
     return lrc?.lyric || '';
   } catch {
     return '';

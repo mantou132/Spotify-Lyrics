@@ -1,5 +1,5 @@
 import { Event, Options } from '../common/consts';
-import { sendAppInfo, sendEvent, events } from '../common/ga';
+import { sendPageView, sendEvent, events } from '../common/ga';
 
 import generateSVG from './svg';
 import { setSongId } from './store';
@@ -94,7 +94,11 @@ optionsPromise.then(opts => {
   options = opts;
   update();
 
-  sendAppInfo(opts.cid, matchMedia('(display-mode: standalone)').matches);
+  // pwa/webpage proportion
+  sendPageView(opts.cid, {
+    pathname: '/',
+    search: `utm_source=${matchMedia('(display-mode: standalone)').matches ? 'pwa' : 'webpage'}`,
+  });
 
   // https://github.com/w3c/manifest/pull/836
   window.addEventListener('appinstalled', () => {

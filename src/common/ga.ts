@@ -14,31 +14,12 @@ const gaRequiredPayload = {
   tid: process.env.NODE_ENV === 'production' ? 'UA-163443161-1' : 'UA-88601817-2',
 };
 
-interface EventOptionalParams {
-  el?: string; // event label
-  ev?: string; // event value
-}
-
-interface EventRequiredParams {
+interface EventParams {
   ec: string; // event category
   ea: string; // event action
 }
 
-type Event = EventRequiredParams & EventOptionalParams;
-
 export const events = {
-  searchLyrics: {
-    ec: 'Load',
-    ea: 'LoadLyrics',
-  },
-  notMatch: {
-    ec: 'Load',
-    ea: 'NotMatchLyrics',
-  },
-  noLyrics: {
-    ec: 'Load',
-    ea: 'NoLyrics',
-  },
   selectTrack: {
     ec: 'Click',
     ea: 'ManuallySelectTrack',
@@ -61,21 +42,28 @@ export const events = {
   },
 };
 
-export function sendEvent(cid: string, e: Event, options?: EventOptionalParams) {
+export function sendEvent(cid: string, payload: EventParams) {
   postReq({
     cid,
     t: 'event',
     ...gaRequiredPayload,
-    ...e,
-    ...options,
-  } as Record<string, string>);
+    ...payload,
+  });
 }
 
-export function sendAppInfo(cid: string, isPWA: boolean) {
+interface PageViewParams {
+  pathname?: string;
+  search?: string | URLSearchParams;
+}
+
+export function sendPageView(cid: string, payload: PageViewParams) {
+  const { pathname = '/', search = '' } = payload;
   postReq({
     cid,
-    t: 'screenview',
+    t: 'pageview',
+    dh: location.host,
+    dl: `${location.origin}${pathname}?${search}`,
+    dp: pathname,
     ...gaRequiredPayload,
-    an: isPWA ? 'standalone-pwa' : 'webpage',
   });
 }
