@@ -1,4 +1,5 @@
 // https://developers.google.com/analytics/devguides/collection/protocol/v1/devguide
+// https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
 // Support extension origin and spotify origin, And share ga cid
 
 const postReq = (params: Record<string, string>) => {
@@ -20,6 +21,18 @@ interface EventParams {
 }
 
 export const events = {
+  searchLyrics: {
+    ec: 'Load',
+    ea: 'LoadLyrics',
+  },
+  notMatch: {
+    ec: 'Load',
+    ea: 'NotMatchLyrics',
+  },
+  noLyrics: {
+    ec: 'Load',
+    ea: 'NoLyrics',
+  },
   selectTrack: {
     ec: 'Click',
     ea: 'ManuallySelectTrack',
@@ -36,34 +49,30 @@ export const events = {
     ec: 'Window',
     ea: 'OpenPopupPage',
   },
+  startUp: {
+    ec: 'UserAgent',
+    ea: 'StartUp',
+  },
   installAsPWA: {
     ec: 'UserAgent',
     ea: 'Install',
   },
 };
 
-export function sendEvent(cid: string, payload: EventParams) {
+export function sendEvent(cid: string, payload: EventParams, customOptions: Record<string, string> = {}) {
   postReq({
     cid,
     t: 'event',
+    ul: navigator.language.toLowerCase(),
+    sr: `${screen.width}x${screen.height}`,
     ...gaRequiredPayload,
     ...payload,
-  });
-}
-
-interface PageViewParams {
-  pathname?: string;
-  search?: string | URLSearchParams;
-}
-
-export function sendPageView(cid: string, payload: PageViewParams) {
-  const { pathname = '/', search = '' } = payload;
-  postReq({
-    cid,
-    t: 'pageview',
-    dh: location.host,
-    dl: `${location.origin}${pathname}?${search}`,
-    dp: pathname,
-    ...gaRequiredPayload,
+    ...customOptions,
+    ...(location.protocol.startsWith('http')
+      ? {
+          vp: `${innerWidth}x${innerHeight}`,
+          cs: matchMedia('(display-mode: standalone)').matches ? 'pwa' : 'webpage',
+        }
+      : {}),
   });
 }
