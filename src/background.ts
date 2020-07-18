@@ -18,3 +18,5 @@ browser.runtime.onMessage.addListener((msg: Message) => {
     }
   }
 });
+
+browser.runtime.setUninstallURL('https://forms.gle/bUWyEqfSTCU9NEwEA');

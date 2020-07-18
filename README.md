@@ -55,3 +55,5 @@ npm run build:zip
 
 The extension requires a stable `NeteaseCloudMusicApi` service or
 other better lyrics service.
+
+[Unmatched lyrics report](https://datastudio.google.com/reporting/bfd79c68-f9f4-4af5-8e51-a12d3d6be450)
