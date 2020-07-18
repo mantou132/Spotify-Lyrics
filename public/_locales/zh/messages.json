@@ -23,6 +23,10 @@
     "message": "保存(会刷新 Spotify)"
   },
 
+  "optionsSmoothScroll": {
+    "message": "启用歌词平滑滚动(更高的 CPU 占用)？"
+  },
+
   "optionsStrictMatchMode": {
     "message": "使用严格匹配模式(艺术家需要匹配)"
   },

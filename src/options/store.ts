@@ -7,6 +7,7 @@ let optionsCache: Options | null = null;
 export function getOptions() {
   if (optionsCache) return optionsCache;
   optionsCache = {} as Options;
+  optionsCache['lyrics-smooth-scroll'] = 'off';
   optionsCache['strict-mode'] = 'off';
   optionsCache['only-cover'] = 'off';
   optionsCache['clean-lyrics'] = 'off';

@@ -29,6 +29,11 @@
     "description": "Save options"
   },
 
+  "optionsSmoothScroll": {
+    "message": "Use smooth scroll(higher cpu load)?",
+    "description": "Use lyrics smooth scroll"
+  },
+
   "optionsStrictMatchMode": {
     "message": "Use strict match mode(artists need to match)",
     "description": "Use song strict matching mode"

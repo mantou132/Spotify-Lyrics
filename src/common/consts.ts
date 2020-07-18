@@ -23,6 +23,7 @@ export const LocalStorageKeys = {
 export const LyricsPositions = ['page', 'pip'] as const;
 type CheckboxValue = 'on' | 'off';
 export interface Options {
+  'lyrics-smooth-scroll': CheckboxValue;
   'strict-mode': CheckboxValue;
   'only-cover': CheckboxValue;
   'clean-lyrics': CheckboxValue;
@@ -38,3 +39,12 @@ export const I18nMsgKeys = Object.keys(i18nEnMessages).reduce((p, c: keyof typeo
   p[c] = c;
   return p;
 }, {} as Keys<typeof i18nEnMessages>);
+
+export const isSupportES2018RegExp = (function() {
+  try {
+    /xx/su;
+    return true;
+  } catch {
+    return false;
+  }
+})();

@@ -46,7 +46,7 @@ const style = css`
   }
 `;
 
-export default function generateSVG(lyric: Lyric = [], currentTime = 0) {
+function generateSVG(lyric: Lyric = [], currentTime = 0) {
   let currentIndex = 0;
   let current = '';
   let before = '';
@@ -87,4 +87,18 @@ export default function generateSVG(lyric: Lyric = [], currentTime = 0) {
       </foreignObject>
     </svg>
   `;
+}
+
+export async function renderLyricsWithSVG(
+  ctx: CanvasRenderingContext2D,
+  lyrics: Lyric,
+  currentTime: number, // s
+): Promise<HTMLImageElement> {
+  const url = `data:image/svg+xml,${encodeURIComponent(generateSVG(lyrics, currentTime))}`;
+  const img = new Image(ctx.canvas.width, ctx.canvas.height);
+  return new Promise((res, rej) => {
+    img.onload = () => res(img);
+    img.onerror = rej;
+    img.src = url;
+  });
 }

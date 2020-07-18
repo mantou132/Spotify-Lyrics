@@ -2,7 +2,14 @@ import { html, customElement, GemElement, refobject, RefObject } from '@mantou/g
 
 import { browser } from 'webextension-polyfill-ts';
 
-import { Message, Event as MessageEvent, I18nMsgKeys, Options, LyricsPositions } from '../common/consts';
+import {
+  Message,
+  Event as MessageEvent,
+  I18nMsgKeys,
+  Options,
+  LyricsPositions,
+  isSupportES2018RegExp,
+} from '../common/consts';
 
 import { getOptions, updateOptions } from './store';
 
@@ -60,7 +67,16 @@ export class OptionsApp extends GemElement<{ changed: boolean }> {
       </style>
       <form ref=${this.formRef.ref} @input=${this.inputHandler} @submit=${this.submitHandler}>
 
-      <label class="form-item">
+        <label class="form-item" ?hidden="${!isSupportES2018RegExp}">
+          <input
+            type="checkbox"
+            name="${'lyrics-smooth-scroll' as keyof Options}"
+            ?checked="${options['lyrics-smooth-scroll'] === 'on'}">
+          </input>
+          ${browser.i18n.getMessage(I18nMsgKeys.optionsSmoothScroll)}
+        </label>
+
+        <label class="form-item">
           <input
             type="checkbox"
             name="${'strict-mode' as keyof Options}"
