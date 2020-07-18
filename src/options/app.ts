@@ -30,13 +30,19 @@ export class OptionsApp extends GemElement<{ changed: boolean }> {
 
   submitHandler = (e: SubmitEvent) => {
     e.preventDefault();
+    if (!this.formRef.element) return;
 
-    const map = [...new FormData(this.formRef.element || undefined)];
-    const value: Partial<Options> = {};
-    map.forEach(([k, v]) => {
-      value[k as keyof Options] = v as any;
+    const value: any = {};
+    [...this.formRef.element.elements].forEach((e: HTMLInputElement | HTMLSelectElement) => {
+      const name = e.name as keyof Options;
+      if (name) {
+        if (e instanceof HTMLInputElement) {
+          value[name] = e.checked ? 'on' : 'off';
+        } else {
+          value[name] = e.value;
+        }
+      }
     });
-
     updateOptions(value);
 
     this.setState({ changed: false });
