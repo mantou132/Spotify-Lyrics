@@ -188,7 +188,7 @@ async function fetchLyric(songId: number) {
       await fetch(`${API_HOST}/lyric?${new URLSearchParams({ id: String(songId) })}`)
     ).json();
     if (!lrc?.lyric) {
-      sendEvent(options.cid, events.noLyrics, { cd2: `${songId}` });
+      sendEvent(options.cid, events.noLyrics, { cd1: `${sharedData.name} - ${sharedData.artists}`, cd2: `${songId}` });
     }
     return lrc?.lyric || '';
   } catch {
