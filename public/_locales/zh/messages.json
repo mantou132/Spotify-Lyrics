@@ -24,7 +24,7 @@
   },
 
   "optionsSmoothScroll": {
-    "message": "启用歌词平滑滚动(更高的 CPU 占用)？"
+    "message": "启用歌词平滑滚动(更高的 CPU 占用)"
   },
 
   "optionsStrictMatchMode": {
@@ -36,10 +36,10 @@
   },
 
   "optionsShowCleanLyrics": {
-    "message": "显示干净歌词"
+    "message": "显示干净歌词(不显示作词作曲等信息)"
   },
 
   "optionsLyricsPosition": {
-    "message": "将歌词显示在哪里？"
+    "message": "歌词显示位置"
   }
 }

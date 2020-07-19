@@ -30,7 +30,7 @@
   },
 
   "optionsSmoothScroll": {
-    "message": "Use smooth scroll(higher cpu load)?",
+    "message": "Use smooth scroll(higher cpu load)",
     "description": "Use lyrics smooth scroll"
   },
 
@@ -45,12 +45,12 @@
   },
 
   "optionsShowCleanLyrics": {
-    "message": "Show clean lyrics",
+    "message": "Show clean lyrics(hide ads and other content)",
     "description": "Show clean lyrics option"
   },
 
   "optionsLyricsPosition": {
-    "message": "Where the lyrics show?",
+    "message": "Where the lyrics show",
     "description": "Lyrics position option"
   }
 }

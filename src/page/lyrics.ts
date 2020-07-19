@@ -204,6 +204,51 @@ class Line {
 export type Lyric = Line[];
 
 export let lyric: Lyric = [];
+
+function parseLyrics(lyricStr: string, enabledCleanLyrics = false) {
+  const lines = lyricStr.split('\n').map(line => line.trim());
+  return lines
+    .map(line => {
+      // ["[ar:Beyond]"]
+      // ["[03:10]"]
+      // ["[03:10]", "永远高唱我歌"]
+      // ["永远高唱我歌"]
+      // ["[03:10]", "[03:10]", "永远高唱我歌"]
+      const matchResult = line.match(/(\[.*?\])|([^\[\]]+)/g) || [line];
+      const textIndex = matchResult.findIndex(slice => !slice.endsWith(']'));
+      let text = ' ';
+      if (textIndex > -1) {
+        text = matchResult.splice(textIndex, 1)[0].trim();
+      }
+      return matchResult.map(slice => {
+        const result = new Line();
+        const [key, value] = slice.match(/[^\[\]]+/g)?.[0].split(':') || [];
+        const [min, sec] = [parseFloat(key), parseFloat(value)];
+        if (!isNaN(min)) {
+          if (enabledCleanLyrics && /^(作\s*词|作\s*曲)\s*(:|：)/.test(text)) {
+            result.text = '';
+          } else {
+            result.startTime = min * 60 + sec;
+            result.text = text;
+          }
+        } else {
+          result.text = enabledCleanLyrics ? '' : `${key?.toUpperCase()}: ${value}`;
+        }
+        return result;
+      });
+    })
+    .flat()
+    .sort((a, b) => {
+      if (a.startTime === null) {
+        return 0;
+      }
+      if (b.startTime === null) {
+        return 1;
+      }
+      return a.startTime - b.startTime;
+    });
+}
+
 export async function updateLyric(query?: Query | number) {
   lyric = [];
 
@@ -227,42 +272,5 @@ export async function updateLyric(query?: Query | number) {
   if (!lyricStr) return;
 
   const options = await optionsPromise;
-
-  const lines = lyricStr.split('\n').map(line => line.trim());
-  lyric = lines
-    .map(line => {
-      // ["[ar:Beyond]"]
-      // ["[03:10]"]
-      // ["[03:10]", "永远高唱我歌"]
-      // ["永远高唱我歌"]
-      // ["[03:10]", "[03:10]", "永远高唱我歌"]
-      const matchResult = line.match(/(\[.*?\])|([^\[\]]+)/g) || [line];
-      const textIndex = matchResult.findIndex(slice => !slice.endsWith(']'));
-      let text = ' ';
-      if (textIndex > -1) {
-        text = matchResult.splice(textIndex, 1)[0];
-      }
-      return matchResult.map(slice => {
-        const result = new Line();
-        const [key, value] = slice.match(/[^\[\]]+/g)?.[0].split(':') || [];
-        const [min, sec] = [parseFloat(key), parseFloat(value)];
-        if (!isNaN(min)) {
-          result.startTime = min * 60 + sec;
-          result.text = text?.trim();
-        } else {
-          result.text = options['clean-lyrics'] === 'on' ? '' : `${key?.toUpperCase()}: ${value}`;
-        }
-        return result;
-      });
-    })
-    .flat()
-    .sort((a, b) => {
-      if (a.startTime === null) {
-        return 0;
-      }
-      if (b.startTime === null) {
-        return 1;
-      }
-      return a.startTime - b.startTime;
-    });
+  lyric = parseLyrics(lyricStr, options['clean-lyrics'] === 'on');
 }
