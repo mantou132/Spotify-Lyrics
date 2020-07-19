@@ -1,8 +1,11 @@
+import { sendEvent, events } from '../common/ga';
+
 import config from './config';
 
 import { video, audio } from './element';
 import { appendStyle, css } from './utils';
 import { updateLyric } from './lyrics';
+import { optionsPromise } from './options';
 
 const LYRICS_CLASSNAME = 'spoticon-lyrics-16';
 const LYRICS_ACTIVE_CLASSNAME = 'active';
@@ -27,7 +30,24 @@ config.then(({ PIP_BTN_SELECTOR }) => {
   `);
 });
 
+window.addEventListener('keyup', async e => {
+  const options = await optionsPromise;
+  const { BTN_WRAPPER_SELECTOR } = await config;
+  const btnWrapper = document.querySelector(BTN_WRAPPER_SELECTOR) as HTMLDivElement;
+  const lyricsBtn = btnWrapper.getElementsByClassName(LYRICS_CLASSNAME)[0] as HTMLButtonElement;
+  if (!lyricsBtn) return;
+  const element = (e.composedPath?.()[0] || e.target) as HTMLElement;
+  if (element.isContentEditable || element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+    return;
+  }
+  if (e.key === 'l') {
+    sendEvent(options.cid, events.keypressToggleLyrics);
+    lyricsBtn.click();
+  }
+});
+
 export const insetLyricsBtn = async () => {
+  const options = await optionsPromise;
   const { BTN_WRAPPER_SELECTOR, BTN_LIKE_SELECTOR } = await config;
 
   const btnWrapper = document.querySelector(BTN_WRAPPER_SELECTOR) as HTMLDivElement;
@@ -39,7 +59,7 @@ export const insetLyricsBtn = async () => {
   btnWrapper.style.display = 'flex';
   const lyricsBtn = likeBtn.cloneNode(true) as HTMLButtonElement;
   lyricsBtn.classList.add(LYRICS_CLASSNAME);
-  lyricsBtn.title = 'Toggle lyrics';
+  lyricsBtn.title = 'Toggle lyrics(L)';
   if (document.pictureInPictureElement === video) lyricsBtn.classList.add(LYRICS_ACTIVE_CLASSNAME);
   video.addEventListener('enterpictureinpicture', () => {
     lyricsBtn.classList.add(LYRICS_ACTIVE_CLASSNAME);
@@ -48,6 +68,7 @@ export const insetLyricsBtn = async () => {
     lyricsBtn.classList.remove(LYRICS_ACTIVE_CLASSNAME);
   });
   lyricsBtn.addEventListener('click', () => {
+    sendEvent(options.cid, events.clickToggleLyrics);
     if (document.pictureInPictureElement) {
       document.exitPictureInPicture().catch(console.error);
     } else {

@@ -41,6 +41,14 @@ export const events = {
     ec: 'Click',
     ea: 'AutoSelectTrack',
   },
+  clickToggleLyrics: {
+    ec: 'Click',
+    ea: 'ClickToggleLyrics',
+  },
+  keypressToggleLyrics: {
+    ec: 'Click',
+    ea: 'KeypressToggleLyrics',
+  },
   openOptionsPage: {
     ec: 'Window',
     ea: 'OpenOptionsPage',
