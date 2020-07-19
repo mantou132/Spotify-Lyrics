@@ -8,6 +8,7 @@
     "page.js"
   ],
   "permissions": [
+    "contextMenus",
     "tabs"
   ],
   "background": {

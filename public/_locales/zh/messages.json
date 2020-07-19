@@ -41,5 +41,13 @@
 
   "optionsLyricsPosition": {
     "message": "歌词显示位置"
+  },
+
+  "menusFeedback": {
+    "message": "反馈"
+  },
+
+  "menusRateMe": {
+    "message": "评价该扩展"
   }
 }

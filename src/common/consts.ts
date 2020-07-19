@@ -15,6 +15,11 @@ export enum Event {
   POPUP_ACTIVE = 'popup-active',
 }
 
+export const ContextItems = {
+  FEEDBACK: 'feedback',
+  RATE_ME: 'rate-me',
+};
+
 // Store in extension localStorage
 export const LocalStorageKeys = {
   CONFIG: 'config',
