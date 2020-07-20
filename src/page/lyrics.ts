@@ -205,6 +205,12 @@ export type Lyric = Line[];
 
 export let lyric: Lyric = [];
 
+function isOtherInfo(text: string) {
+  return /^(作?\s*(词|詞)|作?\s*曲|(编|編)\s*曲?|(监|監)\s*制?|制作人|后期|翻唱|题字|海报|钢琴|吉他|贝斯|.*编写|.*和声|.*提琴|.*录音室|.*工程师|.*混音师|producers|writers).*(:|：)/i.test(
+    text,
+  );
+}
+
 function parseLyrics(lyricStr: string, enabledCleanLyrics = false) {
   const lines = lyricStr.split('\n').map(line => line.trim());
   return lines
@@ -225,7 +231,7 @@ function parseLyrics(lyricStr: string, enabledCleanLyrics = false) {
         const [key, value] = slice.match(/[^\[\]]+/g)?.[0].split(':') || [];
         const [min, sec] = [parseFloat(key), parseFloat(value)];
         if (!isNaN(min)) {
-          if (enabledCleanLyrics && /^(作\s*词|作\s*曲)\s*(:|：)/.test(text)) {
+          if (enabledCleanLyrics && isOtherInfo(text)) {
             result.text = '';
           } else {
             result.startTime = min * 60 + sec;
