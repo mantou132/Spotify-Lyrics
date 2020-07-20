@@ -63,7 +63,7 @@ const getHalfSizeText = (s: string) => {
 };
 
 const removeSongFeat = (s: string) => {
-  return s.replace(/\(feat\..*\)$/i, '').trim();
+  return s.replace(/\(?(feat|with)\.?\s.*\)?$/i, '').trim();
 };
 
 const sharedData: SharedData = { list: [], id: 0, name: '', artists: '' };
@@ -73,7 +73,7 @@ export function sendMatchedData(data?: Partial<SharedData>) {
   window.postMessage(msg, '*');
 }
 
-async function searchSong(query: Query) {
+async function searchSong(query: Query, onlySearchName = false): Promise<number> {
   const options = await optionsPromise;
   const { name = '', artists = '' } = query;
   sendEvent(options.cid, events.searchLyrics, { cd1: `${name} - ${artists}` });
@@ -93,7 +93,7 @@ async function searchSong(query: Query) {
     const { API_HOST } = await config;
     const searchQuery = new URLSearchParams({
       type: '1 ',
-      keywords: `${sify(artists)} ${queryName4}`,
+      keywords: onlySearchName ? queryName4 : `${sify(artists)} ${queryName4}`,
       limit: '100',
     });
     const { result }: SearchResult = await (await fetch(`${API_HOST}/search?${searchQuery}`)).json();
@@ -170,13 +170,13 @@ async function searchSong(query: Query) {
     const saveId = await getSongId(query);
     if (saveId) songId = saveId;
     if (!songId) {
+      if (!onlySearchName) return await searchSong(query, true);
       console.log('Not matched:', { query, songs, rank: score });
       sendEvent(options.cid, events.notMatch, { cd1: `${name} - ${artists}` });
     }
-  } finally {
-    sendMatchedData({ list: songs, id: songId, name, artists });
-    return songId;
-  }
+  } catch {}
+  sendMatchedData({ list: songs, id: songId, name, artists });
+  return songId;
 }
 
 async function fetchLyric(songId: number) {
