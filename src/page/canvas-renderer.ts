@@ -2,7 +2,25 @@ import { Lyric } from './lyrics';
 
 // simple word segmentation rules
 function getWords(str: string) {
-  return str.split(/(\p{sc=Han}|\p{sc=Katakana}|\p{sc=Hiragana}|\p{sc=Hang}|\p{gc=Punctuation})|\s+/gu);
+  const result: string[] = [];
+  const words = str.split(/(\p{sc=Han}|\p{sc=Katakana}|\p{sc=Hiragana}|\p{sc=Hang}|\p{gc=Punctuation})|\s+/gu);
+  let tempWord = '';
+  words.forEach((word = ' ') => {
+    if (word) {
+      if (tempWord && /(“|')$/.test(tempWord)) {
+        // End of line not allowed
+        tempWord += word;
+      } else if (/(,|\.|\?|:|;|'|，|。|？|：|；|”)/.test(word)) {
+        // Start of line not allowed
+        tempWord += word;
+      } else {
+        if (tempWord) result.push(tempWord);
+        tempWord = word;
+      }
+    }
+  });
+  if (tempWord) result.push(tempWord);
+  return result;
 }
 
 interface Options {
@@ -32,23 +50,22 @@ function drawParagraph(ctx: CanvasRenderingContext2D, str = '', options: Options
   const lines: string[] = [];
   const measures: TextMetrics[] = [];
   let tempLine = '';
+  let textMeasures!: TextMetrics;
   for (let i = 0; i < words.length; i++) {
-    if (words[i] !== '') {
-      const word = words[i] || ' ';
-      const line = tempLine + word;
-      const textMeasures = ctx.measureText(line);
-      if (textMeasures.width > maxWidth && tempLine && word !== ' ') {
-        lines.push(tempLine);
-        measures.push(textMeasures);
-        tempLine = word;
-      } else {
-        tempLine = line;
-      }
-      if (i === words.length - 1) {
-        lines.push(tempLine);
-        measures.push(textMeasures);
-      }
+    const word = words[i];
+    const line = tempLine + word;
+    textMeasures = ctx.measureText(line);
+    if (textMeasures.width > maxWidth && tempLine && !/\s/.test(word)) {
+      lines.push(tempLine);
+      measures.push(textMeasures);
+      tempLine = word;
+    } else {
+      tempLine = line;
     }
+  }
+  if (tempLine !== '') {
+    lines.push(tempLine);
+    measures.push(textMeasures);
   }
 
   const ascent = measures.length ? measures[0].actualBoundingBoxAscent : 0;
@@ -162,6 +179,7 @@ export function renderLyricsWithCanvas(
     // just approximate location
     translateY: (selfHeight: number) => selfHeight * (1 - progress),
   });
+  // offscreenCtx.strokeRect(pos.left, pos.top, pos.width, pos.height);
 
   // prev line
   let lastBeforePos = pos;
