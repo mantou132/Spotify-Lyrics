@@ -7,6 +7,7 @@ import config from './config';
 
 import { getSongId } from './store';
 import { optionsPromise } from './options';
+import { captureException } from './utils';
 
 export interface Query {
   name: string;
@@ -109,7 +110,9 @@ async function fetchChineseName(s: string) {
         singerAlias[alia] = artist.name;
       }
     });
-  } catch {}
+  } catch (e) {
+    captureException(e);
+  }
   return singerAlias;
 }
 
@@ -221,7 +224,9 @@ async function searchSong(query: Query, onlySearchName = false): Promise<number>
       console.log('Not matched:', { query, songs, rank: score });
       sendEvent(options.cid, events.notMatch, { cd1: `${name} - ${artists}` });
     }
-  } catch {}
+  } catch (e) {
+    captureException(e);
+  }
   sendMatchedData({ list: songs, id: songId, name, artists });
   return songId;
 }

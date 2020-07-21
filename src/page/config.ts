@@ -1,7 +1,9 @@
+import { isProd } from '../common/consts';
+
 import config from './config.json';
 
 async function getConfig() {
-  if (process.env.NODE_ENV === 'production') {
+  if (isProd) {
     try {
       return (await fetch(
         'https://raw.githubusercontent.com/mantou132/Spotify-Lyrics/master/src/page/config.json',

@@ -1,3 +1,4 @@
+import { browser } from 'webextension-polyfill-ts';
 import { render, html } from '@mantou/gem';
 
 import './app';
@@ -13,3 +14,9 @@ render(
 );
 
 sendEvent(getOptions().cid, events.openOptionsPage);
+
+browser.runtime.getBackgroundPage().then(win => {
+  window.addEventListener('error', e => {
+    win?.Sentry?.captureException(e);
+  });
+});

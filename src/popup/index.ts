@@ -73,3 +73,9 @@ setTimeout(() => {
 }, 200);
 
 sendEvent(getOptions().cid, events.openPopupPage);
+
+browser.runtime.getBackgroundPage().then(win => {
+  window.addEventListener('error', e => {
+    win?.Sentry?.captureException(e);
+  });
+});

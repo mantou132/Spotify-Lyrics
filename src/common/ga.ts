@@ -2,6 +2,8 @@
 // https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
 // Support extension origin and spotify origin, And share ga cid
 
+import { isProd } from './consts';
+
 const postReq = (params: Record<string, string>) => {
   fetch('https://www.google-analytics.com/collect', {
     method: 'post',
@@ -12,7 +14,7 @@ const postReq = (params: Record<string, string>) => {
 
 const gaRequiredPayload = {
   v: '1',
-  tid: process.env.NODE_ENV === 'production' ? 'UA-163443161-1' : 'UA-88601817-2',
+  tid: isProd ? 'UA-163443161-1' : 'UA-88601817-2',
 };
 
 interface EventParams {

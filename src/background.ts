@@ -1,7 +1,23 @@
 import { browser } from 'webextension-polyfill-ts';
+import * as Sentry from '@sentry/browser';
 
-import { Message, Event, I18nMsgKeys, ContextItems } from './common/consts';
+import { Message, Event, I18nMsgKeys, ContextItems, isProd } from './common/consts';
 import { getOptions } from './options/store';
+declare global {
+  interface Window {
+    Sentry?: typeof Sentry;
+  }
+}
+
+// popup, options, contentpage share a Sentry instance
+// the submitted error event environment is background_page, such as console
+if (isProd) {
+  window.Sentry = Sentry;
+  Sentry.init({
+    dsn: 'https://124df8398d8b466fbcf09ec64bcfe144@o55145.ingest.sentry.io/5353517',
+    release: browser.runtime.getManifest().version,
+  });
+}
 
 browser.browserAction.disable();
 
@@ -16,6 +32,14 @@ browser.runtime.onMessage.addListener((msg: Message) => {
     } else {
       browser.browserAction.disable();
     }
+  }
+  if (msg?.type === Event.CAPTURE_EXCEPTION) {
+    const err = new Error(msg.data?.message);
+    err.name = msg.data?.name;
+    err.stack = msg.data?.stack;
+    window.Sentry?.captureException(err, {
+      extra: msg.data?.extra,
+    });
   }
 });
 

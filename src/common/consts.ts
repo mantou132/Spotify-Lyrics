@@ -1,5 +1,7 @@
 import i18nEnMessages from '../../public/_locales/en/messages.json';
 
+export const isProd = process.env.NODE_ENV === 'production';
+
 export interface Message<T = any> {
   type: Event;
   data?: T;
@@ -13,6 +15,7 @@ export enum Event {
   GET_OPTIONS = 'get-options',
   SEND_OPTIONS = 'send-options',
   POPUP_ACTIVE = 'popup-active',
+  CAPTURE_EXCEPTION = 'capture-exception',
 }
 
 export const ContextItems = {

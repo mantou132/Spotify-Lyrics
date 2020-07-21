@@ -11,6 +11,7 @@ import './pip';
 import './misc';
 import './observer';
 import { optionsPromise } from './options';
+import { captureException } from './utils';
 
 const INTERVAL = 80;
 
@@ -83,9 +84,9 @@ const update = async () => {
         lyricWeakMap.set(coverTrack, lyric);
         ctx.drawImage(img, 0, 0, video.width, video.height);
       }
-    } catch {
+    } catch (e) {
       if (errorLyric !== currentLyric) {
-        console.error('error lyric:', currentLyric);
+        captureException(e, currentLyric);
         errorLyric = currentLyric;
       }
       ctx.drawImage(coverTrack.canvas, 0, 0, video.width, video.height);

@@ -3,7 +3,7 @@ import { sendEvent, events } from '../common/ga';
 import config from './config';
 
 import { video, audio } from './element';
-import { appendStyle, css } from './utils';
+import { appendStyle, css, captureException } from './utils';
 import { updateLyric } from './lyrics';
 import { optionsPromise } from './options';
 
@@ -79,7 +79,9 @@ export const insetLyricsBtn = async () => {
           // automatically pause when the video is removed from the DOM tree
           if (!audio?.paused) video.play();
         })
-        .catch(console.error);
+        .catch(e => {
+          captureException(e);
+        });
     }
   });
   btnWrapper.append(lyricsBtn);
