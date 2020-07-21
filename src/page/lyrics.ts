@@ -74,6 +74,7 @@ export function sendMatchedData(data?: Partial<SharedData>) {
 }
 
 async function searchSong(query: Query, onlySearchName = false): Promise<number> {
+  const { API_HOST, SINGER } = await config;
   const options = await optionsPromise;
   const { name = '', artists = '' } = query;
   sendEvent(options.cid, events.searchLyrics, { cd1: `${name} - ${artists}` });
@@ -86,14 +87,14 @@ async function searchSong(query: Query, onlySearchName = false): Promise<number>
   const queryArtistsArr = artists.split(',').sort();
   const queryArtistsArr1 = queryArtistsArr.map(e => e.toLowerCase());
   const queryArtistsArr2 = queryArtistsArr1.map(e => sify(e));
+  const queryArtistsArr3 = queryArtistsArr.map(e => (SINGER as any)[e] || e);
 
   let songId = 0;
   let songs: Song[] = [];
   try {
-    const { API_HOST } = await config;
     const searchQuery = new URLSearchParams({
       type: '1 ',
-      keywords: onlySearchName ? queryName4 : `${sify(artists)} ${queryName4}`,
+      keywords: onlySearchName ? queryName4 : `${sify(queryArtistsArr3.join())} ${queryName4}`,
       limit: '100',
     });
     const { result }: SearchResult = await (await fetch(`${API_HOST}/search?${searchQuery}`)).json();
@@ -142,7 +143,7 @@ async function searchSong(query: Query, onlySearchName = false): Promise<number>
 
       let songArtistsArr = song.artists.map(e => e.name).sort();
       const len = queryArtistsArr.length + songArtistsArr.length;
-      if (queryArtistsArr.join() === songArtistsArr.join()) {
+      if (queryArtistsArr.join() === songArtistsArr.join() || queryArtistsArr3.join() === songArtistsArr.join()) {
         currentScore += 6;
       } else {
         songArtistsArr = songArtistsArr.map(e => e.toLowerCase());
@@ -154,7 +155,10 @@ async function searchSong(query: Query, onlySearchName = false): Promise<number>
           songArtistsArr = songArtistsArr.map(e => sify(e));
           if (queryArtistsArr2.join() === songArtistsArr.join()) {
             currentScore += 5.1;
-          } else if (new Set([...queryArtistsArr2, ...songArtistsArr]).size < len) {
+          } else if (
+            new Set([...queryArtistsArr2, ...songArtistsArr]).size < len ||
+            new Set([...queryArtistsArr3, ...songArtistsArr]).size < len
+          ) {
             currentScore += 5;
           }
         }
