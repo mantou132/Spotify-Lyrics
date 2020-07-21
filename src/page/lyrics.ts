@@ -206,7 +206,7 @@ export type Lyric = Line[];
 export let lyric: Lyric = [];
 
 function isOtherInfo(text: string) {
-  return /^(作?\s*(词|詞)|作?\s*曲|(编|編)\s*曲?|(监|監)\s*制?|制作人|后期|翻唱|题字|海报|钢琴|吉他|贝斯|.*编写|.*和声|.*提琴|.*录音室|.*工程师|.*混音师|producers|writers).*(:|：)/i.test(
+  return /^(作?\s*(词|詞)|作?\s*曲|(编|編)\s*曲?|(监|監)\s*制?|制作|出品|混音|后期|翻唱|题字|文案|海报|古筝|二胡|钢琴|吉他|贝斯|.*编写|.*和声|.*提琴|.*录音|.*工程|.*混音|.*设计|.*剪辑|producers|writers).*(:|：)/i.test(
     text,
   );
 }
