@@ -15,6 +15,7 @@ export interface Query {
 
 export interface Artist {
   name: string;
+  alias: string[];
 }
 export interface Album {
   name: string;
@@ -26,9 +27,15 @@ export interface Song {
   album: Album;
 }
 
-interface SearchResult {
+interface SearchSongsResult {
   result?: {
     songs?: Song[];
+  };
+}
+
+interface SearchArtistsResult {
+  result?: {
+    artists?: Artist[];
   };
 }
 
@@ -48,6 +55,14 @@ interface SongResult {
     lyric?: string;
   };
 }
+
+const charCodeTotal = (s: string) => {
+  let code = 0;
+  for (let i = 0; i < s.length; i++) {
+    code += s.charCodeAt(i);
+  }
+  return code;
+};
 
 const getText = (s: string) => {
   const text = s.replace(/\(.*\)|（.*）|- .*remix$/i, '').trim();
@@ -73,8 +88,33 @@ export function sendMatchedData(data?: Partial<SharedData>) {
   window.postMessage(msg, '*');
 }
 
+async function fetchChineseName(s: string) {
+  const { API_HOST } = await config;
+  const singerAlias: Record<string, string> = {};
+  const searchQuery = new URLSearchParams({
+    keywords: s,
+    type: '100',
+    limit: '100',
+  });
+  try {
+    const { result }: SearchArtistsResult = await (await fetch(`${API_HOST}/search?${searchQuery}`)).json();
+    const artists = result?.artists || [];
+    artists.forEach(artist => {
+      const alia = artist.alias
+        .map(e => e.toLowerCase())
+        .sort()
+        .join();
+      // Chinese singer's English name as an alias
+      if (alia && s.includes(alia)) {
+        singerAlias[alia] = artist.name;
+      }
+    });
+  } catch {}
+  return singerAlias;
+}
+
 async function searchSong(query: Query, onlySearchName = false): Promise<number> {
-  const { API_HOST, SINGER } = await config;
+  const { API_HOST } = await config;
   const options = await optionsPromise;
   const { name = '', artists = '' } = query;
   sendEvent(options.cid, events.searchLyrics, { cd1: `${name} - ${artists}` });
@@ -87,17 +127,20 @@ async function searchSong(query: Query, onlySearchName = false): Promise<number>
   const queryArtistsArr = artists.split(',').sort();
   const queryArtistsArr1 = queryArtistsArr.map(e => e.toLowerCase());
   const queryArtistsArr2 = queryArtistsArr1.map(e => sify(e));
-  const queryArtistsArr3 = queryArtistsArr.map(e => (SINGER as any)[e] || e);
+
+  const singerAlias = await fetchChineseName(queryArtistsArr2.join());
+
+  const queryArtistsArr3 = queryArtistsArr1.map(e => singerAlias[e] || e);
 
   let songId = 0;
   let songs: Song[] = [];
   try {
     const searchQuery = new URLSearchParams({
-      type: '1 ',
       keywords: onlySearchName ? queryName4 : `${sify(queryArtistsArr3.join())} ${queryName4}`,
+      type: '1',
       limit: '100',
     });
-    const { result }: SearchResult = await (await fetch(`${API_HOST}/search?${searchQuery}`)).json();
+    const { result }: SearchSongsResult = await (await fetch(`${API_HOST}/search?${searchQuery}`)).json();
 
     songs = result?.songs || [];
 
@@ -129,9 +172,9 @@ async function searchSong(query: Query, onlySearchName = false): Promise<number>
                 if (songName === queryName5) {
                   currentScore += 7;
                 } else if (
-                  (songName.includes(queryName5) || queryName5.includes(songName)) &&
-                  songName.length > 5 &&
-                  queryName5.length > 5
+                  (songName.startsWith(queryName5) || queryName5.startsWith(songName)) &&
+                  (songName.length > 5 || charCodeTotal(songName) > 5 * 128) &&
+                  (queryName5.length > 5 || charCodeTotal(queryName5) > 5 * 128)
                 ) {
                   currentScore += 6;
                 }
@@ -143,11 +186,11 @@ async function searchSong(query: Query, onlySearchName = false): Promise<number>
 
       let songArtistsArr = song.artists.map(e => e.name).sort();
       const len = queryArtistsArr.length + songArtistsArr.length;
-      if (queryArtistsArr.join() === songArtistsArr.join() || queryArtistsArr3.join() === songArtistsArr.join()) {
+      if (queryArtistsArr.join() === songArtistsArr.join()) {
         currentScore += 6;
       } else {
         songArtistsArr = songArtistsArr.map(e => e.toLowerCase());
-        if (queryArtistsArr1.join() === songArtistsArr.join()) {
+        if (queryArtistsArr1.join() === songArtistsArr.join() || queryArtistsArr3.join() === songArtistsArr.join()) {
           currentScore += 5.3;
         } else if (new Set([...queryArtistsArr1, ...songArtistsArr]).size < len) {
           currentScore += 5.2;
