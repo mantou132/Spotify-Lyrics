@@ -39,7 +39,7 @@ const polyfill = () => {
       this.dispatchEvent(new CustomEvent('enterpictureinpicture'));
       return;
     } else {
-      throw new Error();
+      throw new Error('Page PiP container not found');
     }
   };
 

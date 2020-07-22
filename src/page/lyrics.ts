@@ -1,11 +1,7 @@
 import sify from 'chinese-conv/tongwen/tongwen-ts';
 
-import { Message, Event } from '../common/consts';
-import { sendEvent, events } from '../common/ga';
-
 import config from './config';
 
-import { getSongId } from './store';
 import { optionsPromise } from './options';
 import { captureException } from './utils';
 
@@ -40,17 +36,6 @@ interface SearchArtistsResult {
   };
 }
 
-export interface SharedData {
-  // current track name
-  name: string;
-  // current track artists
-  artists: string;
-  // track list
-  list: Song[];
-  // selected track
-  id: number;
-}
-
 interface SongResult {
   lrc?: {
     lyric?: string;
@@ -82,13 +67,6 @@ const removeSongFeat = (s: string) => {
   return s.replace(/\(?(feat|with)\.?\s.*\)?$/i, '').trim();
 };
 
-const sharedData: SharedData = { list: [], id: 0, name: '', artists: '' };
-export function sendMatchedData(data?: Partial<SharedData>) {
-  if (data) Object.assign(sharedData, data);
-  const msg: Message = { type: Event.SEND_SONGS, data: sharedData };
-  window.postMessage(msg, '*');
-}
-
 async function fetchChineseName(s: string) {
   const { API_HOST } = await config;
   const singerAlias: Record<string, string> = {};
@@ -116,22 +94,25 @@ async function fetchChineseName(s: string) {
   return singerAlias;
 }
 
-async function searchSong(query: Query, onlySearchName = false): Promise<number> {
+export async function matchingLyrics(query: Query, onlySearchName = false): Promise<{ list: Song[]; id: number }> {
   const { API_HOST, SINGER } = await config;
   const options = await optionsPromise;
   const { name = '', artists = '' } = query;
-  sendEvent(options.cid, events.searchLyrics, { cd1: `${name} - ${artists}` });
+
   const queryName = name;
   const queryName1 = queryName.toLowerCase();
   const queryName2 = sify(queryName1);
   const queryName3 = getHalfSizeText(queryName2);
   const queryName4 = removeSongFeat(queryName3);
   const queryName5 = getText(queryName3);
-  const queryArtistsArr = artists.split(',').sort();
+  const queryArtistsArr = artists
+    .split(',')
+    .map(e => e.trim())
+    .sort();
   const queryArtistsArr1 = queryArtistsArr.map(e => e.toLowerCase());
   const queryArtistsArr2 = queryArtistsArr1.map(e => sify(e));
 
-  const singerAlias = await fetchChineseName(queryArtistsArr2.join());
+  const singerAlias = onlySearchName ? {} : await fetchChineseName(queryArtistsArr2.join());
 
   const queryArtistsArr3 = queryArtistsArr1.map(e => singerAlias[e] || (SINGER as any)[e] || e);
 
@@ -217,35 +198,23 @@ async function searchSong(query: Query, onlySearchName = false): Promise<number>
         score = currentScore;
       }
     });
-    const saveId = await getSongId(query);
-    if (saveId) songId = saveId;
-    if (!songId) {
-      if (!onlySearchName) return await searchSong(query, true);
+    if (songId === 0) {
+      if (!onlySearchName) return await matchingLyrics(query, true);
       console.log('Not matched:', { query, songs, rank: score });
-      sendEvent(options.cid, events.notMatch, { cd1: `${name} - ${artists}` });
     }
   } catch (e) {
     captureException(e);
+    throw e;
   }
-  sendMatchedData({ list: songs, id: songId, name, artists });
-  return songId;
+  return { list: songs, id: songId };
 }
 
-async function fetchLyric(songId: number) {
+export async function fetchLyric(songId: number) {
   const { API_HOST } = await config;
-  const options = await optionsPromise;
-  if (!songId) return '';
-  try {
-    const { lrc }: SongResult = await (
-      await fetch(`${API_HOST}/lyric?${new URLSearchParams({ id: String(songId) })}`)
-    ).json();
-    if (!lrc?.lyric) {
-      sendEvent(options.cid, events.noLyrics, { cd1: `${sharedData.name} - ${sharedData.artists}`, cd2: `${songId}` });
-    }
-    return lrc?.lyric || '';
-  } catch {
-    return '';
-  }
+  const { lrc }: SongResult = await (
+    await fetch(`${API_HOST}/lyric?${new URLSearchParams({ id: String(songId) })}`)
+  ).json();
+  return lrc?.lyric || '';
 }
 
 class Line {
@@ -253,9 +222,7 @@ class Line {
   text = '';
 }
 
-export type Lyric = Line[];
-
-export let lyric: Lyric = [];
+export type Lyric = Line[] | null;
 
 function isOtherInfo(text: string) {
   return /^(作?\s*(词|詞)|作?\s*曲|(编|編)\s*曲?|(监|監)\s*制?|制作|出品|混音|后期|翻唱|题字|文案|海报|古筝|二胡|钢琴|吉他|贝斯|.*编写|.*和声|.*提琴|.*录音|.*工程|.*混音|.*设计|.*剪辑|producers|writers).*(:|：)/i.test(
@@ -263,7 +230,7 @@ function isOtherInfo(text: string) {
   );
 }
 
-function parseLyrics(lyricStr: string, enabledCleanLyrics = false) {
+export function parseLyrics(lyricStr: string, enabledCleanLyrics = false) {
   const lines = lyricStr.split('\n').map(line => line.trim());
   return lines
     .map(line => {
@@ -305,30 +272,4 @@ function parseLyrics(lyricStr: string, enabledCleanLyrics = false) {
       }
       return a.startTime - b.startTime;
     });
-}
-
-export async function updateLyric(query?: Query | number) {
-  lyric = [];
-
-  if (!document.pictureInPictureElement) return;
-
-  let songId = 0;
-  if (typeof query === 'number') {
-    songId = query;
-    sendMatchedData({ id: songId });
-  } else if (typeof query === 'object') {
-    songId = await searchSong(query);
-  } else {
-    const { TRACK_NAME_SELECTOR, TRACK_ARTIST_SELECTOR } = await config;
-    const name = document.querySelector(TRACK_NAME_SELECTOR)?.textContent || '';
-    const artists = document.querySelector(TRACK_ARTIST_SELECTOR)?.textContent || '';
-    songId = await searchSong({ name, artists });
-  }
-
-  if (!songId) return;
-  const lyricStr = await fetchLyric(songId);
-  if (!lyricStr) return;
-
-  const options = await optionsPromise;
-  lyric = parseLyrics(lyricStr, options['clean-lyrics'] === 'on');
 }

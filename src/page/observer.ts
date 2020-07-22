@@ -2,7 +2,7 @@ import config from './config';
 
 import { video } from './element';
 import { insetLyricsBtn } from './btn';
-import { updateLyric } from './lyrics';
+import { sharedData } from './share-data';
 
 const weakMap = new WeakMap<Element, MutationObserver>();
 
@@ -15,7 +15,7 @@ config.then(({ ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR }) => {
     const prevInfoElement = infoElement;
     infoElement = document.querySelector(TRACK_INFO_SELECTOR);
     if (!infoElement) return;
-    if (!prevInfoElement) updateLyric();
+    if (!prevInfoElement) sharedData.updateTrack();
 
     if (!weakMap.has(infoElement)) {
       const cover = document.querySelector(ALBUM_COVER_SELECTOR) as HTMLImageElement;
@@ -56,7 +56,7 @@ config.then(({ ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR }) => {
         }
       });
       const infoEleObserver = new MutationObserver(() => {
-        updateLyric();
+        sharedData.updateTrack();
       });
       infoEleObserver.observe(infoElement, { childList: true, characterData: true, subtree: true });
       weakMap.set(infoElement, infoEleObserver);

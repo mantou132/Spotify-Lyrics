@@ -17,7 +17,7 @@ export async function getSongId(data: Query) {
 
 export async function setSongId(data: Query & { id: number }) {
   const key = `${data.name}-${data.artists}`;
-  if (!data.id) {
+  if (data.id === 0) {
     delete store[key];
   } else {
     store[key] = data.id;

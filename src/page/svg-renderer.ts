@@ -1,5 +1,5 @@
 import { Lyric } from './lyrics';
-import { svg, css } from './utils';
+import { svg, html, css, captureException } from './utils';
 
 const style = css`
   :root {
@@ -44,44 +44,59 @@ const style = css`
   .after {
     top: 100%;
   }
+  .hit {
+    font-size: 0.667em;
+    text-align: center;
+  }
 `;
 
-function generateSVG(lyric: Lyric = [], currentTime = 0) {
+function generateSVG(lyric: Lyric, currentTime = 0) {
   let currentIndex = 0;
   let current = '';
   let before = '';
   let after = '';
-  lyric.forEach(({ startTime }, index) => {
-    if (startTime && currentTime > startTime) {
-      currentIndex = index;
-    }
-  });
-  lyric.forEach(({ text }, index) => {
-    const safeHTML = text
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
-    if (index < currentIndex) {
-      before += `<p>${safeHTML}</p>`;
-    } else if (index > currentIndex) {
-      after += `<p>${safeHTML}</p>`;
-    } else {
-      current = `<p>${safeHTML}</p>`;
-    }
-  });
+  let content = '';
+
+  if (!lyric) {
+    content = html`
+      <div class="hit">No lyrics</div>
+    `;
+  } else {
+    lyric.forEach(({ startTime }, index) => {
+      if (startTime && currentTime > startTime) {
+        currentIndex = index;
+      }
+    });
+    lyric.forEach(({ text }, index) => {
+      const safeHTML = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      if (index < currentIndex) {
+        before += `<p>${safeHTML}</p>`;
+      } else if (index > currentIndex) {
+        after += `<p>${safeHTML}</p>`;
+      } else {
+        current = `<p>${safeHTML}</p>`;
+      }
+    });
+    content = html`
+      <div class="before">
+        ${before}
+      </div>
+      ${current}
+      <div class="after">
+        ${after}
+      </div>
+    `;
+  }
   return svg`
     <svg width="640" height="640" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
       <foreignObject width="640" height="640">
         <style>${style}</style>
         <body xmlns="http://www.w3.org/1999/xhtml">
           <div class="container">
-            <div class="before">
-              ${before}
-            </div>
-            ${current}
-            <div class="after">
-              ${after}
-            </div>
+          ${content}
           </div>
         </body>
       </foreignObject>
@@ -89,16 +104,25 @@ function generateSVG(lyric: Lyric = [], currentTime = 0) {
   `;
 }
 
+const errorReport: Record<string, boolean> = {};
+
 export async function renderLyricsWithSVG(
   ctx: CanvasRenderingContext2D,
   lyrics: Lyric,
   currentTime: number, // s
-): Promise<HTMLImageElement> {
+): Promise<HTMLImageElement | undefined> {
   const url = `data:image/svg+xml,${encodeURIComponent(generateSVG(lyrics, currentTime))}`;
   const img = new Image(ctx.canvas.width, ctx.canvas.height);
-  return new Promise((res, rej) => {
+  return new Promise(res => {
     img.onload = () => res(img);
-    img.onerror = rej;
+    img.onerror = () => {
+      const lyricsStr = JSON.stringify(lyrics);
+      if (!errorReport[lyricsStr]) {
+        captureException(new Error('dataURL load error'), lyrics);
+        errorReport[lyricsStr] = true;
+      }
+      res();
+    };
     img.src = url;
   });
 }

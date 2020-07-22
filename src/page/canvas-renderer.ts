@@ -24,13 +24,15 @@ function getWords(str: string) {
 }
 
 interface Options {
-  // only one of center/top/bottom works
-  center?: boolean;
-  top?: number;
-  bottom?: number;
   left: number;
   right: number;
   lineHeight: number; // px
+  // only one of vCenter/top/bottom works
+  vCenter?: boolean;
+  top?: number;
+  bottom?: number;
+
+  hCenter?: boolean;
   translateX?: number | ((width: number) => number);
   translateY?: number | ((width: number) => number);
 }
@@ -45,6 +47,7 @@ interface Position {
 }
 
 function drawParagraph(ctx: CanvasRenderingContext2D, str = '', options: Options): Position {
+  let actualWidth = 0;
   const maxWidth = ctx.canvas.width - options.left - options.right;
   const words = getWords(str);
   const lines: string[] = [];
@@ -56,6 +59,7 @@ function drawParagraph(ctx: CanvasRenderingContext2D, str = '', options: Options
     const line = tempLine + word;
     textMeasures = ctx.measureText(line);
     if (textMeasures.width > maxWidth && tempLine && !/\s/.test(word)) {
+      actualWidth = Math.max(actualWidth, textMeasures.width);
       lines.push(tempLine);
       measures.push(textMeasures);
       tempLine = word;
@@ -64,6 +68,7 @@ function drawParagraph(ctx: CanvasRenderingContext2D, str = '', options: Options
     }
   }
   if (tempLine !== '') {
+    actualWidth = Math.max(actualWidth, textMeasures.width);
     lines.push(tempLine);
     measures.push(textMeasures);
   }
@@ -73,18 +78,26 @@ function drawParagraph(ctx: CanvasRenderingContext2D, str = '', options: Options
   const descent = measures.length ? measures[measures.length - 1].actualBoundingBoxDescent : 0;
   const actualHeight = ascent + body + descent;
 
+  let startX = 0;
   let startY = 0;
-  if (options.center) {
+  let translateX = 0;
+  let translateY = 0;
+  if (options.hCenter) {
+    startX = (ctx.canvas.width - actualWidth) / 2;
+  } else {
+    startX = options.left + translateX;
+  }
+
+  if (options.vCenter) {
     startY = (ctx.canvas.height - actualHeight) / 2 + ascent;
   } else if (options.top) {
     startY = options.top + ascent;
   } else if (options.bottom) {
     startY = options.bottom - descent - body;
   }
-  let translateX = 0;
-  let translateY = 0;
+
   if (typeof options.translateX === 'function') {
-    translateX = options.translateX(maxWidth);
+    translateX = options.translateX(actualWidth);
   }
   if (typeof options.translateX === 'number') {
     translateX = options.translateX;
@@ -96,13 +109,14 @@ function drawParagraph(ctx: CanvasRenderingContext2D, str = '', options: Options
     translateY = options.translateY;
   }
   lines.forEach((str, index) => {
-    ctx.fillText(str, options.left + translateX, startY + index * options.lineHeight + translateY);
+    const x = options.hCenter ? (ctx.canvas.width - measures[index].width) / 2 : startX;
+    ctx.fillText(str, x, startY + index * options.lineHeight + translateY);
   });
   return {
-    width: maxWidth,
+    width: actualWidth,
     height: actualHeight,
-    left: options.left + translateX,
-    right: options.right + translateX,
+    left: startX + translateX,
+    right: ctx.canvas.width - options.left - actualWidth + translateX,
     top: startY - ascent + translateY,
     bottom: startY + body + descent + translateY,
   };
@@ -142,6 +156,25 @@ export function renderLyricsWithCanvas(
   lyrics: Lyric,
   currentTime: number, // s
 ) {
+  ctx.save();
+  ctx.fillStyle = backgroundColor;
+  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+  if (!lyrics) {
+    const fontSize = 32;
+    ctx.filter = `opacity(1)`;
+    ctx.fillStyle = 'white';
+    ctx.font = `bold ${fontSize}px sans-serif`;
+    drawParagraph(ctx, 'No lyrics', {
+      vCenter: true,
+      hCenter: true,
+      left: 0,
+      right: 0,
+      lineHeight: fontSize,
+    });
+    return;
+  }
+
   let currentIndex = 0;
   let progress = 1;
   lyrics.forEach(({ startTime }, index) => {
@@ -152,10 +185,6 @@ export function renderLyricsWithCanvas(
       }
     }
   });
-
-  ctx.save();
-  ctx.fillStyle = backgroundColor;
-  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
   const { offscreenCtx, gradient } = initOffscreenCtx(ctx);
   offscreenCtx.save();
@@ -172,7 +201,7 @@ export function renderLyricsWithCanvas(
   offscreenCtx.fillStyle = 'white';
   offscreenCtx.font = `bold ${fFontSize}px sans-serif`;
   const pos = drawParagraph(offscreenCtx, lyrics[currentIndex]?.text, {
-    center: true,
+    vCenter: true,
     left: marginWidth,
     right: progressRight,
     lineHeight: fLineHeight,

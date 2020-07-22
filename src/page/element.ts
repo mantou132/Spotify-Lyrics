@@ -1,5 +1,9 @@
 import { Message, Event } from '../common/consts';
 
+import { sharedData } from './share-data';
+import { captureException } from './utils';
+import { getLyricsBtn } from './btn';
+
 const video = document.createElement('video');
 video.muted = true;
 video.width = 640;
@@ -38,6 +42,15 @@ document.createElement = function<K extends keyof HTMLElementTagNameMap>(tagName
   if (tagName === 'video') {
     if (!audio) {
       audio = element as HTMLAudioElement;
+      audio.addEventListener('playing', async () => {
+        if (audio?.duration && audio.duration > 2 * 60 && !(await getLyricsBtn())) {
+          captureException(new Error('Lyrics button not found'));
+        }
+      });
+      // when next track
+      audio.addEventListener('emptied', () => {
+        sharedData.removeLyrics();
+      });
       if (navigator.mediaSession) {
         const mediaSession = navigator.mediaSession;
         audio.addEventListener('play', () => {
@@ -55,5 +68,11 @@ document.createElement = function<K extends keyof HTMLElementTagNameMap>(tagName
   }
   return element;
 };
+
+window.addEventListener('load', () => {
+  if (!audio) {
+    captureException(new Error('Audio not found'));
+  }
+});
 
 export { video, audio };

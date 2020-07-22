@@ -4,7 +4,7 @@ import config from './config';
 
 import { video, audio } from './element';
 import { appendStyle, css, captureException } from './utils';
-import { updateLyric } from './lyrics';
+import { sharedData } from './share-data';
 import { optionsPromise } from './options';
 
 const LYRICS_CLASSNAME = 'spoticon-lyrics-16';
@@ -30,11 +30,15 @@ config.then(({ PIP_BTN_SELECTOR }) => {
   `);
 });
 
-window.addEventListener('keyup', async e => {
-  const options = await optionsPromise;
+export async function getLyricsBtn() {
   const { BTN_WRAPPER_SELECTOR } = await config;
   const btnWrapper = document.querySelector(BTN_WRAPPER_SELECTOR) as HTMLDivElement;
-  const lyricsBtn = btnWrapper.getElementsByClassName(LYRICS_CLASSNAME)[0] as HTMLButtonElement;
+  return btnWrapper.getElementsByClassName(LYRICS_CLASSNAME)[0] as HTMLButtonElement;
+}
+
+window.addEventListener('keyup', async e => {
+  const options = await optionsPromise;
+  const lyricsBtn = await getLyricsBtn();
   if (!lyricsBtn) return;
   const element = (e.composedPath?.()[0] || e.target) as HTMLElement;
   if (element.isContentEditable || element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
@@ -75,7 +79,7 @@ export const insetLyricsBtn = async () => {
       video
         .requestPictureInPicture()
         .then(() => {
-          updateLyric();
+          sharedData.updateTrack(true);
           // automatically pause when the video is removed from the DOM tree
           if (!audio?.paused) video.play();
         })

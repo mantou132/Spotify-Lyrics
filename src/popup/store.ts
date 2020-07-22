@@ -3,9 +3,20 @@ import { createStore, updateStore } from '@mantou/gem';
 
 import { Event, Message } from '../common/consts';
 
-import { SharedData } from '../page/lyrics';
+import { Song } from '../page/lyrics';
 
-export const store = createStore<SharedData>({
+export interface PopupStore {
+  // current track name
+  name: string;
+  // current track artists
+  artists: string;
+  // selected lyrics track
+  id: number;
+  // lyrics track list
+  list: Song[];
+}
+
+export const store = createStore<PopupStore>({
   name: '',
   artists: '',
   list: [],
@@ -22,11 +33,12 @@ export function sendMessage(msg: Message) {
 }
 
 export function changeSong(id: number) {
-  const data: Message = {
+  const msg: Message<PopupStore> = {
     type: Event.SELECT_SONG,
-    data: { id, name: store.name, artists: store.artists },
+    data: store,
   };
-  sendMessage(data);
+  updateStore(store, { id });
+  sendMessage(msg);
 }
 
 browser.runtime.onMessage.addListener((msg: Message) => {
