@@ -117,7 +117,7 @@ async function fetchChineseName(s: string) {
 }
 
 async function searchSong(query: Query, onlySearchName = false): Promise<number> {
-  const { API_HOST } = await config;
+  const { API_HOST, SINGER } = await config;
   const options = await optionsPromise;
   const { name = '', artists = '' } = query;
   sendEvent(options.cid, events.searchLyrics, { cd1: `${name} - ${artists}` });
@@ -133,7 +133,7 @@ async function searchSong(query: Query, onlySearchName = false): Promise<number>
 
   const singerAlias = await fetchChineseName(queryArtistsArr2.join());
 
-  const queryArtistsArr3 = queryArtistsArr1.map(e => singerAlias[e] || e);
+  const queryArtistsArr3 = queryArtistsArr1.map(e => singerAlias[e] || (SINGER as any)[e] || e);
 
   let songId = 0;
   let songs: Song[] = [];

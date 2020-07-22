@@ -9,8 +9,10 @@
   "BTN_LIKE_SELECTOR": "[role=contentinfo] > div:nth-child(3) > [class*=spoticon-heart]",
   "PIP_BTN_SELECTOR": "[role=contentinfo] > div:nth-child(4)",
   "SINGER": {
-    "<comment>": "Deprecated",
-    "Jay Chou": "周杰伦",
-    "Eason Chan": "陈奕迅"
+    "jia jia": "家家",
+    "pu shu": "朴树",
+    "sue": "苏运莹",
+    "shirley chen": "陈雪凝",
+    "ada zhuang": "庄心妍"
   }
 }
