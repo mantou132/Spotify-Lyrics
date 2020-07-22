@@ -65,27 +65,19 @@ export class SongList extends GemElement {
           border-top: 1px solid rgba(var(--text-rgb), 0.1);
         }
         .footer button {
-          cursor: pointer;
-          background: rgba(var(--primary-rgb), 0.9);
           color: rgba(var(--text-rgb), 1);
-          transition: all 33ms cubic-bezier(0.3, 0, 0, 1);
-          padding: 0.8rem 2rem;
-          line-height: 1;
-          border-radius: 5rem;
-          border: none;
-          font-family: inherit;
-          color: rgba(var(--text-rgb), 1);
-          text-transform: uppercase;
+          background: transparent;
           font-size: 0.75rem;
           font-weight: 700;
-          letter-spacing: 0.11rem;
+          padding: 0.4375rem 1rem;
+          line-height: 1rem;
+          letter-spacing: 0.1em;
+          border-radius: 4px;
+          border: 1px solid rgba(var(--text-rgb), 0.3);
+          text-transform: uppercase;
         }
         .footer button:hover {
-          background: rgba(var(--primary-rgb), 1);
-          transform: scale(1.06);
-        }
-        .footer button:active {
-          transform: scale(1);
+          border-color: rgba(var(--text-rgb), 1);
         }
         .footer button:focus {
           outline: none;
