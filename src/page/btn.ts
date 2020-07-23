@@ -63,6 +63,15 @@ export const insetLyricsBtn = async () => {
   btnWrapper.style.display = 'flex';
   const lyricsBtn = likeBtn.cloneNode(true) as HTMLButtonElement;
   lyricsBtn.classList.add(LYRICS_CLASSNAME);
+
+  if (document.pictureInPictureElement) {
+    if (document.pictureInPictureElement !== video) {
+      video.requestPictureInPicture().catch(() => document.exitPictureInPicture());
+    } else {
+      lyricsBtn.classList.add(LYRICS_ACTIVE_CLASSNAME);
+    }
+  }
+
   lyricsBtn.title = 'Toggle lyrics(L)';
   if (document.pictureInPictureElement === video) lyricsBtn.classList.add(LYRICS_ACTIVE_CLASSNAME);
   video.addEventListener('enterpictureinpicture', () => {

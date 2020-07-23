@@ -43,7 +43,8 @@ document.createElement = function<K extends keyof HTMLElementTagNameMap>(tagName
     if (!audio) {
       audio = element as HTMLAudioElement;
       audio.addEventListener('playing', async () => {
-        if (audio?.duration && audio.duration > 2 * 60 && !(await getLyricsBtn())) {
+        const isMusic = audio?.duration && audio.duration > 2 * 60 && audio.duration < 4 * 60;
+        if (isMusic && !(await getLyricsBtn())) {
           captureException(new Error('Lyrics button not found'));
         }
       });
