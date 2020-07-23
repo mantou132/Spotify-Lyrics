@@ -18,6 +18,10 @@ const setPopupState = (active: boolean) => {
   window.postMessage(msg, '*');
 };
 
+export const videoMetadataloaded = new Promise(res => {
+  video.addEventListener('loadedmetadata', () => res());
+});
+
 video.addEventListener('enterpictureinpicture', () => {
   setPopupState(true);
 });
