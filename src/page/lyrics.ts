@@ -2,7 +2,6 @@ import sify from 'chinese-conv/tongwen/tongwen-ts';
 
 import config from './config';
 
-import { optionsPromise } from './options';
 import { captureException } from './utils';
 
 export interface Query {
@@ -93,10 +92,24 @@ async function fetchChineseName(s: string) {
   }
   return singerAlias;
 }
+async function fetchSongList(s: string): Promise<Song[]> {
+  const { API_HOST } = await config;
+  const searchQuery = new URLSearchParams({
+    keywords: s,
+    type: '1',
+    limit: '100',
+  });
+  const { result }: SearchSongsResult = await (await fetch(`${API_HOST}/search?${searchQuery}`)).json();
+  return result?.songs || [];
+}
 
-export async function matchingLyrics(query: Query, onlySearchName = false): Promise<{ list: Song[]; id: number }> {
-  const { API_HOST, SINGER } = await config;
-  const options = await optionsPromise;
+export async function matchingLyrics(
+  query: Query,
+  isStrictMode: boolean,
+  fetchData = fetchSongList,
+  onlySearchName = false,
+): Promise<{ list: Song[]; id: number }> {
+  const { SINGER } = await config;
   const { name = '', artists = '' } = query;
 
   const queryName = name;
@@ -116,95 +129,83 @@ export async function matchingLyrics(query: Query, onlySearchName = false): Prom
 
   const queryArtistsArr3 = queryArtistsArr1.map(e => singerAlias[e] || (SINGER as any)[e] || e);
 
+  const searchString = onlySearchName ? queryName4 : `${sify(queryArtistsArr3.join())} ${queryName4}`;
+  const songs = await fetchData(searchString);
+
   let songId = 0;
-  let songs: Song[] = [];
-  try {
-    const searchQuery = new URLSearchParams({
-      keywords: onlySearchName ? queryName4 : `${sify(queryArtistsArr3.join())} ${queryName4}`,
-      type: '1',
-      limit: '100',
-    });
-    const { result }: SearchSongsResult = await (await fetch(`${API_HOST}/search?${searchQuery}`)).json();
+  let score = 0;
+  songs.forEach(song => {
+    let currentScore = isStrictMode ? 0 : 3;
 
-    songs = result?.songs || [];
-
-    let score = 0;
-    songs.forEach(song => {
-      let currentScore = options['strict-mode'] === 'on' ? 0 : 3;
-
-      let songName = song.name;
-      if (songName === queryName) {
-        currentScore += 10;
+    let songName = song.name;
+    if (songName === queryName) {
+      currentScore += 10;
+    } else {
+      songName = songName.toLowerCase();
+      if (songName === queryName1) {
+        currentScore += 9.1;
       } else {
-        songName = songName.toLowerCase();
-        if (songName === queryName1) {
-          currentScore += 9.1;
+        songName = sify(songName);
+        if (songName === queryName2) {
+          currentScore += 9;
         } else {
-          songName = sify(songName);
-          if (songName === queryName2) {
-            currentScore += 9;
+          songName = getHalfSizeText(songName);
+          if (songName === queryName3) {
+            currentScore += 8.1;
           } else {
-            songName = getHalfSizeText(songName);
-            if (songName === queryName3) {
-              currentScore += 8.1;
+            songName = removeSongFeat(songName);
+            if (songName === queryName4) {
+              currentScore += 8;
             } else {
-              songName = removeSongFeat(songName);
-              if (songName === queryName4) {
-                currentScore += 8;
-              } else {
-                songName = getText(songName);
-                if (songName === queryName5) {
-                  currentScore += 7;
-                } else if (
-                  (songName.startsWith(queryName5) || queryName5.startsWith(songName)) &&
-                  (songName.length > 5 || charCodeTotal(songName) > 5 * 128) &&
-                  (queryName5.length > 5 || charCodeTotal(queryName5) > 5 * 128)
-                ) {
-                  currentScore += 6;
-                }
+              songName = getText(songName);
+              if (songName === queryName5) {
+                currentScore += 7;
+              } else if (
+                (songName.startsWith(queryName5) || queryName5.startsWith(songName)) &&
+                (songName.length > 5 || charCodeTotal(songName) > 5 * 128) &&
+                (queryName5.length > 5 || charCodeTotal(queryName5) > 5 * 128)
+              ) {
+                currentScore += 6;
               }
             }
           }
         }
       }
-
-      let songArtistsArr = song.artists.map(e => e.name).sort();
-      const len = queryArtistsArr.length + songArtistsArr.length;
-      if (queryArtistsArr.join() === songArtistsArr.join()) {
-        currentScore += 6;
-      } else {
-        songArtistsArr = songArtistsArr.map(e => e.toLowerCase());
-        if (queryArtistsArr1.join() === songArtistsArr.join() || queryArtistsArr3.join() === songArtistsArr.join()) {
-          currentScore += 5.3;
-        } else if (new Set([...queryArtistsArr1, ...songArtistsArr]).size < len) {
-          currentScore += 5.2;
-        } else {
-          songArtistsArr = songArtistsArr.map(e => sify(e));
-          if (queryArtistsArr2.join() === songArtistsArr.join()) {
-            currentScore += 5.1;
-          } else if (
-            new Set([...queryArtistsArr2, ...songArtistsArr]).size < len ||
-            new Set([...queryArtistsArr3, ...songArtistsArr]).size < len
-          ) {
-            currentScore += 5;
-          }
-        }
-      }
-
-      if (currentScore > score) {
-        if (currentScore > 10) {
-          songId = song.id;
-        }
-        score = currentScore;
-      }
-    });
-    if (songId === 0) {
-      if (!onlySearchName) return await matchingLyrics(query, true);
-      console.log('Not matched:', { query, songs, rank: score });
     }
-  } catch (e) {
-    captureException(e);
-    throw e;
+
+    let songArtistsArr = song.artists.map(e => e.name).sort();
+    const len = queryArtistsArr.length + songArtistsArr.length;
+    if (queryArtistsArr.join() === songArtistsArr.join()) {
+      currentScore += 6;
+    } else {
+      songArtistsArr = songArtistsArr.map(e => e.toLowerCase());
+      if (queryArtistsArr1.join() === songArtistsArr.join() || queryArtistsArr3.join() === songArtistsArr.join()) {
+        currentScore += 5.3;
+      } else if (new Set([...queryArtistsArr1, ...songArtistsArr]).size < len) {
+        currentScore += 5.2;
+      } else {
+        songArtistsArr = songArtistsArr.map(e => sify(e));
+        if (queryArtistsArr2.join() === songArtistsArr.join()) {
+          currentScore += 5.1;
+        } else if (
+          new Set([...queryArtistsArr2, ...songArtistsArr]).size < len ||
+          new Set([...queryArtistsArr3, ...songArtistsArr]).size < len
+        ) {
+          currentScore += 5;
+        }
+      }
+    }
+
+    if (currentScore > score) {
+      if (currentScore > 10) {
+        songId = song.id;
+      }
+      score = currentScore;
+    }
+  });
+  if (songId === 0) {
+    if (!onlySearchName) return await matchingLyrics(query, isStrictMode, fetchData, true);
+    console.log('Not matched:', { query, songs, rank: score });
   }
   return { list: songs, id: songId };
 }

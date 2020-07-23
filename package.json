@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "lint": "tsc --noEmit && eslint --ext .ts --fix src/",
+    "test": "jest",
     "serve": "web-ext --config web-ext.config.js run --start-url open.spotify.com",
     "serve:chromium": "npm run serve -- -t chromium",
     "watch": "webpack --watch",
@@ -23,6 +24,7 @@
     "webextension-polyfill-ts": "^0.9.1"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.5",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
     "babel-eslint": "^10.1.0",
@@ -36,8 +38,10 @@
     "eslint-plugin-prettier": "^3.1.4",
     "file-loader": "^4.3.0",
     "husky": "^2.7.0",
+    "jest": "^26.1.0",
     "lint-staged": "^8.2.1",
     "prettier": "^1.19.1",
+    "ts-jest": "^26.1.3",
     "ts-loader": "^6.2.2",
     "typescript": "^3.9.5",
     "url-loader": "^2.3.0",

@@ -1,7 +1,7 @@
 import { Lyric } from './lyrics';
 
 // simple word segmentation rules
-function getWords(str: string) {
+export function getWords(str: string) {
   const result: string[] = [];
   const words = str.split(/(\p{sc=Han}|\p{sc=Katakana}|\p{sc=Hiragana}|\p{sc=Hang}|\p{gc=Punctuation})|\s+/gu);
   let tempWord = '';

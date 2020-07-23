@@ -49,7 +49,7 @@ export class SharedData {
     const options = await optionsPromise;
     const query = { name: this.name, artists: this.artists };
     sendEvent(options.cid, events.searchLyrics, { cd1: this.cd1 });
-    const { list, id } = await matchingLyrics(query);
+    const { list, id } = await matchingLyrics(query, options['strict-mode'] === 'on');
     if (id === 0) {
       sendEvent(options.cid, events.notMatch, { cd1: this.cd1 });
     }
@@ -93,6 +93,8 @@ export class SharedData {
     this.lyrics = [];
     try {
       await this.matchingLyrics();
+    } catch (e) {
+      captureException(e);
     } finally {
       this.sendToContentScript();
     }
