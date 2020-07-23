@@ -11,13 +11,13 @@ declare global {
 
 // popup, options, contentpage share a Sentry instance
 // the submitted error event environment is background_page, such as console
-if (isProd) {
-  window.Sentry = Sentry;
-  Sentry.init({
-    dsn: 'https://124df8398d8b466fbcf09ec64bcfe144@o55145.ingest.sentry.io/5353517',
-    release: browser.runtime.getManifest().version,
-  });
-}
+
+window.Sentry = Sentry;
+Sentry.init({
+  dsn: 'https://124df8398d8b466fbcf09ec64bcfe144@o55145.ingest.sentry.io/5353517',
+  release: browser.runtime.getManifest().version,
+  environment: isProd ? 'prod' : 'dev',
+});
 
 browser.browserAction.disable();
 
