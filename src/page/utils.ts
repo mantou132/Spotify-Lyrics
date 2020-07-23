@@ -10,7 +10,9 @@ export const css = raw;
 export function appendStyle(s: string) {
   const style = document.createElement('style');
   style.textContent = s;
-  document.head.append(style);
+  window.addEventListener('DOMContentLoaded', () => {
+    document.head.append(style);
+  });
 }
 
 export function captureException(err: Error, extra?: any) {

@@ -70,9 +70,11 @@ document.createElement = function<K extends keyof HTMLElementTagNameMap>(tagName
 };
 
 window.addEventListener('load', () => {
-  if (!audio) {
-    captureException(new Error('Audio not found'));
-  }
+  setTimeout(() => {
+    if (!audio) {
+      captureException(new Error('Audio not found'));
+    }
+  }, 3000);
 });
 
 export { video, audio };
