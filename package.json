@@ -11,7 +11,7 @@
     "build": "cross-env NODE_ENV=production webpack",
     "build:xpi": "npm run build && web-ext --config web-ext.config.js sign",
     "build:zip": "npm run build && web-ext --config web-ext.config.js build",
-    "s:singer": "deno run --allow-read --allow-net script/chinese-singer.ts"
+    "s:singer": "deno run --allow-read --allow-net script/singer.ts"
   },
   "author": "mantou132",
   "license": "ISC",
