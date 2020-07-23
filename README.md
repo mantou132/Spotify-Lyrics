@@ -4,7 +4,10 @@
 
 Install Extension: [Chrome](https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod) | [Firefox](https://addons.mozilla.org/en-US/firefox/addon/spotify-lyrics/) | [Safari](https://github.com/mantou132/Spotify-Lyrics/releases)
 
-Add lyrics button, when activated, the lyrics are displayed in the Picture-in-Picture window.
+The extension adds a button to the bottom left corner of Spotify Web Player,
+Click to switch the display status of the lyrics,
+which is displayed in the Picture-in-Picture window by default setting.
+Spotify can be [installed as pwa](https://support.google.com/chrome/answer/9658361) instead of desktop client.
 
 If you have any questions, please submit an [issue](https://github.com/mantou132/Spotify-Lyrics/issues).
 
@@ -24,10 +27,6 @@ If you have any questions, please submit an [issue](https://github.com/mantou132
 * Chrome [70+](https://caniuse.com/#feat=picture-in-picture)
 * Safari [14+](https://developer.apple.com/documentation/safariservices/safari_web_extensions)
 
-## Recommend
-
-* [Install as PWA](https://support.google.com/chrome/answer/9658361)(only Chrome)
-
 ## Development
 
 Requirement: [Node.js](https://nodejs.org)
@@ -44,16 +43,9 @@ Build:
 npm run build:zip
 ```
 
-## TODO
+## Contribution
 
-* Song matching optimization
-* Debuging info
-* Unit test
-* CI/CD
+Fork it, submit PR.
 
-## Help
-
-The extension requires a stable `NeteaseCloudMusicApi` service or
-other better lyrics service.
-
-[Unmatched lyrics report](https://datastudio.google.com/reporting/bfd79c68-f9f4-4af5-8e51-a12d3d6be450)
+* If you can write code, you can fix [bugs](https://github.com/mantou132/Spotify-Lyrics/issues?q=is%3Aissue+is%3Aopen+label%3Abug) or improve [performance](https://github.com/mantou132/Spotify-Lyrics/issues?q=is%3Aissue+is%3Aopen+label%3Aperformance)
+* Optimize the matching rate of Chinese, Japanese and Korean lyrics.(edit [config.json](./src/page/config.json)). *Note: The extension already has automatic optimization, this list serves as a supplement* . *[Unmatched lyrics report](https://datastudio.google.com/reporting/bfd79c68-f9f4-4af5-8e51-a12d3d6be450)*
