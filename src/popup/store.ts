@@ -24,7 +24,8 @@ export const store = createStore<PopupStore>({
 });
 
 export function sendMessage(msg: Message) {
-  browser.tabs.query({ url: '*://open.spotify.com/*' }).then(tabs => {
+  const manifest = browser.runtime.getManifest() as typeof import('../../public/manifest.json');
+  browser.tabs.query({ url: manifest.content_scripts[0].matches }).then(tabs => {
     tabs.forEach(tab => {
       // Only the tab that open the lyrics will response
       if (tab?.id) browser.tabs.sendMessage(tab.id, msg);

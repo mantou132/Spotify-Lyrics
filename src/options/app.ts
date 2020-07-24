@@ -47,7 +47,8 @@ export class OptionsApp extends GemElement<{ changed: boolean }> {
 
     this.setState({ changed: false });
 
-    browser.tabs.query({ url: '*://open.spotify.com/*' }).then(tabs => {
+    const manifest = browser.runtime.getManifest() as typeof import('../../public/manifest.json');
+    browser.tabs.query({ url: manifest.content_scripts[0].matches }).then(tabs => {
       tabs.forEach(tab => {
         if (tab.id) browser.tabs.sendMessage(tab.id, { type: MessageEvent.RELOAD_SPOTIFY } as Message);
       });
