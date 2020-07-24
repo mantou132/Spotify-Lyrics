@@ -75,7 +75,7 @@ export const audioPromise = new Promise<HTMLAudioElement>(res => {
     setTimeout(() => {
       if (!audio) {
         captureException(new Error('Audio not found'), {
-          timing: performance.timing,
+          now: performance.now(),
           all: document.all.length,
         });
       }
