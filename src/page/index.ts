@@ -5,7 +5,7 @@ import { PopupStore } from '../popup/store';
 
 import { renderLyricsWithCanvas } from './canvas-renderer';
 import { renderLyricsWithSVG } from './svg-renderer';
-import { video, audio } from './element';
+import { video, audioPromise } from './element';
 import { sharedData } from './share-data';
 
 import './pip';
@@ -29,11 +29,10 @@ let options: Options;
 
 const update = async () => {
   if (!ctx) return;
+  const audio = await audioPromise;
   // Do not check `document.pictureInPictureElement`
   // safari enters pip needs a video that is playing
   if (
-    !video ||
-    !audio ||
     !(video.srcObject instanceof MediaStream) ||
     // Safari needs to refresh the video all the time to open pip
     (!document.pictureInPictureElement && !/Version\/.*Safari\/.*/.test(navigator.userAgent))

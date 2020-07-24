@@ -2,7 +2,7 @@ import { sendEvent, events } from '../common/ga';
 
 import config from './config';
 
-import { video, audio, videoMetadataloaded } from './element';
+import { video, audioPromise, videoMetadataloaded } from './element';
 import { appendStyle, css, captureException } from './utils';
 import { sharedData } from './share-data';
 import { optionsPromise } from './options';
@@ -54,6 +54,8 @@ export const insetLyricsBtn = async () => {
   // Failed to execute 'requestPictureInPicture' on 'HTMLVideoElement': Metadata for the video element are not loaded yet.
   // Ensure that the inserted button can be clicked
   await videoMetadataloaded;
+
+  const audio = await audioPromise;
 
   const options = await optionsPromise;
   const { BTN_WRAPPER_SELECTOR, BTN_LIKE_SELECTOR } = await config;
