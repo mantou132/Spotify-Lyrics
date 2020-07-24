@@ -55,21 +55,24 @@ const update = async () => {
     }
   }
   const coverTrack = weakMap.get(video.srcObject) as CanvasCaptureMediaStreamTrack;
+  const drawCover = () => {
+    ctx.canvas.width = ctx.canvas.width;
+    ctx.drawImage(coverTrack.canvas, 0, 0, video.width, video.height);
+  };
 
   if (options['only-cover'] === 'on') {
-    ctx.clearRect(0, 0, video.width, video.height);
-    ctx.drawImage(coverTrack.canvas, 0, 0, video.width, video.height);
+    drawCover();
     setTimeout(update, INTERVAL);
     return;
   }
 
   if (options['lyrics-smooth-scroll'] === 'on') {
-    ctx.drawImage(coverTrack.canvas, 0, 0, video.width, video.height);
+    drawCover();
     renderLyricsWithCanvas(ctx, sharedData.lyrics, audio.currentTime);
     requestAnimationFrame(update);
   } else {
     const img = await renderLyricsWithSVG(ctx, sharedData.lyrics, audio.currentTime);
-    ctx.drawImage(coverTrack.canvas, 0, 0, video.width, video.height);
+    drawCover();
     img && ctx.drawImage(img, 0, 0, video.width, video.height);
     setTimeout(update, INTERVAL);
   }

@@ -24,7 +24,7 @@
   },
 
   "optionsSmoothScroll": {
-    "message": "启用歌词平滑滚动(更高的 CPU 占用)"
+    "message": "启用歌词平滑滚动"
   },
 
   "optionsStrictMatchMode": {

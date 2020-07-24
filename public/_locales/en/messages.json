@@ -30,7 +30,7 @@
   },
 
   "optionsSmoothScroll": {
-    "message": "Use smooth scroll(higher cpu load)",
+    "message": "Use smooth scroll",
     "description": "Use lyrics smooth scroll"
   },
 

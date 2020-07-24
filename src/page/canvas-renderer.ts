@@ -140,14 +140,14 @@ function initOffscreenCtx(ctx: CanvasRenderingContext2D) {
   if (!offscreenCtx) {
     offscreenCanvas = document.createElement('canvas');
     offscreenCtx = offscreenCanvas.getContext('2d') as CanvasRenderingContext2D;
-    offscreenCtx.canvas.width = ctx.canvas.width;
-    offscreenCtx.canvas.height = ctx.canvas.height;
     gradient = offscreenCtx.createLinearGradient(0, 0, 0, ctx.canvas.height);
     gradient.addColorStop(0.08, 'transparent');
     gradient.addColorStop(0.35, 'white');
     gradient.addColorStop(0.65, 'white');
     gradient.addColorStop(0.92, 'transparent');
   }
+  offscreenCtx.canvas.width = ctx.canvas.width;
+  offscreenCtx.canvas.height = ctx.canvas.height;
   return { offscreenCtx, gradient };
 }
 
@@ -188,7 +188,6 @@ export function renderLyricsWithCanvas(
 
   const { offscreenCtx, gradient } = initOffscreenCtx(ctx);
   offscreenCtx.save();
-  offscreenCtx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
   // focus line
   const fFontSize = otherLineFontSize + progress * (focusLineFontSize - otherLineFontSize);
