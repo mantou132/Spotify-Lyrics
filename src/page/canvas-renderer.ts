@@ -162,7 +162,6 @@ export function renderLyricsWithCanvas(
 
   if (!lyrics) {
     const fontSize = 32;
-    ctx.filter = `opacity(1)`;
     ctx.fillStyle = 'white';
     ctx.font = `bold ${fontSize}px sans-serif`;
     drawParagraph(ctx, 'No lyrics', {
@@ -196,8 +195,7 @@ export function renderLyricsWithCanvas(
   const otherRight =
     ctx.canvas.width - marginWidth - (otherLineFontSize / focusLineFontSize) * (ctx.canvas.width - 2 * marginWidth);
   const progressRight = marginWidth + (1 - progress) * (otherRight - marginWidth);
-  offscreenCtx.filter = `opacity(${fLineOpacity})`;
-  offscreenCtx.fillStyle = 'white';
+  offscreenCtx.fillStyle = `rgba(255, 255, 255, ${fLineOpacity})`;
   offscreenCtx.font = `bold ${fFontSize}px sans-serif`;
   const pos = drawParagraph(offscreenCtx, lyrics[currentIndex]?.text, {
     vCenter: true,
@@ -214,10 +212,11 @@ export function renderLyricsWithCanvas(
   for (let i = 0; i < currentIndex; i++) {
     if (i === 0) {
       const prevProgressLineFontSize = otherLineFontSize + (1 - progress) * (focusLineFontSize - otherLineFontSize);
-      offscreenCtx.filter = `opacity(${otherLineOpacity + (1 - progress) * (1 - otherLineOpacity)})`;
+      const prevProgressLineOpacity = otherLineOpacity + (1 - progress) * (1 - otherLineOpacity);
+      offscreenCtx.fillStyle = `rgba(255, 255, 255, ${prevProgressLineOpacity})`;
       offscreenCtx.font = `bold ${prevProgressLineFontSize}px sans-serif`;
     } else {
-      offscreenCtx.filter = `opacity(${otherLineOpacity})`;
+      offscreenCtx.fillStyle = `rgba(255, 255, 255, ${otherLineOpacity})`;
       offscreenCtx.font = `bold ${otherLineFontSize}px sans-serif`;
     }
     lastBeforePos = drawParagraph(offscreenCtx, lyrics[currentIndex - 1 - i].text, {
@@ -229,7 +228,7 @@ export function renderLyricsWithCanvas(
     if (lastBeforePos.top < 0) break;
   }
   // next line
-  offscreenCtx.filter = `opacity(${otherLineOpacity})`;
+  offscreenCtx.fillStyle = `rgba(255, 255, 255, ${otherLineOpacity})`;
   offscreenCtx.font = `bold ${otherLineFontSize}px sans-serif`;
   let lastAfterPos = pos;
   for (let i = currentIndex + 1; i < lyrics.length; i++) {
@@ -243,7 +242,6 @@ export function renderLyricsWithCanvas(
   }
 
   offscreenCtx.globalCompositeOperation = 'source-in';
-  offscreenCtx.filter = 'none';
   offscreenCtx.fillStyle = gradient;
   offscreenCtx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 

@@ -104,7 +104,7 @@ function generateSVG(lyric: Lyric, currentTime = 0) {
   `;
 }
 
-const errorReport: Record<string, boolean> = {};
+const errorReport: Record<string, number> = {};
 
 export async function renderLyricsWithSVG(
   ctx: CanvasRenderingContext2D,
@@ -117,9 +117,10 @@ export async function renderLyricsWithSVG(
     img.onload = () => res(img);
     img.onerror = () => {
       const lyricsStr = JSON.stringify(lyrics);
-      if (!errorReport[lyricsStr]) {
+      // Page refresh may cause loading errors
+      if (errorReport[lyricsStr] === 2) {
         captureException(new Error('dataURL load error'), lyrics);
-        errorReport[lyricsStr] = true;
+        errorReport[lyricsStr] = (errorReport[lyricsStr] || 0) + 1;
       }
       res();
     };

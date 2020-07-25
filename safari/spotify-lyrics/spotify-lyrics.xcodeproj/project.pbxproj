@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7917A93624CCB1E50051489D /* _locales in Resources */ = {isa = PBXBuildFile; fileRef = 7917A93524CCB1E50051489D /* _locales */; };
 		7926D58F24A5908E000C6B52 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7926D58E24A5908E000C6B52 /* AppDelegate.swift */; };
 		7926D59224A5908E000C6B52 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7926D59024A5908E000C6B52 /* Main.storyboard */; };
 		7926D59424A5908E000C6B52 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7926D59324A5908E000C6B52 /* ViewController.swift */; };
@@ -50,6 +51,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7917A93524CCB1E50051489D /* _locales */ = {isa = PBXFileReference; lastKnownFileType = folder; name = _locales; path = ../public/_locales; sourceTree = "<group>"; };
 		7926D58A24A5908E000C6B52 /* spotify-lyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "spotify-lyrics.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7926D58D24A5908E000C6B52 /* spotify_lyrics.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = spotify_lyrics.entitlements; sourceTree = "<group>"; };
 		7926D58E24A5908E000C6B52 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 		7926D5A624A59090000C6B52 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7917A93524CCB1E50051489D /* _locales */,
 				7926D5D424A59937000C6B52 /* options.html */,
 				7926D5D324A59937000C6B52 /* options.js */,
 				7926D5D124A59921000C6B52 /* icons */,
@@ -250,6 +253,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7917A93624CCB1E50051489D /* _locales in Resources */,
 				7926D5C924A596DA000C6B52 /* manifest.json in Resources */,
 				7926D5D524A59937000C6B52 /* options.js in Resources */,
 				7926D5CB24A596DA000C6B52 /* content.js in Resources */,

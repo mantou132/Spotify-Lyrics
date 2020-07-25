@@ -84,6 +84,7 @@ audioPromise.then(audio => {
   });
 
   // safari not support media session, pip contorl video
+  // safari turning off pip will also cause the video to pause
   let time = performance.now();
   video.addEventListener('pause', () => {
     const now = performance.now();
@@ -93,6 +94,7 @@ audioPromise.then(audio => {
     }
   });
   video.addEventListener('play', () => {
+    // video need't seek, because it is stream
     audio.play();
   });
 
