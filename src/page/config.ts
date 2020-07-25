@@ -8,6 +8,8 @@ import { css, svg, getSVGDataUrl } from './utils';
 
 const REMOTE_URL = 'https://raw.githubusercontent.com/mantou132/Spotify-Lyrics/master/src/page/config.json';
 
+// Identify service name
+// Identify the service name, the service name should be the same as in config.json
 const currentService = (() => {
   if (location.host.includes('youtube')) return 'YOUTUBE';
   return 'SPOTIFY';
@@ -23,12 +25,18 @@ async function getConfig() {
   return currentService === 'SPOTIFY' ? result : Object.assign(result, result[currentService]);
 }
 
+// Remote configuration, the modification takes effect immediately
 export default getConfig();
 
+// For some configurations of the service, they need to be repackaged and released to take effect
 interface LocalConfig {
+  // Some fixed styles, they will be inserted into the page as quickly as possible
   STATIC_STYLE: string;
+  // The style that should be added when the lyrics will be displayed on the page
   NO_PIP_STYLE: string;
+  // CSS class Name of the lyrics button
   LYRICS_CLASSNAME: string;
+  // CSS class Name of the lyrics button is actived
   LYRICS_ACTIVE_CLASSNAME: string;
 }
 
