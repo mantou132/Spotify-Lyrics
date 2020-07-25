@@ -21,26 +21,32 @@ export async function getLyricsBtn() {
   return btnWrapper?.getElementsByClassName(localConfig.LYRICS_CLASSNAME)[0] as HTMLButtonElement;
 }
 
-window.addEventListener('keyup', async e => {
-  const options = await optionsPromise;
-  const lyricsBtn = await getLyricsBtn();
-  if (!lyricsBtn) return;
-  const element = (e.composedPath?.()[0] || e.target) as HTMLElement;
-  if (element.isContentEditable || element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
-    return;
-  }
-  if (e.key === 'l') {
-    sendEvent(options.cid, events.keypressToggleLyrics);
-    lyricsBtn.click();
-  }
-});
+window.addEventListener(
+  'keydown',
+  async e => {
+    const options = await optionsPromise;
+    const lyricsBtn = await getLyricsBtn();
+    if (!lyricsBtn) return;
+    const element = (e.composedPath?.()[0] || e.target) as HTMLElement;
+    if (element.isContentEditable || element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+      return;
+    }
+    e.stopImmediatePropagation();
+    e.stopPropagation();
+    if (e.key === 'l' && !e.repeat) {
+      sendEvent(options.cid, events.keypressToggleLyrics);
+      lyricsBtn.click();
+    }
+  },
+  true,
+);
 
 export const insetLyricsBtn = async () => {
   // Failed to execute 'requestPictureInPicture' on 'HTMLVideoElement': Metadata for the video element are not loaded yet.
   // Ensure that the inserted button can be clicked
   await videoMetadataloaded;
 
-  const audio = await audioPromise;
+  await audioPromise;
 
   const options = await optionsPromise;
   const { BTN_WRAPPER_SELECTOR, BTN_LIKE_SELECTOR } = await config;
