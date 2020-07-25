@@ -71,16 +71,8 @@ export const audioPromise = new Promise<HTMLAudioElement>(res => {
 });
 
 audioPromise.then(audio => {
-  // safari not support media session, pip contorl video
-  video.addEventListener('play', () => {
-    audio.play();
-  });
-  video.addEventListener('pause', () => {
-    audio.pause();
-  });
-
   audio.addEventListener('playing', async () => {
-    const isMusic = audio?.duration && audio.duration > 2 * 60 && audio.duration < 4 * 60;
+    const isMusic = audio.duration && audio.duration > 2.6 * 60 && audio.duration < 4 * 60;
     if (isMusic && !(await getLyricsBtn())) {
       captureException(new Error('Lyrics button not found'));
     }
@@ -89,6 +81,19 @@ audioPromise.then(audio => {
   // when next track
   audio.addEventListener('emptied', () => {
     sharedData.removeLyrics();
+  });
+
+  // safari not support media session, pip contorl video
+  let time = performance.now();
+  video.addEventListener('pause', () => {
+    const now = performance.now();
+    if (now - time > 300) {
+      time = now;
+      audio.pause();
+    }
+  });
+  video.addEventListener('play', () => {
+    audio.play();
   });
 
   if (navigator.mediaSession) {
