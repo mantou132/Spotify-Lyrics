@@ -19,7 +19,8 @@
   "content_scripts": [
     {
       "matches": [
-        "*://open.spotify.com/*"
+        "*://open.spotify.com/*",
+        "*://music.youtube.com/*"
       ],
       "js": [
         "content.js"

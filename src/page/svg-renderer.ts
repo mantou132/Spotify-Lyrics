@@ -1,5 +1,5 @@
 import { Lyric } from './lyrics';
-import { svg, html, css, captureException } from './utils';
+import { svg, html, css, captureException, getSVGDataUrl } from './utils';
 
 const style = css`
   :root {
@@ -111,7 +111,7 @@ export async function renderLyricsWithSVG(
   lyrics: Lyric,
   currentTime: number, // s
 ): Promise<HTMLImageElement | undefined> {
-  const url = `data:image/svg+xml,${encodeURIComponent(generateSVG(lyrics, currentTime))}`;
+  const url = getSVGDataUrl(generateSVG(lyrics, currentTime));
   const img = new Image(ctx.canvas.width, ctx.canvas.height);
   return new Promise(res => {
     img.onload = () => res(img);

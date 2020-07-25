@@ -1,20 +1,15 @@
 // https://w3c.github.io/picture-in-picture
 // https://bugzilla.mozilla.org/show_bug.cgi?id=pip
-import config from './config';
+import config, { localConfig } from './config';
 
-import { appendStyle, css } from './utils';
+import { appendStyle } from './utils';
 import { optionsPromise } from './options';
 
 let polyfilled = false;
 const polyfill = () => {
   if (polyfilled) return;
   polyfilled = true;
-  // sync write
-  appendStyle(css`
-    [role='contentinfo'] > div:nth-child(1) > button {
-      display: none;
-    }
-  `);
+  appendStyle(localConfig.NO_PIP_STYLE);
 
   Object.defineProperties(document, {
     pictureInPictureElement: {
@@ -30,11 +25,12 @@ const polyfill = () => {
   });
 
   HTMLVideoElement.prototype.requestPictureInPicture = async function() {
-    const { LYRICS_CONTAINER_SELECTOR } = await config;
+    const { LYRICS_CONTAINER_SELECTOR, PAGE_PIP_STYLE } = await config;
     const container = document.querySelector(LYRICS_CONTAINER_SELECTOR);
     if (container) {
-      this.setAttribute('style', 'width: 100%; position: relative; height: auto;');
+      this.setAttribute('style', PAGE_PIP_STYLE);
       container.append(this);
+      this.hidden = false;
       document.pictureInPictureElement = this;
       this.dispatchEvent(new CustomEvent('enterpictureinpicture'));
       return;
@@ -45,7 +41,7 @@ const polyfill = () => {
 
   document.exitPictureInPicture = async function() {
     const video = document.pictureInPictureElement;
-    video?.remove();
+    if (video) video.hidden = true;
     document.pictureInPictureElement = null;
     video?.dispatchEvent(new CustomEvent('leavepictureinpicture'));
     return;

@@ -1,15 +1,19 @@
 import config from './config';
 
-import { video } from './element';
+import { video, canvas } from './element';
 import { insetLyricsBtn } from './btn';
 import { sharedData } from './share-data';
 
+let loginResolve: (value?: unknown) => void;
+export const loggedPromise = new Promise(res => (loginResolve = res));
+
 const weakMap = new WeakMap<Element, MutationObserver>();
 
-config.then(({ ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR }) => {
+config.then(({ ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR, LOGGED_MARK_SELECTOR }) => {
   let infoElement: Element | null = null;
 
   const checkElement = () => {
+    if (document.querySelector(LOGGED_MARK_SELECTOR)) loginResolve();
     // https://github.com/mantou132/Spotify-Lyrics/issues/30
     insetLyricsBtn();
     const prevInfoElement = infoElement;
@@ -20,19 +24,15 @@ config.then(({ ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR }) => {
     if (!weakMap.has(infoElement)) {
       const cover = document.querySelector(ALBUM_COVER_SELECTOR) as HTMLImageElement;
       // https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
+      // YouTube video has no cors
       cover.crossOrigin = 'anonymous';
-      const coverCanvas = document.createElement('canvas');
-      coverCanvas.width = video.width;
-      coverCanvas.height = video.height;
-      const ctx = coverCanvas.getContext('2d');
+      const ctx = canvas.getContext('2d');
       if (!ctx) return;
-      const stream = coverCanvas.captureStream();
-      video.srcObject = stream;
       // May load multiple times in a short time
       // Need to remember the last cover image
       let largeImage: HTMLImageElement;
       cover.addEventListener('load', () => {
-        const draw = () => {
+        const drawSmallCover = () => {
           ctx.imageSmoothingEnabled = false;
           const blur = 10;
           ctx.filter = `blur(${blur}px)`;
@@ -40,8 +40,10 @@ config.then(({ ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR }) => {
         };
         // https://github.com/mantou132/Spotify-Lyrics/issues/26#issuecomment-638019333
         const reg = /00004851(?=\w{24}$)/;
-        if (!reg.test(cover.src)) {
-          draw();
+        if (cover.naturalWidth >= 480) {
+          ctx.drawImage(cover, 0, 0, video.width, video.height);
+        } else if (!reg.test(cover.src)) {
+          drawSmallCover();
         } else {
           const largeUrl = cover.src.replace(reg, '0000b273');
           largeImage = new Image();
@@ -51,9 +53,12 @@ config.then(({ ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR }) => {
             ctx.filter = `blur(0px)`;
             ctx.drawImage(largeImage, 0, 0, video.width, video.height);
           });
-          largeImage.addEventListener('error', draw);
+          largeImage.addEventListener('error', drawSmallCover);
           largeImage.src = largeUrl;
         }
+      });
+      cover.addEventListener('error', () => {
+        ctx.fillRect(0, 0, video.width, video.height);
       });
       const infoEleObserver = new MutationObserver(() => {
         sharedData.updateTrack();

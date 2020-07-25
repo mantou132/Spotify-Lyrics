@@ -7,6 +7,10 @@ export const svg = raw;
 export const html = raw;
 export const css = raw;
 
+export function getSVGDataUrl(s: string) {
+  return `data:image/svg+xml,${encodeURIComponent(s)}`;
+}
+
 export const headReady = new Promise(res => {
   if (document.head) res();
   document.addEventListener('readystatechange', () => {
@@ -15,13 +19,14 @@ export const headReady = new Promise(res => {
 });
 
 export async function appendStyle(s: string) {
+  if (s === '') return;
   await headReady;
   const style = document.createElement('style');
   style.textContent = s;
   document.head.append(style);
 }
 
-export function captureException(err: Error, extra?: any) {
+export function captureException(err: Error, extra: any = { herf: location.href }) {
   if (!isProd) console.error(err, extra);
   const msg: Message = {
     type: Event.CAPTURE_EXCEPTION,

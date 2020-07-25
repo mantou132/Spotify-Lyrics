@@ -82,7 +82,7 @@ export class SharedData {
     const artists = document.querySelector(TRACK_ARTIST_SELECTOR)?.textContent;
     if (!name || !artists) {
       if (isTrust) {
-        captureException(new Error(`Can't find track info`));
+        captureException(new Error(`Track info not found`));
       }
       return;
     }

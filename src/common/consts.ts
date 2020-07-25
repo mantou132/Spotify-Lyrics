@@ -48,7 +48,7 @@ export const I18nMsgKeys = Object.keys(i18nEnMessages).reduce((p, c: keyof typeo
   return p;
 }, {} as Keys<typeof i18nEnMessages>);
 
-export const isSupportES2018RegExp = (function() {
+export const isSupportES2018RegExp = (() => {
   try {
     /xx/su;
     return true;

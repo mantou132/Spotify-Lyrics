@@ -82,6 +82,7 @@ export function sendEvent(cid: string, payload: EventParams, customOptions: Reco
       ? {
           vp: `${innerWidth}x${innerHeight}`,
           cs: matchMedia('(display-mode: standalone)').matches ? 'pwa' : 'webpage',
+          cm: location.host,
         }
       : {}),
   });

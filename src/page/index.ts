@@ -9,10 +9,11 @@ import { video, audioPromise } from './element';
 import { sharedData } from './share-data';
 
 import './pip';
-import './misc';
 import './observer';
 
 import { optionsPromise } from './options';
+import { appendStyle } from './utils';
+import { localConfig } from './config';
 
 const INTERVAL = 80;
 
@@ -101,3 +102,5 @@ window.addEventListener('message', async ({ data }: MessageEvent) => {
     sharedData.chooseLyricsTrack(data.data as PopupStore);
   }
 });
+
+appendStyle(localConfig.STATIC_STYLE);

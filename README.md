@@ -13,6 +13,10 @@ If you have any questions, please submit an [issue](https://github.com/mantou132
 
 ![screenshot](./screenshot/screenshot3.jpg)
 
+The extension also supports Youtube Music, but does not support videos well.
+
+![screenshot](./screenshot/youtube.jpg)
+
 ## How To Work
 
 1. [Listen](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) for track info element.

@@ -1,6 +1,8 @@
 {
   "API_HOST": "https://music.xianqiao.wang/neteaseapi",
+  "LOGGED_MARK_SELECTOR": "header [data-testid=user-widget-link]",
   "LYRICS_CONTAINER_SELECTOR": ".Root__nav-bar nav",
+  "PAGE_PIP_STYLE": "position: relative; width: 100%; height: auto;",
   "ALBUM_COVER_SELECTOR": "[role=contentinfo] > div:nth-child(1) img",
   "TRACK_INFO_SELECTOR": "[role=contentinfo] > div:nth-child(2)",
   "TRACK_NAME_SELECTOR": "[role=contentinfo] > div:nth-child(2) > div:nth-child(1)",
@@ -8,6 +10,20 @@
   "BTN_WRAPPER_SELECTOR": "[role=contentinfo] > div:nth-child(3)",
   "BTN_LIKE_SELECTOR": "[role=contentinfo] > div:nth-child(3) > [class*=spoticon-heart]",
   "PIP_BTN_SELECTOR": "[role=contentinfo] > div:nth-child(4)",
+  "AUDIO_SELECTOR": "NONE",
+  "YOUTUBE": {
+    "LOGGED_MARK_SELECTOR": "ytmusic-settings-button",
+    "LYRICS_CONTAINER_SELECTOR": "ytmusic-player",
+    "PAGE_PIP_STYLE": "position: absolute; width: 100%; height: 100%; top: 0; object-fit: cover;",
+    "ALBUM_COVER_SELECTOR": "ytmusic-player-bar .ytmusic-player-bar.image",
+    "TRACK_INFO_SELECTOR": "ytmusic-player-bar .content-info-wrapper",
+    "TRACK_NAME_SELECTOR": "ytmusic-player-bar .content-info-wrapper .title",
+    "TRACK_ARTIST_SELECTOR": "ytmusic-player-bar .content-info-wrapper .subtitle yt-formatted-string > :first-child",
+    "BTN_WRAPPER_SELECTOR": "ytmusic-like-button-renderer",
+    "BTN_LIKE_SELECTOR": "ytmusic-like-button-renderer paper-icon-button:last-child",
+    "PIP_BTN_SELECTOR": "NONE",
+    "AUDIO_SELECTOR": "video.html5-main-video"
+  },
   "SINGER": {
     "jia jia": "家家",
     "sue": "苏运莹",
@@ -15,6 +31,7 @@
     "ada zhuang": "庄心妍",
     "dicky cheung": "张卫健",
     "show luo": "罗志祥",
+    "show lo": "罗志祥",
     "a-mei chang": "张惠妹",
 
     "kenshi yonezu": "米津玄師",
