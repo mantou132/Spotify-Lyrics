@@ -14,14 +14,34 @@
     "description": "The currently playing song was not found on the lyrics service."
   },
 
-  "popupAutoMatch": {
-    "message": "Reset",
-    "description": "Automatically match lyrics."
+  "popupConfirmTip": {
+    "message": "Save this change?",
+    "description": "Request confirmation from the user"
   },
 
-  "popupMatchDescription": {
-    "message": "If your lyrics are not displayed or wrong, you can manually match(click) the correct track to reload the lyrics",
-    "description": "Lyric matching description."
+  "popupConfirmSave" : {
+    "message": "Save",
+    "description": "Save user selection"
+  },
+
+  "popupConfirmReset" : {
+    "message": "Reset",
+    "description": "Automatically match lyrics"
+  },
+
+  "popupMatchDescription1": {
+    "message": "Try other lyrics or",
+    "description": "Lyric matching description1"
+  },
+
+  "popupMatchDescription2": {
+    "message": "use default",
+    "description": "Lyric matching use default"
+  },
+
+  "popupMatchDescription3": {
+    "message": "",
+    "description": "Lyric matching description3"
   },
 
   "optionsSave": {

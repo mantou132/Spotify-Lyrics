@@ -18,7 +18,7 @@ render(
       }
       body {
         box-sizing: border-box;
-        border: 1px solid rgba(var(--text-rgb), 0.1);
+        border: 1px solid rgba(var(--text-rgb), 0.2);
         width: 20rem;
         height: 30rem;
         margin: 0;

@@ -93,13 +93,17 @@ optionsPromise.then(opts => {
 
 window.addEventListener('message', async ({ data }: MessageEvent) => {
   if (!document.pictureInPictureElement) return;
+  if (!data?.type) return;
 
-  if (data?.type === Event.GET_SONGS) {
-    sharedData.sendToContentScript();
-  }
-
-  if (data?.type === Event.SELECT_SONG) {
-    sharedData.chooseLyricsTrack(data.data as PopupStore);
+  switch (data.type) {
+    case Event.GET_SONGS:
+      return sharedData.sendToContentScript();
+    case Event.SELECT_SONG:
+      return sharedData.chooseLyricsTrack(data.data as PopupStore);
+    case Event.CONFIRMED_SONG:
+      return sharedData.confirmedMId();
+    default:
+      return;
   }
 });
 

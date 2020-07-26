@@ -1,7 +1,7 @@
 import { browser } from 'webextension-polyfill-ts';
 import { createStore, updateStore } from '@mantou/gem';
 
-import { Event, Message } from '../common/consts';
+import { Event, Message, USER_SELECT_USE_LOCAL } from '../common/consts';
 
 import { Song } from '../page/lyrics';
 
@@ -10,8 +10,10 @@ export interface PopupStore {
   name: string;
   // current track artists
   artists: string;
-  // selected lyrics track
+  // current matched lyrics track id
   id: number;
+  // auto matched lyrics track id
+  aId: number;
   // lyrics track list
   list: Song[];
 }
@@ -21,6 +23,7 @@ export const store = createStore<PopupStore>({
   artists: '',
   list: [],
   id: 0,
+  aId: 0,
 });
 
 export function sendMessage(msg: Message) {
@@ -34,12 +37,17 @@ export function sendMessage(msg: Message) {
 }
 
 export function changeSong(id: number) {
+  updateStore(store, { id, aId: USER_SELECT_USE_LOCAL ? id : store.aId });
+
   const msg: Message<PopupStore> = {
     type: Event.SELECT_SONG,
     data: store,
   };
-  updateStore(store, { id });
   sendMessage(msg);
+}
+
+export function confirmedMId() {
+  sendMessage({ type: Event.CONFIRMED_SONG });
 }
 
 browser.runtime.onMessage.addListener((msg: Message) => {

@@ -11,12 +11,24 @@
     "message": "目前没有可用的歌曲"
   },
 
-  "popupAutoMatch": {
-    "message": "恢复默认"
+  "popupConfirmTip": {
+    "message": "保存这个改动？"
   },
 
-  "popupMatchDescription": {
-    "message": "如果您的歌词未显示或显示错误，您可以手动匹配(点击)正确的曲目以重新加载歌词"
+  "popupConfirmSave" : {
+    "message": "保存"
+  },
+
+  "popupConfirmReset" : {
+    "message": "重设"
+  },
+
+  "popupMatchDescription1": {
+    "message": "尝试其他歌词或"
+  },
+
+  "popupMatchDescription2": {
+    "message": "使用默认歌词"
   },
 
   "optionsSave": {

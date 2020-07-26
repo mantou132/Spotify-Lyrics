@@ -12,6 +12,7 @@ export enum Event {
   GET_SONGS = 'get-songs',
   SEND_SONGS = 'send-songs',
   SELECT_SONG = 'select-song',
+  CONFIRMED_SONG = 'confirmed-song',
   GET_OPTIONS = 'get-options',
   SEND_OPTIONS = 'send-options',
   POPUP_ACTIVE = 'popup-active',
@@ -56,3 +57,5 @@ export const isSupportES2018RegExp = (() => {
     return false;
   }
 })();
+
+export const USER_SELECT_USE_LOCAL = true;

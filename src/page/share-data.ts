@@ -1,4 +1,4 @@
-import { Message, Event } from '../common/consts';
+import { Message, Event, USER_SELECT_USE_LOCAL } from '../common/consts';
 import { sendEvent, events } from '../common/ga';
 
 import { PopupStore } from '../popup/store';
@@ -13,6 +13,7 @@ export class SharedData {
   name = '';
   artists = '';
   id = 0;
+  aId = 0;
   list: Song[] = [];
   lyrics: Lyric = [];
 
@@ -29,7 +30,7 @@ export class SharedData {
   }
 
   // can only modify `lyrics`
-  async fetchLyrics() {
+  async updateLyrics() {
     const options = await optionsPromise;
     if (this.id === 0) {
       this.lyrics = null;
@@ -44,8 +45,8 @@ export class SharedData {
     }
   }
 
-  // can only modify `lyrics`/`id`/`list`
-  async matchingLyrics() {
+  // can only modify `lyrics`/`id`/`aId`/`list`
+  async matching() {
     const options = await optionsPromise;
     const query = { name: this.name, artists: this.artists };
     sendEvent(options.cid, events.searchLyrics, { cd1: this.cd1 });
@@ -53,24 +54,32 @@ export class SharedData {
     if (id === 0) {
       sendEvent(options.cid, events.notMatch, { cd1: this.cd1 });
     }
-    this.id = id;
     this.list = list;
-    const saveId = await getSongId(query);
-    if (saveId) this.id = saveId;
-    await this.fetchLyrics();
+    this.id = (await getSongId(query)) || id;
+    this.aId = this.id;
+    await this.updateLyrics();
+  }
+
+  async confirmedMId() {
+    const { name, artists, id } = this;
+    await setSongId({ name, artists, id });
+    this.aId = id;
+    this.sendToContentScript();
   }
 
   async chooseLyricsTrack({ id, name, artists }: PopupStore) {
+    if (id === this.id) return;
     if (name !== this.name || artists !== this.artists) return;
     this.id = id;
     this.lyrics = [];
-    await setSongId({ name, artists, id });
     if (id === 0) {
-      // auto matching
-      await this.matchingLyrics();
+      // reset
+      await setSongId({ name, artists, id });
+      await this.matching();
       this.sendToContentScript();
     } else {
-      await this.fetchLyrics();
+      if (USER_SELECT_USE_LOCAL) this.confirmedMId();
+      await this.updateLyrics();
     }
   }
 
@@ -89,25 +98,27 @@ export class SharedData {
     this.name = name;
     this.artists = artists;
     this.id = 0;
+    this.aId = 0;
     this.list = [];
     this.lyrics = [];
     try {
-      await this.matchingLyrics();
+      await this.matching();
     } catch (e) {
       captureException(e);
-    } finally {
-      this.sendToContentScript();
     }
+    this.sendToContentScript();
   }
 
   sendToContentScript() {
+    const { name, artists, id, aId, list } = this;
     const msg: Message<PopupStore> = {
       type: Event.SEND_SONGS,
       data: {
-        name: this.name,
-        artists: this.artists,
-        id: this.id,
-        list: this.list,
+        name,
+        artists,
+        id,
+        aId,
+        list,
       },
     };
     window.postMessage(msg, '*');

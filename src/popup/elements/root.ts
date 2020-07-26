@@ -3,7 +3,7 @@ import { html, customElement, connectStore, GemElement } from '@mantou/gem';
 
 import './list';
 
-import { store, changeSong } from '../store';
+import { store, changeSong, confirmedMId } from '../store';
 import { events, sendEvent } from '../../common/ga';
 import { I18nMsgKeys } from '../../common/consts';
 import { getOptions } from '../../options/store';
@@ -40,6 +40,42 @@ export class SongList extends GemElement {
           flex-direction: column;
           font-weight: 400;
         }
+        .header {
+          display: flex;
+          flex-shrink: 0;
+          padding: 1rem 0;
+          margin: 0 0.875rem;
+          border-bottom: 1px solid rgba(var(--text-rgb), 0.2);
+          color: rgba(var(--text-rgb), 0.5);
+        }
+        .header p {
+          margin: 0;
+          flex-grow: 1;
+        }
+        .header .button {
+          border-bottom: 1px dotted;
+        }
+        .header .button:hover {
+          cursor: default;
+          color: rgba(var(--text-rgb), 1);
+        }
+        .header button {
+          background: transparent;
+          font-size: 0.75rem;
+          font-weight: 700;
+          padding: 0;
+          margin-left: 0.5rem;
+          line-height: 1rem;
+          letter-spacing: 0.1em;
+          border: none;
+          color: inherit;
+        }
+        .header button:hover {
+          color: rgba(var(--text-rgb), 1);
+        }
+        .header button:focus {
+          outline: none;
+        }
         .main {
           overflow: auto;
           flex-grow: 1;
@@ -48,49 +84,30 @@ export class SongList extends GemElement {
         .main::-webkit-scrollbar {
           display: none;
         }
-        .notice {
-          padding: 0.75rem 0;
-          margin: 0 0.875rem;
-          color: rgba(var(--text-rgb), 0.5);
-          border-bottom: 1px solid rgba(var(--text-rgb), 0.1);
-          font-size: 0.875rem;
-        }
-        .footer {
-          display: flex;
-          flex-shrink: 0;
-          justify-content: center;
-          align-items: center;
-          padding: 0.75rem 0;
-          margin: 0 0.875rem;
-          border-top: 1px solid rgba(var(--text-rgb), 0.1);
-        }
-        .footer button {
-          color: rgba(var(--text-rgb), 1);
-          background: transparent;
-          font-size: 0.75rem;
-          font-weight: 700;
-          padding: 0.4375rem 1rem;
-          line-height: 1rem;
-          letter-spacing: 0.1em;
-          border-radius: 4px;
-          border: 1px solid rgba(var(--text-rgb), 0.3);
-          text-transform: uppercase;
-        }
-        .footer button:hover {
-          border-color: rgba(var(--text-rgb), 1);
-        }
-        .footer button:focus {
-          outline: none;
-        }
       </style>
-      <div class="main">
-        <div class="notice">
-          ${browser.i18n.getMessage(I18nMsgKeys.popupMatchDescription)}
-        </div>
-        <app-track-list class="list"></app-track-list>
+      <div class="header">
+        ${store.id && store.id !== store.aId
+          ? html`
+              <p>${browser.i18n.getMessage(I18nMsgKeys.popupConfirmTip)}</p>
+              <button @click=${this.autoSelect}>
+                ${browser.i18n.getMessage(I18nMsgKeys.popupConfirmReset)}
+              </button>
+              <button @click=${confirmedMId}>
+                ${browser.i18n.getMessage(I18nMsgKeys.popupConfirmSave)}
+              </button>
+            `
+          : html`
+              <p>
+                ${browser.i18n.getMessage(I18nMsgKeys.popupMatchDescription1)}
+                <span @click=${this.autoSelect} class="button">
+                  ${browser.i18n.getMessage(I18nMsgKeys.popupMatchDescription2)}
+                </span>
+                ${browser.i18n.getMessage(I18nMsgKeys.popupMatchDescription3)}
+              </p>
+            `}
       </div>
-      <div class="footer">
-        <button @click=${this.autoSelect}>${browser.i18n.getMessage(I18nMsgKeys.popupAutoMatch)}</button>
+      <div class="main">
+        <app-track-list class="list"></app-track-list>
       </div>
     `;
   }
