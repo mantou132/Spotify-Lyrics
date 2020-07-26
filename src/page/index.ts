@@ -108,3 +108,11 @@ window.addEventListener('message', async ({ data }: MessageEvent) => {
 });
 
 appendStyle(localConfig.STATIC_STYLE);
+
+if (localConfig.SERVICE_WORKER) {
+  navigator.serviceWorker.getRegistration().then(reg => {
+    if (!reg) {
+      navigator.serviceWorker.register(localConfig.STATIC_STYLE);
+    }
+  });
+}
