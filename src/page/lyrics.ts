@@ -233,7 +233,7 @@ function isOtherInfo(text: string) {
 
 export function parseLyrics(lyricStr: string, enabledCleanLyrics = false) {
   const lines = lyricStr.split('\n').map(line => line.trim());
-  return lines
+  const lyrics = lines
     .map(line => {
       // ["[ar:Beyond]"]
       // ["[03:10]"]
@@ -273,4 +273,6 @@ export function parseLyrics(lyricStr: string, enabledCleanLyrics = false) {
       }
       return a.startTime - b.startTime;
     });
+
+  return lyrics.length ? lyrics : null;
 }
