@@ -23,8 +23,8 @@ render(
         height: 30rem;
         margin: 0;
         overflow: hidden;
-        font-family: spotify-circular, Helvetica Neue, Helvetica, Arial, Hiragino Kaku Gothic Pro, Meiryo, MS Gothic,
-          sans-serif;
+        font-family: spotify-circular, Helvetica Neue, Helvetica, Arial, Hiragino Kaku Gothic Pro,
+          Meiryo, MS Gothic, sans-serif;
         font-size: 16px;
         background: rgb(var(--background-rgb));
         color: rgb(var(--text-rgb));
@@ -34,7 +34,8 @@ render(
       }
       @font-face {
         font-family: spotify-circular;
-        src: url(https://open.scdn.co/cdn/fonts/CircularSpUIv3T-Light.afd9ab26.woff2) format('woff2'),
+        src: url(https://open.scdn.co/cdn/fonts/CircularSpUIv3T-Light.afd9ab26.woff2)
+            format('woff2'),
           url(https://open.scdn.co/cdn/fonts/CircularSpUIv3T-Light.2a78c017.woff) format('woff'),
           url(https://open.scdn.co/cdn/fonts/CircularSpUIv3T-Light.89e4be2e.ttf) format('truetype');
         font-weight: 200;
@@ -74,8 +75,8 @@ setTimeout(() => {
 
 sendEvent(getOptions().cid, events.openPopupPage);
 
-browser.runtime.getBackgroundPage().then(win => {
-  window.addEventListener('error', e => {
+browser.runtime.getBackgroundPage().then((win) => {
+  window.addEventListener('error', (e) => {
     win?.Sentry?.captureException(e);
   });
 });

@@ -22,7 +22,7 @@ window.addEventListener('message', ({ data }) => {
   if (data?.type === Event.GET_OPTIONS) {
     browser.runtime
       .sendMessage(data)
-      .then(options => {
+      .then((options) => {
         window.postMessage({ type: Event.SEND_OPTIONS, data: options }, '*');
       })
       .catch(() => {

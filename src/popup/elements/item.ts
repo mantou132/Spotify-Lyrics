@@ -49,11 +49,7 @@ export class SongItem extends GemElement {
           <span>${artists.map(({ name }) => name).join(',')}</span> • <span>${album.name}</span>
         </div>
       </div>
-      ${checked
-        ? html`
-            <div class="status">✓</div>
-          `
-        : null}
+      ${checked ? html`<div class="status">✓</div>` : null}
     `;
   }
 

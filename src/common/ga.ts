@@ -69,7 +69,11 @@ export const events = {
   },
 };
 
-export function sendEvent(cid: string, payload: EventParams, customOptions: Record<string, string> = {}) {
+export function sendEvent(
+  cid: string,
+  payload: EventParams,
+  customOptions: Record<string, string> = {},
+) {
   postReq({
     cid,
     t: 'event',
@@ -81,7 +85,9 @@ export function sendEvent(cid: string, payload: EventParams, customOptions: Reco
     ...(location.protocol.startsWith('http')
       ? {
           vp: `${innerWidth}x${innerHeight}`,
-          cs: matchMedia('(display-mode: standalone), (display-mode: minimal-ui)').matches ? 'pwa' : 'webpage',
+          cs: matchMedia('(display-mode: standalone), (display-mode: minimal-ui)').matches
+            ? 'pwa'
+            : 'webpage',
           cm: location.host,
         }
       : {}),

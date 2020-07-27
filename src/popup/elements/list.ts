@@ -23,7 +23,7 @@ export class SongList extends GemElement {
         }
       </style>
       ${store.list.map(
-        song =>
+        (song) =>
           html`
             <app-track-item @click=${() => this.select(song.id)} .song=${song}></app-track-item>
           `,

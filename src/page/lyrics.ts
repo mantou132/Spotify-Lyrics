@@ -55,11 +55,7 @@ const getText = (s: string) => {
 };
 
 const getHalfSizeText = (s: string) => {
-  return s
-    .replace(/，/g, ',')
-    .replace(/。/g, '.')
-    .replace(/、/g, ',')
-    .replace(/‘|’/g, "'");
+  return s.replace(/，/g, ',').replace(/。/g, '.').replace(/、/g, ',').replace(/‘|’/g, "'");
 };
 
 const removeSongFeat = (s: string) => {
@@ -75,11 +71,13 @@ async function fetchChineseName(s: string) {
     limit: '100',
   });
   try {
-    const { result }: SearchArtistsResult = await (await fetch(`${API_HOST}/search?${searchQuery}`)).json();
+    const { result }: SearchArtistsResult = await (
+      await fetch(`${API_HOST}/search?${searchQuery}`)
+    ).json();
     const artists = result?.artists || [];
-    artists.forEach(artist => {
+    artists.forEach((artist) => {
       const alia = artist.alias
-        .map(e => e.toLowerCase())
+        .map((e) => e.toLowerCase())
         .sort()
         .join();
       // Chinese singer's English name as an alias
@@ -99,7 +97,9 @@ async function fetchSongList(s: string): Promise<Song[]> {
     type: '1',
     limit: '100',
   });
-  const { result }: SearchSongsResult = await (await fetch(`${API_HOST}/search?${searchQuery}`)).json();
+  const { result }: SearchSongsResult = await (
+    await fetch(`${API_HOST}/search?${searchQuery}`)
+  ).json();
   return result?.songs || [];
 }
 
@@ -120,21 +120,23 @@ export async function matchingLyrics(
   const queryName5 = getText(queryName3);
   const queryArtistsArr = artists
     .split(',')
-    .map(e => e.trim())
+    .map((e) => e.trim())
     .sort();
-  const queryArtistsArr1 = queryArtistsArr.map(e => e.toLowerCase());
-  const queryArtistsArr2 = queryArtistsArr1.map(e => sify(e));
+  const queryArtistsArr1 = queryArtistsArr.map((e) => e.toLowerCase());
+  const queryArtistsArr2 = queryArtistsArr1.map((e) => sify(e));
 
   const singerAlias = onlySearchName ? {} : await fetchChineseName(queryArtistsArr2.join());
 
-  const queryArtistsArr3 = queryArtistsArr1.map(e => singerAlias[e] || (SINGER as any)[e] || e);
+  const queryArtistsArr3 = queryArtistsArr1.map((e) => singerAlias[e] || (SINGER as any)[e] || e);
 
-  const searchString = onlySearchName ? queryName4 : `${sify(queryArtistsArr3.join())} ${queryName4}`;
+  const searchString = onlySearchName
+    ? queryName4
+    : `${sify(queryArtistsArr3.join())} ${queryName4}`;
   const songs = await fetchData(searchString);
 
   let songId = 0;
   let score = 0;
-  songs.forEach(song => {
+  songs.forEach((song) => {
     let currentScore = isStrictMode ? 0 : 3;
 
     let songName = song.name;
@@ -173,18 +175,21 @@ export async function matchingLyrics(
       }
     }
 
-    let songArtistsArr = song.artists.map(e => e.name).sort();
+    let songArtistsArr = song.artists.map((e) => e.name).sort();
     const len = queryArtistsArr.length + songArtistsArr.length;
     if (queryArtistsArr.join() === songArtistsArr.join()) {
       currentScore += 6;
     } else {
-      songArtistsArr = songArtistsArr.map(e => e.toLowerCase());
-      if (queryArtistsArr1.join() === songArtistsArr.join() || queryArtistsArr3.join() === songArtistsArr.join()) {
+      songArtistsArr = songArtistsArr.map((e) => e.toLowerCase());
+      if (
+        queryArtistsArr1.join() === songArtistsArr.join() ||
+        queryArtistsArr3.join() === songArtistsArr.join()
+      ) {
         currentScore += 5.3;
       } else if (new Set([...queryArtistsArr1, ...songArtistsArr]).size < len) {
         currentScore += 5.2;
       } else {
-        songArtistsArr = songArtistsArr.map(e => sify(e));
+        songArtistsArr = songArtistsArr.map((e) => sify(e));
         if (queryArtistsArr2.join() === songArtistsArr.join()) {
           currentScore += 5.1;
         } else if (
@@ -232,21 +237,21 @@ function isOtherInfo(text: string) {
 }
 
 export function parseLyrics(lyricStr: string, enabledCleanLyrics = false) {
-  const lines = lyricStr.split('\n').map(line => line.trim());
+  const lines = lyricStr.split('\n').map((line) => line.trim());
   const lyrics = lines
-    .map(line => {
+    .map((line) => {
       // ["[ar:Beyond]"]
       // ["[03:10]"]
       // ["[03:10]", "永远高唱我歌"]
       // ["永远高唱我歌"]
       // ["[03:10]", "[03:10]", "永远高唱我歌"]
       const matchResult = line.match(/(\[.*?\])|([^\[\]]+)/g) || [line];
-      const textIndex = matchResult.findIndex(slice => !slice.endsWith(']'));
+      const textIndex = matchResult.findIndex((slice) => !slice.endsWith(']'));
       let text = ' ';
       if (textIndex > -1) {
         text = matchResult.splice(textIndex, 1)[0].trim();
       }
-      return matchResult.map(slice => {
+      return matchResult.map((slice) => {
         const result = new Line();
         const [key, value] = slice.match(/[^\[\]]+/g)?.[0].split(':') || [];
         const [min, sec] = [parseFloat(key), parseFloat(value)];

@@ -6,7 +6,8 @@ import { isProd } from '../common/consts';
 import config from './config.json';
 import { css, svg, getSVGDataUrl } from './utils';
 
-const REMOTE_URL = 'https://raw.githubusercontent.com/mantou132/Spotify-Lyrics/master/src/page/config.json';
+const REMOTE_URL =
+  'https://raw.githubusercontent.com/mantou132/Spotify-Lyrics/master/src/page/config.json';
 
 // Identify service name
 // Identify the service name, the service name should be the same as in config.json

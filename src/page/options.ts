@@ -1,6 +1,6 @@
 import { Event, Message, Options } from '../common/consts';
 
-export const optionsPromise = new Promise<Options>(res => {
+export const optionsPromise = new Promise<Options>((res) => {
   // get config from content script
   window.postMessage({ type: Event.GET_OPTIONS } as Message, '*');
   window.addEventListener('message', ({ data }) => {

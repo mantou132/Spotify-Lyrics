@@ -24,7 +24,7 @@ const polyfill = () => {
     },
   });
 
-  HTMLVideoElement.prototype.requestPictureInPicture = async function() {
+  HTMLVideoElement.prototype.requestPictureInPicture = async function () {
     const { LYRICS_CONTAINER_SELECTOR, PAGE_PIP_STYLE } = await config;
     const container = document.querySelector(LYRICS_CONTAINER_SELECTOR);
     if (container) {
@@ -39,7 +39,7 @@ const polyfill = () => {
     }
   };
 
-  document.exitPictureInPicture = async function() {
+  document.exitPictureInPicture = async function () {
     const video = document.pictureInPictureElement;
     if (video) video.hidden = true;
     document.pictureInPictureElement = null;
@@ -53,7 +53,7 @@ if (!document.pictureInPictureEnabled) {
   polyfill();
 }
 
-optionsPromise.then(options => {
+optionsPromise.then((options) => {
   // Rewrite PIP WebAPI
   if (options['show-on'] === 'page') {
     polyfill();

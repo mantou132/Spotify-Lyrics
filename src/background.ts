@@ -54,7 +54,8 @@ browser.contextMenus.create({
 async function getRateMeLink() {
   const linkMap: Record<string, string> = {
     firefox: 'https://addons.mozilla.org/en-US/firefox/addon/spotify-lyrics/',
-    chrome: 'https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod',
+    chrome:
+      'https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod',
     safari: '',
   };
   // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/getBrowserInfo
@@ -72,7 +73,7 @@ async function getRateMeLink() {
   return '';
 }
 
-getRateMeLink().then(link => {
+getRateMeLink().then((link) => {
   if (link) {
     browser.contextMenus.create({
       id: ContextItems.RATE_ME,
@@ -82,7 +83,7 @@ getRateMeLink().then(link => {
   }
 });
 
-browser.contextMenus.onClicked.addListener(async function(info) {
+browser.contextMenus.onClicked.addListener(async function (info) {
   switch (info.menuItemId) {
     case ContextItems.FEEDBACK:
       browser.tabs.create({

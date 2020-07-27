@@ -5,7 +5,7 @@ import { insetLyricsBtn } from './btn';
 import { sharedData } from './share-data';
 
 let loginResolve: (value?: unknown) => void;
-export const loggedPromise = new Promise(res => (loginResolve = res));
+export const loggedPromise = new Promise((res) => (loginResolve = res));
 
 const weakMap = new WeakMap<Element, MutationObserver>();
 
@@ -36,7 +36,13 @@ config.then(({ ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR, LOGGED_MARK_SELECTOR }
           ctx.imageSmoothingEnabled = false;
           const blur = 10;
           ctx.filter = `blur(${blur}px)`;
-          ctx.drawImage(cover, -blur * 2, -blur * 2, video.width + 4 * blur, video.height + 4 * blur);
+          ctx.drawImage(
+            cover,
+            -blur * 2,
+            -blur * 2,
+            video.width + 4 * blur,
+            video.height + 4 * blur,
+          );
         };
         // https://github.com/mantou132/Spotify-Lyrics/issues/26#issuecomment-638019333
         const reg = /00004851(?=\w{24}$)/;
@@ -48,7 +54,7 @@ config.then(({ ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR, LOGGED_MARK_SELECTOR }
           const largeUrl = cover.src.replace(reg, '0000b273');
           largeImage = new Image();
           largeImage.crossOrigin = 'anonymous';
-          largeImage.addEventListener('load', function() {
+          largeImage.addEventListener('load', function () {
             if (this !== largeImage) return;
             ctx.filter = `blur(0px)`;
             ctx.drawImage(largeImage, 0, 0, video.width, video.height);

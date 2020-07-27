@@ -18,7 +18,7 @@ canvas.height = video.height;
 canvas.getContext('2d');
 video.srcObject = canvas.captureStream();
 
-export const videoMetadataloaded = new Promise(res => {
+export const videoMetadataloaded = new Promise((res) => {
   video.addEventListener('loadedmetadata', () => res());
 });
 
@@ -38,12 +38,12 @@ window.addEventListener('beforeunload', () => {
   if (document.pictureInPictureElement) setPopupState(false);
 });
 
-export const audioPromise = new Promise<HTMLAudioElement>(res => {
+export const audioPromise = new Promise<HTMLAudioElement>((res) => {
   let audio: HTMLAudioElement | null = null;
 
   const createElement: typeof document.createElement = document.createElement.bind(document);
 
-  document.createElement = function<K extends keyof HTMLElementTagNameMap>(
+  document.createElement = function <K extends keyof HTMLElementTagNameMap>(
     tagName: K,
     options: ElementCreationOptions,
   ) {
@@ -70,7 +70,7 @@ export const audioPromise = new Promise<HTMLAudioElement>(res => {
   });
 });
 
-audioPromise.then(audio => {
+audioPromise.then((audio) => {
   audio.addEventListener('playing', async () => {
     const isMusic = audio.duration && audio.duration > 2.6 * 60 && audio.duration < 4 * 60;
     if (isMusic && !(await getLyricsBtn())) {

@@ -23,12 +23,16 @@ export async function getLyricsBtn() {
 
 window.addEventListener(
   'keydown',
-  async e => {
+  async (e) => {
     const options = await optionsPromise;
     const lyricsBtn = await getLyricsBtn();
     if (!lyricsBtn) return;
     const element = (e.composedPath?.()[0] || e.target) as HTMLElement;
-    if (element.isContentEditable || element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+    if (
+      element.isContentEditable ||
+      element instanceof HTMLInputElement ||
+      element instanceof HTMLTextAreaElement
+    ) {
       return;
     }
     e.stopImmediatePropagation();
@@ -70,7 +74,8 @@ export const insetLyricsBtn = async () => {
   }
 
   lyricsBtn.title = 'Toggle lyrics(L)';
-  if (document.pictureInPictureElement === video) lyricsBtn.classList.add(localConfig.LYRICS_ACTIVE_CLASSNAME);
+  if (document.pictureInPictureElement === video)
+    lyricsBtn.classList.add(localConfig.LYRICS_ACTIVE_CLASSNAME);
   video.addEventListener('enterpictureinpicture', () => {
     lyricsBtn.classList.add(localConfig.LYRICS_ACTIVE_CLASSNAME);
   });

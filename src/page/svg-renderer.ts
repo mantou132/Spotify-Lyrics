@@ -12,7 +12,13 @@ const style = css`
   }
   body {
     /* https://bugs.chromium.org/p/chromium/issues/detail?id=432153 */
-    -webkit-mask-image: linear-gradient(to bottom, transparent 8%, black 35%, black 65%, transparent 92%);
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 8%,
+      black 35%,
+      black 65%,
+      transparent 92%
+    );
     mask-image: linear-gradient(to bottom, transparent 8%, black 35%, black 65%, transparent 92%);
     width: 100%;
     height: 100%;
@@ -58,9 +64,7 @@ function generateSVG(lyric: Lyric, currentTime = 0) {
   let content = '';
 
   if (!lyric) {
-    content = html`
-      <div class="hit">No lyrics</div>
-    `;
+    content = html`<div class="hit">No lyrics</div>`;
   } else {
     lyric.forEach(({ startTime }, index) => {
       if (startTime && currentTime > startTime) {
@@ -68,10 +72,7 @@ function generateSVG(lyric: Lyric, currentTime = 0) {
       }
     });
     lyric.forEach(({ text }, index) => {
-      const safeHTML = text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+      const safeHTML = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       if (index < currentIndex) {
         before += `<p>${safeHTML}</p>`;
       } else if (index > currentIndex) {
@@ -113,7 +114,7 @@ export async function renderLyricsWithSVG(
 ): Promise<HTMLImageElement | undefined> {
   const url = getSVGDataUrl(generateSVG(lyrics, currentTime));
   const img = new Image(ctx.canvas.width, ctx.canvas.height);
-  return new Promise(res => {
+  return new Promise((res) => {
     img.onload = () => res(img);
     img.onerror = () => {
       const lyricsStr = JSON.stringify(lyrics);

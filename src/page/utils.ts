@@ -11,7 +11,7 @@ export function getSVGDataUrl(s: string) {
   return `data:image/svg+xml,${encodeURIComponent(s)}`;
 }
 
-export const headReady = new Promise(res => {
+export const headReady = new Promise((res) => {
   if (document.head) res();
   document.addEventListener('readystatechange', () => {
     if (document.head) res();

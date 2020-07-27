@@ -3,7 +3,9 @@ import { Lyric } from './lyrics';
 // simple word segmentation rules
 export function getWords(str: string) {
   const result: string[] = [];
-  const words = str.split(/(\p{sc=Han}|\p{sc=Katakana}|\p{sc=Hiragana}|\p{sc=Hang}|\p{gc=Punctuation})|\s+/gu);
+  const words = str.split(
+    /(\p{sc=Han}|\p{sc=Katakana}|\p{sc=Hiragana}|\p{sc=Hang}|\p{gc=Punctuation})|\s+/gu,
+  );
   let tempWord = '';
   words.forEach((word = ' ') => {
     if (word) {
@@ -193,7 +195,9 @@ export function renderLyricsWithCanvas(
   const fLineHeight = otherLineHeight + progress * (focusLineHeight - otherLineHeight);
   const fLineOpacity = otherLineOpacity + progress * (1 - otherLineOpacity);
   const otherRight =
-    ctx.canvas.width - marginWidth - (otherLineFontSize / focusLineFontSize) * (ctx.canvas.width - 2 * marginWidth);
+    ctx.canvas.width -
+    marginWidth -
+    (otherLineFontSize / focusLineFontSize) * (ctx.canvas.width - 2 * marginWidth);
   const progressRight = marginWidth + (1 - progress) * (otherRight - marginWidth);
   offscreenCtx.fillStyle = `rgba(255, 255, 255, ${fLineOpacity})`;
   offscreenCtx.font = `bold ${fFontSize}px sans-serif`;
@@ -211,7 +215,8 @@ export function renderLyricsWithCanvas(
   let lastBeforePos = pos;
   for (let i = 0; i < currentIndex; i++) {
     if (i === 0) {
-      const prevProgressLineFontSize = otherLineFontSize + (1 - progress) * (focusLineFontSize - otherLineFontSize);
+      const prevProgressLineFontSize =
+        otherLineFontSize + (1 - progress) * (focusLineFontSize - otherLineFontSize);
       const prevProgressLineOpacity = otherLineOpacity + (1 - progress) * (1 - otherLineOpacity);
       offscreenCtx.fillStyle = `rgba(255, 255, 255, ${prevProgressLineOpacity})`;
       offscreenCtx.font = `bold ${prevProgressLineFontSize}px sans-serif`;
@@ -223,7 +228,10 @@ export function renderLyricsWithCanvas(
       bottom: i === 0 ? lastBeforePos.top - focusLineMargin : lastBeforePos.top - otherLineMargin,
       left: marginWidth,
       right: i === 0 ? marginWidth + progress * (otherRight - marginWidth) : otherRight,
-      lineHeight: i === 0 ? otherLineHeight + (1 - progress) * (focusLineHeight - otherLineHeight) : otherLineHeight,
+      lineHeight:
+        i === 0
+          ? otherLineHeight + (1 - progress) * (focusLineHeight - otherLineHeight)
+          : otherLineHeight,
     });
     if (lastBeforePos.top < 0) break;
   }
@@ -233,7 +241,10 @@ export function renderLyricsWithCanvas(
   let lastAfterPos = pos;
   for (let i = currentIndex + 1; i < lyrics.length; i++) {
     lastAfterPos = drawParagraph(offscreenCtx, lyrics[i].text, {
-      top: i === currentIndex + 1 ? lastAfterPos.bottom + focusLineMargin : lastAfterPos.bottom + otherLineMargin,
+      top:
+        i === currentIndex + 1
+          ? lastAfterPos.bottom + focusLineMargin
+          : lastAfterPos.bottom + otherLineMargin,
       left: marginWidth,
       right: otherRight,
       lineHeight: otherLineHeight,
