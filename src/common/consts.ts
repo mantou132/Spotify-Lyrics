@@ -8,7 +8,6 @@ export interface Message<T = any> {
 }
 
 export enum Event {
-  RELOAD_SPOTIFY = 'reload-spotify',
   GET_SONGS = 'get-songs',
   SEND_SONGS = 'send-songs',
   SELECT_SONG = 'select-song',

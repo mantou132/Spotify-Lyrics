@@ -37,7 +37,12 @@ export class Test extends GemElement<{ changed: boolean }> {
     const manifest = browser.runtime.getManifest() as typeof import('../../public/manifest.json');
     browser.tabs.query({ url: manifest.content_scripts[0].matches }).then((tabs) => {
       tabs.forEach((tab) => {
-        if (tab.id) browser.tabs.sendMessage(tab.id, { type: Event.RELOAD_SPOTIFY } as Message);
+        if (tab.id) {
+          browser.tabs.sendMessage(tab.id, {
+            type: Event.SEND_OPTIONS,
+            data: options,
+          } as Message);
+        }
       });
     });
   };
@@ -48,10 +53,15 @@ export class Test extends GemElement<{ changed: boolean }> {
           display: block;
         }
         ele-form {
-          margin-bottom: 2em;
+          margin-bottom: 1em;
         }
         ele-form-item {
           border-bottom: 1px solid rgba(${theme.blackRGB}, 0.1);
+        }
+        .tip {
+          font-style: italic;
+          color: rgba(${theme.blackRGB}, 0.5);
+          margin-bottom: 2em;
         }
       </style>
       <ele-form @input=${this.inputHandler} ref=${this.formRef.ref}>
@@ -75,7 +85,7 @@ export class Test extends GemElement<{ changed: boolean }> {
           ></ele-switch>
         </ele-form-item>
         <ele-form-item
-          label=${i18n.optionsLyricsPosition()}
+          label="${i18n.optionsLyricsPosition()}(*)"
           description=${i18n.optionsLyricsPositionDetail()}
         >
           <ele-select
@@ -91,6 +101,7 @@ export class Test extends GemElement<{ changed: boolean }> {
           ></ele-switch>
         </ele-form-item>
       </ele-form>
+      <p class="tip">(*): ${i18n.optionsSaveTip()}</p>
       <ele-button ?disabled=${!this.state.changed} @click=${this.submitHandler}>
         ${i18n.optionsSave()}
       </ele-button>

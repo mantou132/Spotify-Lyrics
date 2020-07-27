@@ -26,7 +26,7 @@ export class Switch extends GemElement {
           border: 1px solid;
           background: transparent;
           line-height: 1.3;
-          padding: 0.5em 1em;
+          padding: 0.4em 1em;
           font-weight: 500;
         }
         button:hover {

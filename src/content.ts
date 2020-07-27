@@ -11,11 +11,7 @@ window.addEventListener('message', ({ data }) => {
 });
 
 browser.runtime.onMessage.addListener((msg: Message) => {
-  if (msg.type === Event.RELOAD_SPOTIFY) {
-    location.reload();
-  } else {
-    window.postMessage(msg, '*');
-  }
+  window.postMessage(msg, '*');
 });
 
 window.addEventListener('message', ({ data }) => {

@@ -31,8 +31,12 @@
     "message": "使用默认歌词"
   },
 
+  "optionsSaveTip": {
+    "message": "需要重新加载才能生效"
+  },
+
   "optionsSave": {
-    "message": "保存(会刷新 Spotify)"
+    "message": "保存"
   },
 
   "optionsSmoothScroll": {

@@ -44,8 +44,13 @@
     "description": "Lyric matching description3"
   },
 
+  "optionsSaveTip": {
+    "message": "Need to reload to take effect",
+    "description": "Some tips for saving options"
+  },
+
   "optionsSave": {
-    "message": "Save(reload spotify)",
+    "message": "Save",
     "description": "Save options"
   },
 
