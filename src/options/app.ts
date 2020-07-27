@@ -87,8 +87,8 @@ export class Test extends GemElement {
           ></ele-switch>
         </ele-form-item>
         <ele-form-item
+          ?hidden=${!document.pictureInPictureEnabled}
           label="${i18n.optionsLyricsPosition()}"
-          description=${i18n.optionsLyricsPositionDetail()}
         >
           <ele-select
             name=${'show-on' as keyof Options}

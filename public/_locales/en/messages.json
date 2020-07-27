@@ -99,11 +99,6 @@
     "description": "Toggle show lyrics shortcut detail"
   },
 
-  "optionsLyricsPositionDetail": {
-    "message": "Some browsers do not support PiP, the lyrics will always be displayed on the page",
-    "description": "Lyrics position option detail"
-  },
-
   "menusFeedback": {
     "message": "Feedback",
     "description": "Feedback context menus item"
