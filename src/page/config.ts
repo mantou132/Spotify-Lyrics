@@ -31,8 +31,9 @@ export default getConfig();
 
 // For some configurations of the service, they need to be repackaged and released to take effect
 interface LocalConfig {
+  // If necessary, inject the service worker in advance
   SERVICE_WORKER: string;
-  // Some fixed styles, they will be inserted into the page as quickly as possible
+  // Some fixed styles, they will be inserted into the page as quickly as possible, avoid page flickering
   STATIC_STYLE: string;
   // The style that should be added when the lyrics will be displayed on the page
   NO_PIP_STYLE: string;
@@ -76,13 +77,14 @@ export const localConfig: LocalConfig = (() => {
     return {
       SERVICE_WORKER: '',
       STATIC_STYLE: css`
+        /* not logged in */
         [data-testid='cookie-notice'],
         [data-testid='signup-bar'],
-        /* download link */
-        .NavBar__download-item,
-        /* icon */
+        /* webpage: download link */
+        .Rootlist ~ div a[href*=download],
+        /* webpage: logo */
         [role='banner'],
-        /* ad */
+        /* ad, still exist? */
         [role='main'] ~ div {
           display: none;
         }
