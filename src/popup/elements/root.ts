@@ -1,13 +1,12 @@
-import { browser } from 'webextension-polyfill-ts';
 import { html, customElement, connectStore, GemElement } from '@mantou/gem';
 
 import './list';
 
 import { store, changeSong, confirmedMId } from '../store';
 import { events, sendEvent } from '../../common/ga';
-import { I18nMsgKeys } from '../../common/consts';
 import { getOptions } from '../../options/store';
 import { theme } from '../../common/theme';
+import { i18n } from '../../i18n';
 
 @connectStore(store)
 @customElement('app-root')
@@ -89,21 +88,21 @@ export class SongList extends GemElement {
       <div class="header">
         ${store.id && store.id !== store.aId
           ? html`
-              <p>${browser.i18n.getMessage(I18nMsgKeys.popupConfirmTip)}</p>
+              <p>${i18n.popupConfirmTip()}</p>
               <button @click=${this.autoSelect}>
-                ${browser.i18n.getMessage(I18nMsgKeys.popupConfirmReset)}
+                ${i18n.popupConfirmReset()}
               </button>
               <button @click=${confirmedMId}>
-                ${browser.i18n.getMessage(I18nMsgKeys.popupConfirmSave)}
+                ${i18n.popupConfirmSave()}
               </button>
             `
           : html`
               <p>
-                ${browser.i18n.getMessage(I18nMsgKeys.popupMatchDescription1)}
+                ${i18n.popupMatchDescription1()}
                 <span @click=${this.autoSelect} class="button">
-                  ${browser.i18n.getMessage(I18nMsgKeys.popupMatchDescription2)}
+                  ${i18n.popupMatchDescription2()}
                 </span>
-                ${browser.i18n.getMessage(I18nMsgKeys.popupMatchDescription3)}
+                ${i18n.popupMatchDescription3()}
               </p>
             `}
       </div>

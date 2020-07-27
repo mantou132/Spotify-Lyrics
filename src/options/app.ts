@@ -1,16 +1,11 @@
 import { browser } from 'webextension-polyfill-ts';
 import { customElement, GemElement, html, refobject, RefObject } from '@mantou/gem';
 
-import {
-  Message,
-  Event,
-  I18nMsgKeys,
-  Options,
-  LyricsPositions,
-  isSupportES2018RegExp,
-} from '../common/consts';
+import { Message, Event, Options, LyricsPositions, isSupportES2018RegExp } from '../common/consts';
 
 import { theme } from '../common/theme';
+
+import { i18n } from '../i18n';
 
 import type { Form } from './elements/form';
 
@@ -62,8 +57,8 @@ export class Test extends GemElement<{ changed: boolean }> {
       <ele-form @input=${this.inputHandler} ref=${this.formRef.ref}>
         <ele-form-item
           ?hidden=${!isSupportES2018RegExp}
-          label=${browser.i18n.getMessage(I18nMsgKeys.optionsSmoothScroll)}
-          description=${browser.i18n.getMessage(I18nMsgKeys.optionsSmoothScrollDetail)}
+          label=${i18n.optionsSmoothScroll()}
+          description=${i18n.optionsSmoothScrollDetail()}
         >
           <ele-switch
             name=${'lyrics-smooth-scroll' as keyof Options}
@@ -71,8 +66,8 @@ export class Test extends GemElement<{ changed: boolean }> {
           ></ele-switch>
         </ele-form-item>
         <ele-form-item
-          label=${browser.i18n.getMessage(I18nMsgKeys.optionsShowCleanLyrics)}
-          description=${browser.i18n.getMessage(I18nMsgKeys.optionsShowCleanLyricsDetail)}
+          label=${i18n.optionsShowCleanLyrics()}
+          description=${i18n.optionsShowCleanLyricsDetail()}
         >
           <ele-switch
             name=${'clean-lyrics' as keyof Options}
@@ -80,8 +75,8 @@ export class Test extends GemElement<{ changed: boolean }> {
           ></ele-switch>
         </ele-form-item>
         <ele-form-item
-          label=${browser.i18n.getMessage(I18nMsgKeys.optionsLyricsPosition)}
-          description=${browser.i18n.getMessage(I18nMsgKeys.optionsLyricsPositionDetail)}
+          label=${i18n.optionsLyricsPosition()}
+          description=${i18n.optionsLyricsPositionDetail()}
         >
           <ele-select
             name=${'show-on' as keyof Options}
@@ -89,7 +84,7 @@ export class Test extends GemElement<{ changed: boolean }> {
             .options=${LyricsPositions.map((e) => ({ label: e, value: e }))}
           ></ele-select>
         </ele-form-item>
-        <ele-form-item label=${browser.i18n.getMessage(I18nMsgKeys.optionsShowLyrics)}>
+        <ele-form-item label=${i18n.optionsShowLyrics()}>
           <ele-switch
             name=${'only-cover' as keyof Options}
             default-value=${options['only-cover']}
@@ -97,7 +92,7 @@ export class Test extends GemElement<{ changed: boolean }> {
         </ele-form-item>
       </ele-form>
       <ele-button ?disabled=${!this.state.changed} @click=${this.submitHandler}>
-        ${browser.i18n.getMessage(I18nMsgKeys.optionsSave)}
+        ${i18n.optionsSave()}
       </ele-button>
     `;
   }

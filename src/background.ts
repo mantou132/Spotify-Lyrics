@@ -1,8 +1,9 @@
 import { browser } from 'webextension-polyfill-ts';
 import * as Sentry from '@sentry/browser';
 
-import { Message, Event, I18nMsgKeys, ContextItems, isProd } from './common/consts';
+import { Message, Event, ContextItems, isProd } from './common/consts';
 import { getOptions } from './options/store';
+import { i18n } from './i18n';
 declare global {
   interface Window {
     Sentry?: typeof Sentry;
@@ -47,7 +48,7 @@ browser.runtime.setUninstallURL('https://forms.gle/bUWyEqfSTCU9NEwEA');
 
 browser.contextMenus.create({
   id: ContextItems.FEEDBACK,
-  title: browser.i18n.getMessage(I18nMsgKeys.menusFeedback),
+  title: i18n.menusFeedback(),
   contexts: ['browser_action'],
 });
 
@@ -77,7 +78,7 @@ getRateMeLink().then((link) => {
   if (link) {
     browser.contextMenus.create({
       id: ContextItems.RATE_ME,
-      title: browser.i18n.getMessage(I18nMsgKeys.menusRateMe),
+      title: i18n.menusRateMe(),
       contexts: ['browser_action'],
     });
   }

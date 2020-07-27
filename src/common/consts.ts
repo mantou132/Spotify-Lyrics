@@ -1,5 +1,3 @@
-import i18nEnMessages from '../../public/_locales/en/messages.json';
-
 import type { Value } from '../options/elements/switch';
 
 export const isProd = process.env.NODE_ENV === 'production';
@@ -39,18 +37,6 @@ export interface Options {
   'show-on': typeof LyricsPositions[number];
   cid: string;
 }
-
-type Keys<T> = {
-  [K in keyof T]: string;
-};
-
-export const I18nMsgKeys = Object.keys(i18nEnMessages).reduce(
-  (p, c: keyof typeof i18nEnMessages) => {
-    p[c] = c;
-    return p;
-  },
-  {} as Keys<typeof i18nEnMessages>,
-);
 
 export const isSupportES2018RegExp = (() => {
   try {

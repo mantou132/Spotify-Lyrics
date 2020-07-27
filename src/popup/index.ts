@@ -1,13 +1,13 @@
 import { browser } from 'webextension-polyfill-ts';
 import { render, html } from '@mantou/gem';
 
-import { I18nMsgKeys } from '../common/consts';
 import { theme } from '../common/theme';
 
 import { sendEvent, events } from '../common/ga';
 
 import './elements/root';
 import { getOptions } from '../options/store';
+import { i18n } from '../i18n';
 
 render(
   html`
@@ -57,7 +57,7 @@ render(
         font-display: swap;
       }
     </style>
-    <app-root>${browser.i18n.getMessage(I18nMsgKeys.popupMissMatch)}</app-root>
+    <app-root>${i18n.popupMissMatch()}</app-root>
   `,
   document.body,
 );
