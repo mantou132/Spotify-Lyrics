@@ -7,10 +7,12 @@ let optionsCache: Options | null = null;
 export function getOptions() {
   if (optionsCache) return optionsCache;
   optionsCache = {} as Options;
+  // default options
   optionsCache['lyrics-smooth-scroll'] = 'off';
   optionsCache['only-cover'] = 'off';
   optionsCache['clean-lyrics'] = 'off';
   optionsCache['show-on'] = 'pip';
+  optionsCache['font-size'] = 48;
   optionsCache.cid = `${Date.now()}-${Math.random()}`;
   const localOptionsStr = localStorage.getItem(LocalStorageKeys.CONFIG);
   if (localOptionsStr) {

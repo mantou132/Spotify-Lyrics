@@ -13,26 +13,17 @@ import './elements/form';
 import './elements/form-item';
 import './elements/select';
 import './elements/switch';
-import './elements/button';
 
 import { getOptions, updateOptions } from './store';
 const options = getOptions();
 
 @customElement('options-app')
-export class Test extends GemElement<{ changed: boolean }> {
+export class Test extends GemElement {
   @refobject formRef: RefObject<Form>;
 
-  state = { changed: false };
-
   inputHandler = () => {
-    this.setState({ changed: true });
-  };
-
-  submitHandler = () => {
     if (!this.formRef.element) return;
     updateOptions(Object.fromEntries(this.formRef.element.value));
-
-    this.setState({ changed: false });
 
     const manifest = browser.runtime.getManifest() as typeof import('../../public/manifest.json');
     browser.tabs.query({ url: manifest.content_scripts[0].matches }).then((tabs) => {
@@ -59,12 +50,23 @@ export class Test extends GemElement<{ changed: boolean }> {
           border-bottom: 1px solid rgba(${theme.blackRGB}, 0.1);
         }
         .tip {
+          font-size: 1.2rem;
           font-style: italic;
           color: rgba(${theme.blackRGB}, 0.5);
-          margin-bottom: 2em;
+          margin: 2em 0;
         }
       </style>
       <ele-form @input=${this.inputHandler} ref=${this.formRef.ref}>
+        <ele-form-item label=${i18n.optionsFontSize()} description=${i18n.optionsFontSizeDetail()}>
+          <ele-select
+            name=${'font-size' as keyof Options}
+            default-value=${String(options['font-size'])}
+            .options=${new Array(9).fill(null).map((_, index) => ({
+              label: String(index * 2 + 32) + 'px',
+              value: String(index * 2 + 32),
+            }))}
+          ></ele-select>
+        </ele-form-item>
         <ele-form-item
           ?hidden=${!isSupportES2018RegExp}
           label=${i18n.optionsSmoothScroll()}
@@ -85,7 +87,7 @@ export class Test extends GemElement<{ changed: boolean }> {
           ></ele-switch>
         </ele-form-item>
         <ele-form-item
-          label="${i18n.optionsLyricsPosition()}(*)"
+          label="${i18n.optionsLyricsPosition()}"
           description=${i18n.optionsLyricsPositionDetail()}
         >
           <ele-select
@@ -101,10 +103,7 @@ export class Test extends GemElement<{ changed: boolean }> {
           ></ele-switch>
         </ele-form-item>
       </ele-form>
-      <p class="tip">(*): ${i18n.optionsSaveTip()}</p>
-      <ele-button ?disabled=${!this.state.changed} @click=${this.submitHandler}>
-        ${i18n.optionsSave()}
-      </ele-button>
+      <p class="tip">${i18n.optionsSaveTip()}</p>
     `;
   }
 }

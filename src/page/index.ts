@@ -67,12 +67,16 @@ const update = async () => {
     return;
   }
 
+  const renderOptions = {
+    focusLineFontSize: options['font-size'],
+  };
+
   if (options['lyrics-smooth-scroll'] === 'on') {
     drawCover();
-    renderLyricsWithCanvas(ctx, sharedData.lyrics, audio.currentTime);
+    renderLyricsWithCanvas(ctx, sharedData.lyrics, audio.currentTime, renderOptions);
     requestAnimationFrame(update);
   } else {
-    const img = await renderLyricsWithSVG(ctx, sharedData.lyrics, audio.currentTime);
+    const img = await renderLyricsWithSVG(ctx, sharedData.lyrics, audio.currentTime, renderOptions);
     drawCover();
     img && ctx.drawImage(img, 0, 0, video.width, video.height);
     setTimeout(update, INTERVAL);

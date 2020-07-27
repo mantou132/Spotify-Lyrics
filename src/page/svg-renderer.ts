@@ -1,62 +1,62 @@
 import { Lyric } from './lyrics';
 import { svg, html, css, captureException, getSVGDataUrl } from './utils';
 
-const style = css`
-  :root {
-    background: #000000b0;
-    color: white;
-    text-align: left;
-    font-family: sans-serif;
-    font-weight: bold;
-    font-size: 48px;
-  }
-  body {
-    /* https://bugs.chromium.org/p/chromium/issues/detail?id=432153 */
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      transparent 8%,
-      black 35%,
-      black 65%,
-      transparent 92%
-    );
-    mask-image: linear-gradient(to bottom, transparent 8%, black 35%, black 65%, transparent 92%);
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
-    box-sizing: border-box;
-    padding: 1em;
-  }
-  .container {
-    position: relative;
-    width: 100%;
-  }
-  p {
-    margin: 0.5em 0;
-  }
-  .before,
-  .after {
-    opacity: 0.35;
-    font-size: 0.75em;
-    position: absolute;
-    width: 100%;
-  }
-  .before {
-    bottom: 100%;
-  }
-  .after {
-    top: 100%;
-  }
-  .hit {
-    font-size: 0.667em;
-    text-align: center;
-  }
-`;
+function generateSVG(lyric: Lyric, currentTime = 0, options: { focusLineFontSize: number }) {
+  const style = css`
+    :root {
+      background: #000000b0;
+      color: white;
+      text-align: left;
+      font-family: sans-serif;
+      font-weight: bold;
+      font-size: ${options.focusLineFontSize}px;
+    }
+    body {
+      /* https://bugs.chromium.org/p/chromium/issues/detail?id=432153 */
+      -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 8%,
+        black 35%,
+        black 65%,
+        transparent 92%
+      );
+      mask-image: linear-gradient(to bottom, transparent 8%, black 35%, black 65%, transparent 92%);
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      box-sizing: border-box;
+      padding: 1em;
+    }
+    .container {
+      position: relative;
+      width: 100%;
+    }
+    p {
+      margin: 0.5em 0;
+    }
+    .before,
+    .after {
+      opacity: 0.35;
+      font-size: 0.75em;
+      position: absolute;
+      width: 100%;
+    }
+    .before {
+      bottom: 100%;
+    }
+    .after {
+      top: 100%;
+    }
+    .hit {
+      font-size: 0.667em;
+      text-align: center;
+    }
+  `;
 
-function generateSVG(lyric: Lyric, currentTime = 0) {
   let currentIndex = 0;
   let current = '';
   let before = '';
@@ -111,8 +111,9 @@ export async function renderLyricsWithSVG(
   ctx: CanvasRenderingContext2D,
   lyrics: Lyric,
   currentTime: number, // s
+  options: { focusLineFontSize: number },
 ): Promise<HTMLImageElement | undefined> {
-  const url = getSVGDataUrl(generateSVG(lyrics, currentTime));
+  const url = getSVGDataUrl(generateSVG(lyrics, currentTime, options));
   const img = new Image(ctx.canvas.width, ctx.canvas.height);
   return new Promise((res) => {
     img.onload = () => res(img);

@@ -32,11 +32,15 @@
   },
 
   "optionsSaveTip": {
-    "message": "需要重新加载才能生效"
+    "message": "带有“*”标记的选项需要重新加载才能生效"
   },
 
-  "optionsSave": {
-    "message": "保存"
+  "optionsFontSize": {
+    "message": "歌词字体大小"
+  },
+
+  "optionsFontSizeDetail": {
+    "message": "这是一个相对尺寸，将歌词窗口的宽度视为 640px"
   },
 
   "optionsSmoothScroll": {
@@ -56,7 +60,7 @@
   },
 
   "optionsLyricsPosition": {
-    "message": "歌词显示位置"
+    "message": "歌词显示位置 *"
   },
 
   "optionsLyricsPositionDetail": {

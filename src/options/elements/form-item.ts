@@ -16,6 +16,9 @@ export class FormItem extends GemElement {
           display: none;
         }
         .text {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
           cursor: default;
           flex-grow: 1;
           line-height: 1.3;

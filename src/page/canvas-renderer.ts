@@ -124,17 +124,6 @@ function drawParagraph(ctx: CanvasRenderingContext2D, str = '', options: Options
   };
 }
 
-const focusLineFontSize = 48;
-const focusLineHeight = focusLineFontSize * 1.2;
-const focusLineMargin = focusLineFontSize * 1;
-const otherLineFontSize = focusLineFontSize * 1;
-const otherLineHeight = otherLineFontSize * 1.2;
-const otherLineMargin = otherLineFontSize * 1;
-const otherLineOpacity = 0.35;
-const marginWidth = focusLineFontSize * 1;
-const animateDuration = 0.3;
-const backgroundColor = '#000000b0';
-
 let offscreenCanvas: HTMLCanvasElement;
 let offscreenCtx: CanvasRenderingContext2D;
 let gradient: CanvasGradient;
@@ -157,7 +146,19 @@ export function renderLyricsWithCanvas(
   ctx: CanvasRenderingContext2D,
   lyrics: Lyric,
   currentTime: number, // s
+  options: { focusLineFontSize: number },
 ) {
+  const focusLineFontSize = options.focusLineFontSize;
+  const focusLineHeight = focusLineFontSize * 1.2;
+  const focusLineMargin = focusLineFontSize * 1;
+  const otherLineFontSize = focusLineFontSize * 1;
+  const otherLineHeight = otherLineFontSize * 1.2;
+  const otherLineMargin = otherLineFontSize * 1;
+  const otherLineOpacity = 0.35;
+  const marginWidth = focusLineFontSize * 1;
+  const animateDuration = 0.3;
+  const backgroundColor = '#000000b0';
+
   ctx.save();
   ctx.fillStyle = backgroundColor;
   ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);

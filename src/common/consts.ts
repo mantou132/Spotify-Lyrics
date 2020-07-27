@@ -30,6 +30,7 @@ export const LocalStorageKeys = {
 
 export const LyricsPositions = ['page', 'pip'] as const;
 export interface Options {
+  'font-size': number;
   'lyrics-smooth-scroll': Value;
   'only-cover': Value;
   'clean-lyrics': Value;

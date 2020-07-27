@@ -45,13 +45,18 @@
   },
 
   "optionsSaveTip": {
-    "message": "Need to reload to take effect",
+    "message": "With \"*\" mark with options need to reload to take effect",
     "description": "Some tips for saving options"
   },
 
-  "optionsSave": {
-    "message": "Save",
-    "description": "Save options"
+  "optionsFontSize": {
+    "message": "Lyrics font size",
+    "description": "Specify font size"
+  },
+
+  "optionsFontSizeDetail": {
+    "message": "This is a relative size, the width of the lyrics window is treated as 640px",
+    "description": "Specify font size detail"
   },
 
   "optionsSmoothScroll": {
@@ -80,7 +85,7 @@
   },
 
   "optionsLyricsPosition": {
-    "message": "Where the lyrics show",
+    "message": "Where the lyrics show *",
     "description": "Lyrics position option"
   },
 
