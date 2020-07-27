@@ -8,7 +8,6 @@ export function getOptions() {
   if (optionsCache) return optionsCache;
   optionsCache = {} as Options;
   optionsCache['lyrics-smooth-scroll'] = 'off';
-  optionsCache['strict-mode'] = 'on';
   optionsCache['only-cover'] = 'off';
   optionsCache['clean-lyrics'] = 'off';
   optionsCache['show-on'] = 'pip';

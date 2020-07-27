@@ -4,6 +4,7 @@ import './item';
 import { store, changeSong } from '../store';
 import { events, sendEvent } from '../../common/ga';
 import { getOptions } from '../../options/store';
+import { theme } from '../../common/theme';
 
 @connectStore(store)
 @customElement('app-track-list')
@@ -19,7 +20,7 @@ export class SongList extends GemElement {
     return html`
       <style>
         app-track-item:hover {
-          background: rgba(var(--text-rgb), 0.1);
+          background: rgba(${theme.textRGB}, 0.1);
         }
       </style>
       ${store.list.map(

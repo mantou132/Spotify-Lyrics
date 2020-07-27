@@ -1,5 +1,7 @@
 import i18nEnMessages from '../../public/_locales/en/messages.json';
 
+import type { Value } from '../options/elements/switch';
+
 export const isProd = process.env.NODE_ENV === 'production';
 
 export interface Message<T = any> {
@@ -30,12 +32,10 @@ export const LocalStorageKeys = {
 };
 
 export const LyricsPositions = ['page', 'pip'] as const;
-type CheckboxValue = 'on' | 'off';
 export interface Options {
-  'lyrics-smooth-scroll': CheckboxValue;
-  'strict-mode': CheckboxValue;
-  'only-cover': CheckboxValue;
-  'clean-lyrics': CheckboxValue;
+  'lyrics-smooth-scroll': Value;
+  'only-cover': Value;
+  'clean-lyrics': Value;
   'show-on': typeof LyricsPositions[number];
   cid: string;
 }

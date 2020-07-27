@@ -3,6 +3,7 @@ import { html, customElement, connectStore, GemElement, property } from '@mantou
 import { store } from '../store';
 
 import { Song } from '../../page/lyrics';
+import { theme } from '../../common/theme';
 
 @connectStore(store)
 @customElement('app-track-item')
@@ -20,8 +21,8 @@ export class SongItem extends GemElement {
           align-items: center;
           padding: 0.75rem 0.875em;
           cursor: default;
-          background: rgba(var(--text-rgb), 0);
-          color: rgba(var(--text-rgb), 1);
+          background: rgba(${theme.textRGB}, 0);
+          color: rgba(${theme.textRGB}, 1);
         }
         .track-info {
           line-height: 1.375;
@@ -37,7 +38,7 @@ export class SongItem extends GemElement {
         }
         .artist-name {
           font-size: 0.875rem;
-          color: rgba(var(--text-rgb), 0.5);
+          color: rgba(${theme.textRGB}, 0.5);
         }
         .status {
           padding-left: 1rem;

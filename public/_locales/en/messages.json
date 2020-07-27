@@ -54,9 +54,9 @@
     "description": "Use lyrics smooth scroll"
   },
 
-  "optionsStrictMatchMode": {
-    "message": "Use strict match mode(artists need to match)",
-    "description": "Use song strict matching mode"
+  "optionsSmoothScrollDetail": {
+    "message": "Canvas API will be used to achieve smooth scrolling, CPU usage will become high, and line wrapping may not be correct",
+    "description": "Use lyrics smooth scroll detail"
   },
 
   "optionsShowLyrics": {
@@ -65,13 +65,23 @@
   },
 
   "optionsShowCleanLyrics": {
-    "message": "Show clean lyrics(hide ads and other content)",
+    "message": "Show clean lyrics",
     "description": "Show clean lyrics option"
+  },
+
+  "optionsShowCleanLyricsDetail": {
+    "message": "Use regular matching to hide composer and producer information",
+    "description": "Show clean lyrics option detail"
   },
 
   "optionsLyricsPosition": {
     "message": "Where the lyrics show",
     "description": "Lyrics position option"
+  },
+
+  "optionsLyricsPositionDetail": {
+    "message": "Some browsers do not support PiP, the lyrics will always be displayed on the page",
+    "description": "Lyrics position option detail"
   },
 
   "menusFeedback": {

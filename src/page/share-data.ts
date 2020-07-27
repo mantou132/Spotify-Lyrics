@@ -50,7 +50,7 @@ export class SharedData {
     const options = await optionsPromise;
     const query = { name: this.name, artists: this.artists };
     sendEvent(options.cid, events.searchLyrics, { cd1: this.cd1 });
-    const { list, id } = await matchingLyrics(query, options['strict-mode'] === 'on');
+    const { list, id } = await matchingLyrics(query);
     if (id === 0) {
       sendEvent(options.cid, events.notMatch, { cd1: this.cd1 });
     }

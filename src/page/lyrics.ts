@@ -105,7 +105,6 @@ async function fetchSongList(s: string): Promise<Song[]> {
 
 export async function matchingLyrics(
   query: Query,
-  isStrictMode: boolean,
   fetchData = fetchSongList,
   onlySearchName = false,
 ): Promise<{ list: Song[]; id: number }> {
@@ -137,7 +136,7 @@ export async function matchingLyrics(
   let songId = 0;
   let score = 0;
   songs.forEach((song) => {
-    let currentScore = isStrictMode ? 0 : 3;
+    let currentScore = 0;
 
     let songName = song.name;
     if (songName === queryName) {
@@ -209,7 +208,7 @@ export async function matchingLyrics(
     }
   });
   if (songId === 0) {
-    if (!onlySearchName) return await matchingLyrics(query, isStrictMode, fetchData, true);
+    if (!onlySearchName) return await matchingLyrics(query, fetchData, true);
     console.log('Not matched:', { query, songs, rank: score });
   }
   return { list: songs, id: songId };

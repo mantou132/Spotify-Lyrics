@@ -2,6 +2,7 @@ import { browser } from 'webextension-polyfill-ts';
 import { render, html } from '@mantou/gem';
 
 import { I18nMsgKeys } from '../common/consts';
+import { theme } from '../common/theme';
 
 import { sendEvent, events } from '../common/ga';
 
@@ -11,14 +12,9 @@ import { getOptions } from '../options/store';
 render(
   html`
     <style>
-      :root {
-        --primary-rgb: 30, 215, 96;
-        --background-rgb: 18, 18, 18;
-        --text-rgb: 255, 255, 255;
-      }
       body {
         box-sizing: border-box;
-        border: 1px solid rgba(var(--text-rgb), 0.2);
+        border: 1px solid rgba(${theme.textRGB}, 0.2);
         width: 20rem;
         height: 30rem;
         margin: 0;
@@ -26,8 +22,8 @@ render(
         font-family: spotify-circular, Helvetica Neue, Helvetica, Arial, Hiragino Kaku Gothic Pro,
           Meiryo, MS Gothic, sans-serif;
         font-size: 16px;
-        background: rgb(var(--background-rgb));
-        color: rgb(var(--text-rgb));
+        background: rgb(${theme.backgroundRGB});
+        color: rgb(${theme.textRGB});
       }
       app-root {
         height: 100%;

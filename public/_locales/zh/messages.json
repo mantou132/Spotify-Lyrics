@@ -39,20 +39,24 @@
     "message": "启用歌词平滑滚动"
   },
 
-  "optionsStrictMatchMode": {
-    "message": "使用严格匹配模式(艺术家需要匹配)"
-  },
-
   "optionsShowLyrics": {
     "message": "仅显示封面"
   },
 
   "optionsShowCleanLyrics": {
-    "message": "显示干净歌词(不显示作词作曲等信息)"
+    "message": "显示干净歌词"
+  },
+
+  "optionsShowCleanLyricsDetail": {
+    "message": "使用正则匹配来隐藏作词作曲等信息"
   },
 
   "optionsLyricsPosition": {
     "message": "歌词显示位置"
+  },
+
+  "optionsLyricsPositionDetail": {
+    "message": "有些浏览器不支持 PiP，歌词将始终显示在页面中"
   },
 
   "menusFeedback": {

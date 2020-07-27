@@ -1,26 +1,31 @@
-import { html, customElement, GemElement, refobject, RefObject } from '@mantou/gem';
-
 import { browser } from 'webextension-polyfill-ts';
+import { customElement, GemElement, html, refobject, RefObject } from '@mantou/gem';
 
 import {
   Message,
-  Event as MessageEvent,
+  Event,
   I18nMsgKeys,
   Options,
   LyricsPositions,
   isSupportES2018RegExp,
 } from '../common/consts';
 
-import { getOptions, updateOptions } from './store';
+import { theme } from '../common/theme';
 
+import type { Form } from './elements/form';
+
+import './elements/form';
+import './elements/form-item';
+import './elements/select';
+import './elements/switch';
+import './elements/button';
+
+import { getOptions, updateOptions } from './store';
 const options = getOptions();
 
-// https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent
-type SubmitEvent = Event;
-
 @customElement('options-app')
-export class OptionsApp extends GemElement<{ changed: boolean }> {
-  @refobject formRef: RefObject<HTMLFormElement>;
+export class Test extends GemElement<{ changed: boolean }> {
+  @refobject formRef: RefObject<Form>;
 
   state = { changed: false };
 
@@ -28,105 +33,72 @@ export class OptionsApp extends GemElement<{ changed: boolean }> {
     this.setState({ changed: true });
   };
 
-  submitHandler = (e: SubmitEvent) => {
-    e.preventDefault();
+  submitHandler = () => {
     if (!this.formRef.element) return;
-
-    const value: any = {};
-    [...this.formRef.element.elements].forEach((e: HTMLInputElement | HTMLSelectElement) => {
-      const name = e.name as keyof Options;
-      if (name) {
-        if (e instanceof HTMLInputElement) {
-          value[name] = e.checked ? 'on' : 'off';
-        } else {
-          value[name] = e.value;
-        }
-      }
-    });
-    updateOptions(value);
+    updateOptions(Object.fromEntries(this.formRef.element.value));
 
     this.setState({ changed: false });
 
     const manifest = browser.runtime.getManifest() as typeof import('../../public/manifest.json');
     browser.tabs.query({ url: manifest.content_scripts[0].matches }).then((tabs) => {
       tabs.forEach((tab) => {
-        if (tab.id)
-          browser.tabs.sendMessage(tab.id, { type: MessageEvent.RELOAD_SPOTIFY } as Message);
+        if (tab.id) browser.tabs.sendMessage(tab.id, { type: Event.RELOAD_SPOTIFY } as Message);
       });
     });
   };
-
   render() {
     return html`
       <style>
-        .form-item {
+        :host {
           display: block;
-          margin-block-end: 0.5em;
         }
-        [type=checkbox] {
-          margin-inline-end: .5em;
+        ele-form {
+          margin-bottom: 2em;
         }
-        select {
-          margin-inline-start: .5em;
-        }
-        [type='submit'] {
-          margin-block-start: 2em;
+        ele-form-item {
+          border-bottom: 1px solid rgba(${theme.blackRGB}, 0.1);
         }
       </style>
-      <form ref=${this.formRef.ref} @input=${this.inputHandler} @submit=${this.submitHandler}>
-
-        <label class="form-item" ?hidden="${!isSupportES2018RegExp}">
-          <input
-            type="checkbox"
-            name="${'lyrics-smooth-scroll' as keyof Options}"
-            ?checked="${options['lyrics-smooth-scroll'] === 'on'}">
-          </input>
-          ${browser.i18n.getMessage(I18nMsgKeys.optionsSmoothScroll)}
-        </label>
-
-        <label class="form-item">
-          <input
-            type="checkbox"
-            name="${'strict-mode' as keyof Options}"
-            ?checked="${options['strict-mode'] === 'on'}">
-          </input>
-          ${browser.i18n.getMessage(I18nMsgKeys.optionsStrictMatchMode)}
-        </label>
-
-        <label class="form-item">
-          <input
-            type="checkbox"
-            name="${'only-cover' as keyof Options}"
-            ?checked="${options['only-cover'] === 'on'}">
-          </input>
-          ${browser.i18n.getMessage(I18nMsgKeys.optionsShowLyrics)}
-        </label>
-
-        <label class="form-item">
-          <input
-            type="checkbox"
-            name="${'clean-lyrics' as keyof Options}"
-            ?checked="${options['clean-lyrics'] === 'on'}">
-          </input>
-          ${browser.i18n.getMessage(I18nMsgKeys.optionsShowCleanLyrics)}
-        </label>
-
-        <div class="form-item">
-          <label>${browser.i18n.getMessage(I18nMsgKeys.optionsLyricsPosition)}</label>
-          <select name="${'show-on' as keyof Options}">
-            ${LyricsPositions.map(
-              (v) => html`<option ?selected=${options['show-on'] === v} value=${v}>${v}</option>`,
-            )}
-          </select>
-        </div>
-
-        <button
-          ?disabled=${!this.state.changed}
-          type="submit">
-          ${browser.i18n.getMessage(I18nMsgKeys.optionsSave)}
-        </button>
-
-      </form>
+      <ele-form @input=${this.inputHandler} ref=${this.formRef.ref}>
+        <ele-form-item
+          ?hidden=${!isSupportES2018RegExp}
+          label=${browser.i18n.getMessage(I18nMsgKeys.optionsSmoothScroll)}
+          description=${browser.i18n.getMessage(I18nMsgKeys.optionsSmoothScrollDetail)}
+        >
+          <ele-switch
+            name=${'lyrics-smooth-scroll' as keyof Options}
+            default-value=${options['lyrics-smooth-scroll']}
+          ></ele-switch>
+        </ele-form-item>
+        <ele-form-item
+          label=${browser.i18n.getMessage(I18nMsgKeys.optionsShowCleanLyrics)}
+          description=${browser.i18n.getMessage(I18nMsgKeys.optionsShowCleanLyricsDetail)}
+        >
+          <ele-switch
+            name=${'clean-lyrics' as keyof Options}
+            default-value=${options['clean-lyrics']}
+          ></ele-switch>
+        </ele-form-item>
+        <ele-form-item
+          label=${browser.i18n.getMessage(I18nMsgKeys.optionsLyricsPosition)}
+          description=${browser.i18n.getMessage(I18nMsgKeys.optionsLyricsPositionDetail)}
+        >
+          <ele-select
+            name=${'show-on' as keyof Options}
+            default-value=${options['show-on']}
+            .options=${LyricsPositions.map((e) => ({ label: e, value: e }))}
+          ></ele-select>
+        </ele-form-item>
+        <ele-form-item label=${browser.i18n.getMessage(I18nMsgKeys.optionsShowLyrics)}>
+          <ele-switch
+            name=${'only-cover' as keyof Options}
+            default-value=${options['only-cover']}
+          ></ele-switch>
+        </ele-form-item>
+      </ele-form>
+      <ele-button ?disabled=${!this.state.changed} @click=${this.submitHandler}>
+        ${browser.i18n.getMessage(I18nMsgKeys.optionsSave)}
+      </ele-button>
     `;
   }
 }

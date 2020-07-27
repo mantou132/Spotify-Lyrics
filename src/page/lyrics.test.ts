@@ -28,7 +28,7 @@ describe('matching track', () => {
       search = s;
       return songs;
     };
-    const result = await matchingLyrics(query, true, getData);
+    const result = await matchingLyrics(query, getData);
     expect(search).toBe('张卫健 夜雪');
     expect(result.id).toBe(2);
   });

@@ -7,6 +7,7 @@ import { store, changeSong, confirmedMId } from '../store';
 import { events, sendEvent } from '../../common/ga';
 import { I18nMsgKeys } from '../../common/consts';
 import { getOptions } from '../../options/store';
+import { theme } from '../../common/theme';
 
 @connectStore(store)
 @customElement('app-root')
@@ -45,8 +46,8 @@ export class SongList extends GemElement {
           flex-shrink: 0;
           padding: 1rem 0;
           margin: 0 0.875rem;
-          border-bottom: 1px solid rgba(var(--text-rgb), 0.2);
-          color: rgba(var(--text-rgb), 0.5);
+          border-bottom: 1px solid rgba(${theme.textRGB}, 0.2);
+          color: rgba(${theme.textRGB}, 0.5);
         }
         .header p {
           margin: 0;
@@ -57,7 +58,7 @@ export class SongList extends GemElement {
         }
         .header .button:hover {
           cursor: default;
-          color: rgba(var(--text-rgb), 1);
+          color: rgba(${theme.textRGB}, 1);
         }
         .header button {
           background: transparent;
@@ -71,7 +72,7 @@ export class SongList extends GemElement {
           color: inherit;
         }
         .header button:hover {
-          color: rgba(var(--text-rgb), 1);
+          color: rgba(${theme.textRGB}, 1);
         }
         .header button:focus {
           outline: none;
