@@ -96,6 +96,19 @@ export class Test extends GemElement {
             .options=${LyricsPositions.map((e) => ({ label: e, value: e }))}
           ></ele-select>
         </ele-form-item>
+        <ele-form-item
+          label="${i18n.optionsToggleShortcut()}"
+          description=${i18n.optionsToggleShortcutDetail()}
+        >
+          <ele-select
+            name=${'toggle-shortcut' as keyof Options}
+            default-value=${options['toggle-shortcut']}
+            .options=${new Array(26).fill(null).map((_, index) => ({
+              label: String.fromCharCode(index + 97),
+              value: String.fromCharCode(index + 97),
+            }))}
+          ></ele-select>
+        </ele-form-item>
         <ele-form-item label=${i18n.optionsShowLyrics()}>
           <ele-switch
             name=${'only-cover' as keyof Options}

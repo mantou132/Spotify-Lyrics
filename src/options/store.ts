@@ -13,6 +13,7 @@ export function getOptions() {
   optionsCache['clean-lyrics'] = 'off';
   optionsCache['show-on'] = 'pip';
   optionsCache['font-size'] = 48;
+  optionsCache['toggle-shortcut'] = 'l';
   optionsCache.cid = `${Date.now()}-${Math.random()}`;
   const localOptionsStr = localStorage.getItem(LocalStorageKeys.CONFIG);
   if (localOptionsStr) {

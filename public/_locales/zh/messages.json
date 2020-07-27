@@ -63,6 +63,15 @@
     "message": "歌词显示位置 *"
   },
 
+  "optionsToggleShortcut": {
+    "message": "显示歌词的快捷键"
+  },
+
+  "optionsToggleShortcutDetail": {
+    "message": "当 WebApp 处于焦点时，可以使用快捷方式来打开歌词和关闭歌词"
+  },
+
+
   "optionsLyricsPositionDetail": {
     "message": "有些浏览器不支持 PiP，歌词将始终显示在页面中"
   },

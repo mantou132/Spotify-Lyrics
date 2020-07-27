@@ -89,6 +89,16 @@
     "description": "Lyrics position option"
   },
 
+  "optionsToggleShortcut": {
+    "message": "Shortcut",
+    "description": "Toggle show lyrics shortcut"
+  },
+
+  "optionsToggleShortcutDetail": {
+    "message": "When webapp is in focus, you can use shortcuts to open and close lyrics",
+    "description": "Toggle show lyrics shortcut detail"
+  },
+
   "optionsLyricsPositionDetail": {
     "message": "Some browsers do not support PiP, the lyrics will always be displayed on the page",
     "description": "Lyrics position option detail"

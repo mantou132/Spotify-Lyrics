@@ -35,9 +35,10 @@ window.addEventListener(
     ) {
       return;
     }
-    e.stopImmediatePropagation();
-    e.stopPropagation();
-    if (e.key === 'l' && !e.repeat) {
+    if (e.key === options['toggle-shortcut'] && !e.repeat) {
+      // Execute in current microtask
+      e.stopImmediatePropagation();
+      e.stopPropagation();
       sendEvent(options.cid, events.keypressToggleLyrics);
       lyricsBtn.click();
     }
