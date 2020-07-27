@@ -11,11 +11,11 @@ Spotify can be [installed as pwa](https://support.google.com/chrome/answer/96583
 
 If you have any questions, please submit an [issue](https://github.com/mantou132/Spotify-Lyrics/issues).
 
-![screenshot](./screenshot/screenshot3.jpg)
+![windows-pwa-spotify](./screenshot/windows-pwa-spotify.jpg)
 
 The extension also supports Youtube Music, but does not support videos well.
 
-![screenshot](./screenshot/youtube.jpg)
+![macos-pwa-youtube](./screenshot/macos-pwa-youtube.jpg)
 
 ## How To Work
 
