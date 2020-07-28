@@ -55,7 +55,13 @@ const getText = (s: string) => {
 };
 
 const getHalfSizeText = (s: string) => {
-  return s.replace(/，/g, ',').replace(/。/g, '.').replace(/、/g, ',').replace(/‘|’/g, "'");
+  return s
+    .replace(/（/g, '(')
+    .replace(/）/g, ')')
+    .replace(/，/g, ',')
+    .replace(/。/g, '.')
+    .replace(/、/g, ',')
+    .replace(/‘|’/g, "'");
 };
 
 const removeSongFeat = (s: string) => {
@@ -123,14 +129,15 @@ export async function matchingLyrics(
     .sort();
   const queryArtistsArr1 = queryArtistsArr.map((e) => e.toLowerCase());
   const queryArtistsArr2 = queryArtistsArr1.map((e) => sify(e));
+  const queryArtistsArr3 = queryArtistsArr1.map((e) => getHalfSizeText(e));
 
   const singerAlias = onlySearchName ? {} : await fetchChineseName(queryArtistsArr2.join());
 
-  const queryArtistsArr3 = queryArtistsArr1.map((e) => singerAlias[e] || (SINGER as any)[e] || e);
+  const queryArtistsArr4 = queryArtistsArr1.map((e) => singerAlias[e] || (SINGER as any)[e] || e);
 
   const searchString = onlySearchName
     ? queryName4
-    : `${sify(queryArtistsArr3.join())} ${queryName4}`;
+    : `${sify(queryArtistsArr4.join())} ${queryName4}`;
   const songs = await fetchData(searchString);
   const list: Song[] = [];
 
@@ -186,29 +193,34 @@ export async function matchingLyrics(
       songArtistsArr = songArtistsArr.map((e) => e.toLowerCase());
       if (
         queryArtistsArr1.join() === songArtistsArr.join() ||
-        queryArtistsArr3.join() === songArtistsArr.join()
+        queryArtistsArr4.join() === songArtistsArr.join()
       ) {
-        currentScore += 5.3;
+        currentScore += 5.4;
       } else if (new Set([...queryArtistsArr1, ...songArtistsArr]).size < len) {
-        currentScore += 5.2;
+        currentScore += 5.3;
       } else {
         songArtistsArr = songArtistsArr.map((e) => sify(e));
         if (queryArtistsArr2.join() === songArtistsArr.join()) {
-          currentScore += 5.1;
-        } else if (
-          new Set([...queryArtistsArr2, ...songArtistsArr]).size < len ||
-          new Set([...queryArtistsArr3, ...songArtistsArr]).size < len
-        ) {
-          currentScore += 5;
-        } else if (
-          songArtistsArr.some(
-            (artist) =>
-              queryName2.includes(artist) ||
-              queryArtistsArr2.join().includes(artist) ||
-              queryArtistsArr3.join().includes(artist),
-          )
-        ) {
-          currentScore += 3;
+          currentScore += 5.2;
+        } else {
+          songArtistsArr = songArtistsArr.map((e) => getHalfSizeText(e));
+          if (queryArtistsArr3.join() === songArtistsArr.join()) {
+            currentScore += 5.1;
+          } else if (
+            new Set([...queryArtistsArr2, ...songArtistsArr]).size < len ||
+            new Set([...queryArtistsArr4, ...songArtistsArr]).size < len
+          ) {
+            currentScore += 5;
+          } else if (
+            songArtistsArr.some(
+              (artist) =>
+                queryName2.includes(artist) ||
+                queryArtistsArr2.join().includes(artist) ||
+                queryArtistsArr4.join().includes(artist),
+            )
+          ) {
+            currentScore += 3;
+          }
         }
       }
     }
