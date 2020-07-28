@@ -292,6 +292,15 @@ export function parseLyrics(lyricStr: string, enabledCleanLyrics = false) {
         return 1;
       }
       return a.startTime - b.startTime;
+    })
+    .filter(({ text }, index, arr) => {
+      if (index) {
+        const prevEle = arr[index - 1];
+        if (prevEle.text === text && text === ' ') {
+          return false;
+        }
+      }
+      return true;
     });
 
   return lyrics.length ? lyrics : null;
