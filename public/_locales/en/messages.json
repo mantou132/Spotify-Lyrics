@@ -70,7 +70,7 @@
   },
 
   "optionsSmoothScrollDetail": {
-    "message": "Canvas API will be used to achieve smooth scrolling, CPU usage will become high, and line wrapping may not be correct",
+    "message": "CPU usage will become high, and line wrapping may not be correct",
     "description": "Use lyrics smooth scroll detail"
   },
 
@@ -85,7 +85,7 @@
   },
 
   "optionsShowCleanLyricsDetail": {
-    "message": "Use regular matching to hide composer and producer information",
+    "message": "Hide composer and producer information",
     "description": "Show clean lyrics option detail"
   },
 

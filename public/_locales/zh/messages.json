@@ -51,6 +51,10 @@
     "message": "启用歌词平滑滚动"
   },
 
+  "optionsSmoothScrollDetail": {
+    "message": "CPU 使用率将变高，并且换行可能不正确"
+  },
+
   "optionsShowLyrics": {
     "message": "仅显示封面"
   },
@@ -60,7 +64,7 @@
   },
 
   "optionsShowCleanLyricsDetail": {
-    "message": "使用正则匹配来隐藏作词作曲等信息"
+    "message": "隐藏作词作曲等信息"
   },
 
   "optionsLyricsPosition": {

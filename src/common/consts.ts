@@ -41,13 +41,4 @@ export interface Options {
   cid: string;
 }
 
-export const isSupportES2018RegExp = (() => {
-  try {
-    /xx/su;
-    return true;
-  } catch {
-    return false;
-  }
-})();
-
 export const USER_SELECT_USE_LOCAL = true;

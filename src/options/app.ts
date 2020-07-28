@@ -1,14 +1,7 @@
 import { browser } from 'webextension-polyfill-ts';
 import { customElement, GemElement, html, refobject, RefObject } from '@mantou/gem';
 
-import {
-  Message,
-  Event,
-  Options,
-  LyricsPositions,
-  isSupportES2018RegExp,
-  LyricsAlign,
-} from '../common/consts';
+import { Message, Event, Options, LyricsPositions, LyricsAlign } from '../common/consts';
 
 import { theme } from '../common/theme';
 
@@ -23,6 +16,16 @@ import './elements/switch';
 
 import { getOptions, updateOptions } from './store';
 const options = getOptions();
+
+export const isSupportSmoothScroll =
+  (() => {
+    try {
+      /xx/su;
+      return true;
+    } catch {
+      return false;
+    }
+  })() && 'actualBoundingBoxAscent' in TextMetrics.prototype;
 
 @customElement('options-app')
 export class Test extends GemElement {
@@ -60,7 +63,7 @@ export class Test extends GemElement {
           font-size: 1.2rem;
           font-style: italic;
           color: rgba(${theme.blackRGB}, 0.5);
-          margin: 2em 0;
+          margin: 1em 0;
         }
       </style>
       <ele-form @input=${this.inputHandler} ref=${this.formRef.ref}>
@@ -82,7 +85,7 @@ export class Test extends GemElement {
           ></ele-select>
         </ele-form-item>
         <ele-form-item
-          ?hidden=${!isSupportES2018RegExp}
+          ?hidden=${!isSupportSmoothScroll}
           label=${i18n.optionsSmoothScroll()}
           description=${i18n.optionsSmoothScrollDetail()}
         >
