@@ -57,24 +57,28 @@ function drawParagraph(ctx: CanvasRenderingContext2D, str = '', options: Options
   const lines: string[] = [];
   const measures: TextMetrics[] = [];
   let tempLine = '';
-  let textMeasures!: TextMetrics;
+  let textMeasures = ctx.measureText('');
   for (let i = 0; i < words.length; i++) {
     const word = words[i];
     const line = tempLine + word;
-    textMeasures = ctx.measureText(line);
-    if (textMeasures.width > maxWidth && tempLine && !/\s/.test(word)) {
+    const mea = ctx.measureText(line);
+    const isSpace = /\s/.test(word);
+    if (mea.width > maxWidth && tempLine && !isSpace) {
       actualWidth = Math.max(actualWidth, textMeasures.width);
       lines.push(tempLine);
       measures.push(textMeasures);
       tempLine = word;
     } else {
       tempLine = line;
+      if (!isSpace) {
+        textMeasures = mea;
+      }
     }
   }
   if (tempLine !== '') {
     actualWidth = Math.max(actualWidth, textMeasures.width);
     lines.push(tempLine);
-    measures.push(textMeasures);
+    measures.push(ctx.measureText(tempLine));
   }
 
   const ascent = measures.length ? measures[0].actualBoundingBoxAscent : 0;
