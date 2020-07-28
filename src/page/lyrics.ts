@@ -132,8 +132,9 @@ export async function matchingLyrics(
     ? queryName4
     : `${sify(queryArtistsArr3.join())} ${queryName4}`;
   const songs = await fetchData(searchString);
+  const list: Song[] = [];
 
-  let songId = 0;
+  let id = 0;
   let score = 0;
   songs.forEach((song) => {
     let currentScore = 0;
@@ -162,11 +163,14 @@ export async function matchingLyrics(
               if (songName === queryName5) {
                 currentScore += 7;
               } else if (
-                (songName.startsWith(queryName5) || queryName5.startsWith(songName)) &&
                 (songName.length > 5 || charCodeTotal(songName) > 5 * 128) &&
                 (queryName5.length > 5 || charCodeTotal(queryName5) > 5 * 128)
               ) {
-                currentScore += 6;
+                if (songName.startsWith(queryName5) || queryName5.startsWith(songName)) {
+                  currentScore += 6;
+                } else if (songName.includes(queryName5) || queryName5.includes(songName)) {
+                  currentScore += 3;
+                }
               }
             }
           }
@@ -196,22 +200,34 @@ export async function matchingLyrics(
           new Set([...queryArtistsArr3, ...songArtistsArr]).size < len
         ) {
           currentScore += 5;
+        } else if (
+          songArtistsArr.some(
+            (artist) =>
+              queryName2.includes(artist) ||
+              queryArtistsArr2.join().includes(artist) ||
+              queryArtistsArr3.join().includes(artist),
+          )
+        ) {
+          currentScore += 3;
         }
       }
     }
 
     if (currentScore > score) {
       if (currentScore > 10) {
-        songId = song.id;
+        id = song.id;
       }
       score = currentScore;
     }
+    if (currentScore > 0) {
+      list.push(song);
+    }
   });
-  if (songId === 0) {
+  if (id === 0) {
     if (!onlySearchName) return await matchingLyrics(query, fetchData, true);
     console.log('Not matched:', { query, songs, rank: score });
   }
-  return { list: songs, id: songId };
+  return { list, id };
 }
 
 export async function fetchLyric(songId: number) {
