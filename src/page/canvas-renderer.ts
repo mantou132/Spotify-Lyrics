@@ -37,6 +37,8 @@ interface Options {
   hCenter?: boolean;
   translateX?: number | ((width: number) => number);
   translateY?: number | ((width: number) => number);
+
+  measure?: boolean;
 }
 
 interface Position {
@@ -110,10 +112,12 @@ function drawParagraph(ctx: CanvasRenderingContext2D, str = '', options: Options
   if (typeof options.translateY === 'number') {
     translateY = options.translateY;
   }
-  lines.forEach((str, index) => {
-    const x = options.hCenter ? (ctx.canvas.width - measures[index].width) / 2 : startX;
-    ctx.fillText(str, x, startY + index * options.lineHeight + translateY);
-  });
+  if (!options.measure) {
+    lines.forEach((str, index) => {
+      const x = options.hCenter ? (ctx.canvas.width - measures[index].width) / 2 : startX;
+      ctx.fillText(str, x, startY + index * options.lineHeight + translateY);
+    });
+  }
   return {
     width: actualWidth,
     height: actualHeight,
@@ -202,13 +206,20 @@ export function renderLyricsWithCanvas(
   const progressRight = marginWidth + (1 - progress) * (otherRight - marginWidth);
   offscreenCtx.fillStyle = `rgba(255, 255, 255, ${fLineOpacity})`;
   offscreenCtx.font = `bold ${fFontSize}px sans-serif`;
+  const prevLineFocusHeight = drawParagraph(offscreenCtx, lyrics[currentIndex - 1]?.text, {
+    vCenter: true,
+    left: marginWidth,
+    right: marginWidth,
+    lineHeight: focusLineFontSize,
+    measure: true,
+  }).height;
   const pos = drawParagraph(offscreenCtx, lyrics[currentIndex]?.text, {
     vCenter: true,
     left: marginWidth,
     right: progressRight,
     lineHeight: fLineHeight,
-    // just approximate location
-    translateY: (selfHeight: number) => selfHeight * (1 - progress),
+    translateY: (selfHeight: number) =>
+      ((prevLineFocusHeight + selfHeight) / 2 + focusLineMargin) * (1 - progress),
   });
   // offscreenCtx.strokeRect(pos.left, pos.top, pos.width, pos.height);
 
