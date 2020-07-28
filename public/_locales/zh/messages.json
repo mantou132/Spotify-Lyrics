@@ -39,6 +39,10 @@
     "message": "歌词字体大小"
   },
 
+  "optionsLyricsAlign": {
+    "message": "歌词对齐"
+  },
+
   "optionsFontSizeDetail": {
     "message": "这是一个相对尺寸，将歌词窗口的宽度视为 640px"
   },

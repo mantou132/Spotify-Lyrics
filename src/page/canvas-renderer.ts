@@ -1,3 +1,5 @@
+import { LyricsAlign } from '../common/consts';
+
 import { Lyric } from './lyrics';
 
 // simple word segmentation rules
@@ -150,11 +152,16 @@ function initOffscreenCtx(ctx: CanvasRenderingContext2D) {
   return { offscreenCtx, gradient };
 }
 
+export interface RenderOptions {
+  focusLineFontSize: number;
+  align: typeof LyricsAlign[number];
+}
+
 export function renderLyricsWithCanvas(
   ctx: CanvasRenderingContext2D,
   lyrics: Lyric,
   currentTime: number, // s
-  options: { focusLineFontSize: number },
+  options: RenderOptions,
 ) {
   const focusLineFontSize = options.focusLineFontSize;
   const focusLineHeight = focusLineFontSize * 1.2;
@@ -166,6 +173,7 @@ export function renderLyricsWithCanvas(
   const marginWidth = focusLineFontSize * 1;
   const animateDuration = 0.3;
   const backgroundColor = '#000000b0';
+  const hCenter = options.align === 'center' ? true : false;
 
   ctx.save();
   ctx.fillStyle = backgroundColor;
@@ -212,6 +220,7 @@ export function renderLyricsWithCanvas(
   offscreenCtx.font = `bold ${fFontSize}px sans-serif`;
   const prevLineFocusHeight = drawParagraph(offscreenCtx, lyrics[currentIndex - 1]?.text, {
     vCenter: true,
+    hCenter,
     left: marginWidth,
     right: marginWidth,
     lineHeight: focusLineFontSize,
@@ -219,6 +228,7 @@ export function renderLyricsWithCanvas(
   }).height;
   const pos = drawParagraph(offscreenCtx, lyrics[currentIndex]?.text, {
     vCenter: true,
+    hCenter,
     left: marginWidth,
     right: progressRight,
     lineHeight: fLineHeight,
@@ -241,6 +251,7 @@ export function renderLyricsWithCanvas(
       offscreenCtx.font = `bold ${otherLineFontSize}px sans-serif`;
     }
     lastBeforePos = drawParagraph(offscreenCtx, lyrics[currentIndex - 1 - i].text, {
+      hCenter,
       bottom: i === 0 ? lastBeforePos.top - focusLineMargin : lastBeforePos.top - otherLineMargin,
       left: marginWidth,
       right: i === 0 ? marginWidth + progress * (otherRight - marginWidth) : otherRight,
@@ -257,6 +268,7 @@ export function renderLyricsWithCanvas(
   let lastAfterPos = pos;
   for (let i = currentIndex + 1; i < lyrics.length; i++) {
     lastAfterPos = drawParagraph(offscreenCtx, lyrics[i].text, {
+      hCenter,
       top:
         i === currentIndex + 1
           ? lastAfterPos.bottom + focusLineMargin

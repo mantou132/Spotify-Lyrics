@@ -3,7 +3,7 @@ import { sendEvent, events } from '../common/ga';
 
 import { PopupStore } from '../popup/store';
 
-import { renderLyricsWithCanvas } from './canvas-renderer';
+import { renderLyricsWithCanvas, RenderOptions } from './canvas-renderer';
 import { renderLyricsWithSVG } from './svg-renderer';
 import { video, audioPromise } from './element';
 import { sharedData } from './share-data';
@@ -67,8 +67,9 @@ const update = async () => {
     return;
   }
 
-  const renderOptions = {
-    focusLineFontSize: options['font-size'],
+  const renderOptions: RenderOptions = {
+    focusLineFontSize: Number(options['font-size']),
+    align: options['lyrics-align'],
   };
 
   if (options['lyrics-smooth-scroll'] === 'on') {

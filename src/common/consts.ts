@@ -29,13 +29,15 @@ export const LocalStorageKeys = {
 };
 
 export const LyricsPositions = ['page', 'pip'] as const;
+export const LyricsAlign = ['left', 'center'] as const;
 export interface Options {
-  'font-size': number;
+  'font-size': string;
   'toggle-shortcut': string;
   'lyrics-smooth-scroll': Value;
   'only-cover': Value;
   'clean-lyrics': Value;
   'show-on': typeof LyricsPositions[number];
+  'lyrics-align': typeof LyricsAlign[number];
   cid: string;
 }
 

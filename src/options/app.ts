@@ -1,7 +1,14 @@
 import { browser } from 'webextension-polyfill-ts';
 import { customElement, GemElement, html, refobject, RefObject } from '@mantou/gem';
 
-import { Message, Event, Options, LyricsPositions, isSupportES2018RegExp } from '../common/consts';
+import {
+  Message,
+  Event,
+  Options,
+  LyricsPositions,
+  isSupportES2018RegExp,
+  LyricsAlign,
+} from '../common/consts';
 
 import { theme } from '../common/theme';
 
@@ -60,11 +67,18 @@ export class Test extends GemElement {
         <ele-form-item label=${i18n.optionsFontSize()} description=${i18n.optionsFontSizeDetail()}>
           <ele-select
             name=${'font-size' as keyof Options}
-            default-value=${String(options['font-size'])}
+            default-value=${options['font-size']}
             .options=${new Array(9).fill(null).map((_, index) => ({
               label: String(index * 2 + 32) + 'px',
               value: String(index * 2 + 32),
             }))}
+          ></ele-select>
+        </ele-form-item>
+        <ele-form-item label=${i18n.optionsLyricsAlign()}>
+          <ele-select
+            name=${'lyrics-align' as keyof Options}
+            default-value=${options['lyrics-align']}
+            .options=${LyricsAlign.map((e) => ({ label: e, value: e }))}
           ></ele-select>
         </ele-form-item>
         <ele-form-item

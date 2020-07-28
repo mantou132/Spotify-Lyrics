@@ -1,12 +1,13 @@
 import { Lyric } from './lyrics';
+import { RenderOptions } from './canvas-renderer';
 import { svg, html, css, captureException, getSVGDataUrl } from './utils';
 
-function generateSVG(lyric: Lyric, currentTime = 0, options: { focusLineFontSize: number }) {
+function generateSVG(lyric: Lyric, currentTime = 0, options: RenderOptions) {
   const style = css`
     :root {
       background: #000000b0;
       color: white;
-      text-align: left;
+      text-align: ${options.align};
       font-family: sans-serif;
       font-weight: bold;
       font-size: ${options.focusLineFontSize}px;
@@ -111,7 +112,7 @@ export async function renderLyricsWithSVG(
   ctx: CanvasRenderingContext2D,
   lyrics: Lyric,
   currentTime: number, // s
-  options: { focusLineFontSize: number },
+  options: RenderOptions,
 ): Promise<HTMLImageElement | undefined> {
   const url = getSVGDataUrl(generateSVG(lyrics, currentTime, options));
   const img = new Image(ctx.canvas.width, ctx.canvas.height);

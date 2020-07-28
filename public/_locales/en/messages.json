@@ -54,6 +54,11 @@
     "description": "Specify font size"
   },
 
+  "optionsLyricsAlign": {
+    "message": "Lyrics align",
+    "description": "Specify alignment"
+  },
+
   "optionsFontSizeDetail": {
     "message": "This is a relative size, the width of the lyrics window is treated as 640px",
     "description": "Specify font size detail"
