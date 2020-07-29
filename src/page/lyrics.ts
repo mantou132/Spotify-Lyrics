@@ -140,6 +140,7 @@ export async function matchingLyrics(
     : `${sify(queryArtistsArr4.join())} ${queryName4}`;
   const songs = await fetchData(searchString);
   const list: Song[] = [];
+  const listIdSet = new Set<number>();
 
   let id = 0;
   let score = 0;
@@ -171,13 +172,12 @@ export async function matchingLyrics(
                 currentScore += 7;
               } else if (
                 (songName.length > 5 || charCodeTotal(songName) > 5 * 128) &&
-                (queryName5.length > 5 || charCodeTotal(queryName5) > 5 * 128)
+                (queryName5.length > 5 || charCodeTotal(queryName5) > 5 * 128) &&
+                (songName.startsWith(queryName5) || queryName5.startsWith(songName))
               ) {
-                if (songName.startsWith(queryName5) || queryName5.startsWith(songName)) {
-                  currentScore += 6;
-                } else if (songName.includes(queryName5) || queryName5.includes(songName)) {
-                  currentScore += 3;
-                }
+                currentScore += 6;
+              } else if (songName.includes(queryName5) || queryName5.includes(songName)) {
+                currentScore += 3;
               }
             }
           }
@@ -211,15 +211,18 @@ export async function matchingLyrics(
             new Set([...queryArtistsArr4, ...songArtistsArr]).size < len
           ) {
             currentScore += 5;
-          } else if (
-            songArtistsArr.some(
-              (artist) =>
-                queryName2.includes(artist) ||
-                queryArtistsArr2.join().includes(artist) ||
-                queryArtistsArr4.join().includes(artist),
-            )
-          ) {
-            currentScore += 3;
+          } else {
+            songArtistsArr = songArtistsArr.map((e) => getText(e));
+            if (
+              songArtistsArr.some(
+                (artist) =>
+                  queryName2.includes(artist) ||
+                  queryArtistsArr2.join().includes(artist) ||
+                  queryArtistsArr4.join().includes(artist),
+              )
+            ) {
+              currentScore += 3;
+            }
           }
         }
       }
@@ -233,11 +236,20 @@ export async function matchingLyrics(
     }
     if (currentScore > 0) {
       list.push(song);
+      listIdSet.add(song.id);
     }
   });
   if (id === 0) {
-    if (!onlySearchName) return await matchingLyrics(query, fetchData, true);
-    console.log('Not matched:', { query, songs, rank: score });
+    if (!onlySearchName) {
+      const { id, list: listForMissingName } = await matchingLyrics(query, fetchData, true);
+      listForMissingName.forEach((song) => {
+        if (!listIdSet.has(song.id)) {
+          list.push(song);
+        }
+      });
+      return { id, list };
+    }
+    console.log('Not matched:', { query, songs, list, rank: score });
   }
   return { list, id };
 }
