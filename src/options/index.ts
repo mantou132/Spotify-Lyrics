@@ -39,7 +39,9 @@ render(
   document.body,
 );
 
-sendEvent(getOptions().cid, events.openOptionsPage);
+getOptions().then(({ cid }) => {
+  sendEvent(cid, events.openOptionsPage);
+});
 
 browser.runtime.getBackgroundPage().then((win) => {
   window.addEventListener('error', (e) => {

@@ -79,7 +79,6 @@ export const localConfig: LocalConfig = (() => {
       STATIC_STYLE: css`
         /* not logged in */
         [data-testid='cookie-notice'],
-        [data-testid='signup-bar'],
         /* webpage: download link */
         .Rootlist ~ div a[href*=download],
         /* webpage: logo */

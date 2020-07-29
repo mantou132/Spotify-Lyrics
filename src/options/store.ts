@@ -1,41 +1,37 @@
-// Cannot be used in webpage
+import { browser } from 'webextension-polyfill-ts';
 
-import { LocalStorageKeys, Options } from '../common/consts';
+import { Options } from '../common/consts';
 
-let optionsCache: Options | null = null;
+const defaultOptions: Options = {
+  cid: `${Date.now()}-${Math.random()}`,
+  'lyrics-smooth-scroll': 'off',
+  'only-cover': 'off',
+  'clean-lyrics': 'off',
+  'show-on': 'pip',
+  'lyrics-align': 'left',
+  'font-size': '48',
+  'toggle-shortcut': 'l',
+};
 
-export function getOptions() {
-  if (optionsCache) return optionsCache;
-  optionsCache = {} as Options;
-  // default options
-  optionsCache['lyrics-smooth-scroll'] = 'off';
-  optionsCache['only-cover'] = 'off';
-  optionsCache['clean-lyrics'] = 'off';
-  optionsCache['show-on'] = 'pip';
-  optionsCache['lyrics-align'] = 'left';
-  optionsCache['font-size'] = '48';
-  optionsCache['toggle-shortcut'] = 'l';
-  optionsCache.cid = `${Date.now()}-${Math.random()}`;
-  const localOptionsStr = localStorage.getItem(LocalStorageKeys.CONFIG);
-  if (localOptionsStr) {
-    try {
-      Object.assign(optionsCache, JSON.parse(localOptionsStr));
-      localStorage.setItem(LocalStorageKeys.CONFIG, JSON.stringify(optionsCache));
-    } catch {}
-  }
-  return optionsCache;
-}
-
-export function updateOptions(value: Partial<Options>) {
-  optionsCache = Object.assign(getOptions(), value);
-  localStorage.setItem(LocalStorageKeys.CONFIG, JSON.stringify(optionsCache));
-}
-
-window.addEventListener('storage', () => {
-  const localOptionsStr = localStorage.getItem(LocalStorageKeys.CONFIG);
-  if (localOptionsStr) {
-    try {
-      optionsCache = Object.assign({}, optionsCache, JSON.parse(localOptionsStr));
-    } catch {}
-  }
+// Remove in future versions
+const copyLegacyOptionsPromise = new Promise(async (res) => {
+  const legacyOptions: Options = JSON.parse(localStorage.getItem('config') || '{}');
+  delete legacyOptions['strict-mode'];
+  await updateOptions(legacyOptions);
+  localStorage.removeItem('config');
+  res();
 });
+
+export async function getOptions() {
+  await copyLegacyOptionsPromise;
+
+  const options = (await browser.storage.sync.get(defaultOptions)) as Options;
+  if (options.cid === defaultOptions.cid) {
+    await browser.storage.sync.set({ cid: options.cid });
+  }
+  return options;
+}
+
+export async function updateOptions(value: Partial<Options>) {
+  return browser.storage.sync.set(value);
+}

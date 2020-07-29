@@ -15,7 +15,6 @@ import './elements/select';
 import './elements/switch';
 
 import { getOptions, updateOptions } from './store';
-const options = getOptions();
 
 export const isSupportSmoothScroll =
   (() => {
@@ -27,27 +26,38 @@ export const isSupportSmoothScroll =
     }
   })() && 'actualBoundingBoxAscent' in TextMetrics.prototype;
 
+type State = { options: Options | null };
 @customElement('options-app')
-export class Test extends GemElement {
+export class Test extends GemElement<State> {
   @refobject formRef: RefObject<Form>;
 
-  inputHandler = () => {
+  state: State = {
+    options: null,
+  };
+
+  async mounted() {
+    this.setState({ options: await getOptions() });
+  }
+
+  inputHandler = async () => {
     if (!this.formRef.element) return;
     updateOptions(Object.fromEntries(this.formRef.element.value));
 
     const manifest = browser.runtime.getManifest() as typeof import('../../public/manifest.json');
-    browser.tabs.query({ url: manifest.content_scripts[0].matches }).then((tabs) => {
-      tabs.forEach((tab) => {
-        if (tab.id) {
-          browser.tabs.sendMessage(tab.id, {
-            type: Event.SEND_OPTIONS,
-            data: options,
-          } as Message);
-        }
-      });
+    const tabs = await browser.tabs.query({ url: manifest.content_scripts[0].matches });
+    tabs.forEach(async (tab) => {
+      if (tab.id) {
+        browser.tabs.sendMessage(tab.id, {
+          type: Event.SEND_OPTIONS,
+          data: await getOptions(),
+        } as Message);
+      }
     });
   };
   render() {
+    const { options } = this.state;
+    if (!options) return null;
+
     return html`
       <style>
         :host {

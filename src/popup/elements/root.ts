@@ -11,8 +11,9 @@ import { i18n } from '../../i18n';
 @connectStore(store)
 @customElement('app-root')
 export class SongList extends GemElement {
-  autoSelect = () => {
-    sendEvent(getOptions().cid, events.autoSelectTrack);
+  autoSelect = async () => {
+    const { cid } = await getOptions();
+    sendEvent(cid, events.autoSelectTrack);
     changeSong(0);
   };
   render() {

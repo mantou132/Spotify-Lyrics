@@ -69,7 +69,9 @@ setTimeout(() => {
   }
 }, 200);
 
-sendEvent(getOptions().cid, events.openPopupPage);
+getOptions().then(({ cid }) => {
+  sendEvent(cid, events.openPopupPage);
+});
 
 browser.runtime.getBackgroundPage().then((win) => {
   window.addEventListener('error', (e) => {

@@ -23,14 +23,10 @@ export const ContextItems = {
   RATE_ME: 'rate-me',
 };
 
-// Store in extension localStorage
-export const LocalStorageKeys = {
-  CONFIG: 'config',
-};
-
 export const LyricsPositions = ['page', 'pip'] as const;
 export const LyricsAlign = ['left', 'center'] as const;
 export interface Options {
+  cid: string;
   'font-size': string;
   'toggle-shortcut': string;
   'lyrics-smooth-scroll': Value;
@@ -38,7 +34,8 @@ export interface Options {
   'clean-lyrics': Value;
   'show-on': typeof LyricsPositions[number];
   'lyrics-align': typeof LyricsAlign[number];
-  cid: string;
+  // Deprecated
+  'strict-mode'?: Value;
 }
 
 export const USER_SELECT_USE_LOCAL = true;

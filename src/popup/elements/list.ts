@@ -9,8 +9,9 @@ import { theme } from '../../common/theme';
 @connectStore(store)
 @customElement('app-track-list')
 export class SongList extends GemElement {
-  select = (id: number) => {
-    sendEvent(getOptions().cid, events.selectTrack);
+  select = async (id: number) => {
+    const { cid } = await getOptions();
+    sendEvent(cid, events.selectTrack);
     changeSong(id);
   };
   render() {

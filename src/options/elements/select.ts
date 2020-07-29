@@ -6,6 +6,8 @@ import {
   property,
   refobject,
   RefObject,
+  emitter,
+  Emitter,
 } from '@mantou/gem';
 
 import { theme } from '../../common/theme';
@@ -23,6 +25,12 @@ export class Select extends GemElement {
   @property options: Option[] = [];
 
   @refobject selectRef: RefObject<HTMLSelectElement>;
+  @emitter input: Emitter;
+
+  // https://bugzilla.mozilla.org/show_bug.cgi?id=1655937
+  inputHandler = () => {
+    this.input(null, { composed: true, bubbles: true });
+  };
 
   get control() {
     return this.selectRef.element!;
@@ -38,6 +46,8 @@ export class Select extends GemElement {
           position: relative;
         }
         select {
+          -moz-appearance: none;
+          -webkit-appearance: none;
           appearance: none;
           cursor: pointer;
           border-radius: 2px;
@@ -68,7 +78,7 @@ export class Select extends GemElement {
           margin: auto;
         }
       </style>
-      <select ref=${this.selectRef.ref}>
+      <select ref=${this.selectRef.ref} @input=${this.inputHandler}>
         ${this.options.map(
           (option) =>
             html`
