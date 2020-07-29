@@ -3,6 +3,7 @@ import config from './config';
 import { video, canvas } from './element';
 import { insetLyricsBtn } from './btn';
 import { sharedData } from './share-data';
+import { generateCover } from './cover';
 
 let loginResolve: (value?: unknown) => void;
 export const loggedPromise = new Promise((res) => (loginResolve = res));
@@ -33,6 +34,7 @@ config.then(({ ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR, LOGGED_MARK_SELECTOR }
       let largeImage: HTMLImageElement;
       cover.addEventListener('load', () => {
         const drawSmallCover = () => {
+          ctx.save();
           ctx.imageSmoothingEnabled = false;
           const blur = 10;
           ctx.filter = `blur(${blur}px)`;
@@ -43,28 +45,30 @@ config.then(({ ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR, LOGGED_MARK_SELECTOR }
             video.width + 4 * blur,
             video.height + 4 * blur,
           );
+          ctx.restore();
         };
         // https://github.com/mantou132/Spotify-Lyrics/issues/26#issuecomment-638019333
         const reg = /00004851(?=\w{24}$)/;
         if (cover.naturalWidth >= 480) {
           ctx.drawImage(cover, 0, 0, video.width, video.height);
-        } else if (!reg.test(cover.src)) {
-          drawSmallCover();
-        } else {
+        } else if (reg.test(cover.src)) {
           const largeUrl = cover.src.replace(reg, '0000b273');
           largeImage = new Image();
           largeImage.crossOrigin = 'anonymous';
           largeImage.addEventListener('load', function () {
             if (this !== largeImage) return;
-            ctx.filter = `blur(0px)`;
             ctx.drawImage(largeImage, 0, 0, video.width, video.height);
           });
           largeImage.addEventListener('error', drawSmallCover);
           largeImage.src = largeUrl;
+        } else if ('filter' in ctx) {
+          drawSmallCover();
+        } else {
+          generateCover(ctx);
         }
       });
       cover.addEventListener('error', () => {
-        ctx.fillRect(0, 0, video.width, video.height);
+        generateCover(ctx);
       });
       const infoEleObserver = new MutationObserver(() => {
         sharedData.updateTrack();
