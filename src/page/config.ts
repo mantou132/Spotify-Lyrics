@@ -54,8 +54,11 @@ export const localConfig: LocalConfig = (() => {
       </svg>
     `);
     return {
-      SERVICE_WORKER: 'https://open.spotify.com/service-worker.js',
+      SERVICE_WORKER: '',
       STATIC_STYLE: css`
+        yt-bubble-hint-renderer {
+          display: none;
+        }
         .${LYRICS_CLASSNAME} {
           margin-left: var(--ytmusic-like-button-renderer-button-spacing, 8px);
         }
@@ -75,7 +78,7 @@ export const localConfig: LocalConfig = (() => {
     };
   } else {
     return {
-      SERVICE_WORKER: '',
+      SERVICE_WORKER: 'https://open.spotify.com/service-worker.js',
       STATIC_STYLE: css`
         /* not logged in */
         [data-testid='cookie-notice'],
