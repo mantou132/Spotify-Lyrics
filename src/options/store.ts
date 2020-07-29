@@ -1,6 +1,6 @@
 import { browser } from 'webextension-polyfill-ts';
 
-import { Options } from '../common/consts';
+import { Message, Event, Options } from '../common/consts';
 
 const defaultOptions: Options = {
   cid: `${Date.now()}-${Math.random()}`,
@@ -33,5 +33,16 @@ export async function getOptions() {
 }
 
 export async function updateOptions(value: Partial<Options>) {
-  return browser.storage.sync.set(value);
+  await browser.storage.sync.set(value);
+
+  const manifest = browser.runtime.getManifest() as typeof import('../../public/manifest.json');
+  const tabs = await browser.tabs.query({ url: manifest.content_scripts[0].matches });
+  tabs.forEach(async (tab) => {
+    if (tab.id) {
+      browser.tabs.sendMessage(tab.id, {
+        type: Event.SEND_OPTIONS,
+        data: await getOptions(),
+      } as Message);
+    }
+  });
 }

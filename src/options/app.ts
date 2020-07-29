@@ -1,7 +1,6 @@
-import { browser } from 'webextension-polyfill-ts';
 import { customElement, GemElement, html, refobject, RefObject } from '@mantou/gem';
 
-import { Message, Event, Options, LyricsPositions, LyricsAlign } from '../common/consts';
+import { Options, LyricsPositions, LyricsAlign } from '../common/consts';
 
 import { theme } from '../common/theme';
 
@@ -40,20 +39,8 @@ export class Test extends GemElement<State> {
   }
 
   inputHandler = async () => {
-    console.log(await getOptions());
     if (!this.formRef.element) return;
     updateOptions(Object.fromEntries(this.formRef.element.value));
-
-    const manifest = browser.runtime.getManifest() as typeof import('../../public/manifest.json');
-    const tabs = await browser.tabs.query({ url: manifest.content_scripts[0].matches });
-    tabs.forEach(async (tab) => {
-      if (tab.id) {
-        browser.tabs.sendMessage(tab.id, {
-          type: Event.SEND_OPTIONS,
-          data: await getOptions(),
-        } as Message);
-      }
-    });
   };
   render() {
     const { options } = this.state;
