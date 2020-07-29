@@ -64,6 +64,11 @@ const getHalfSizeText = (s: string) => {
     .replace(/‘|’/g, "'");
 };
 
+// https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript
+const ignoreAccented = (s: string) => {
+  return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+};
+
 const removeSongFeat = (s: string) => {
   return s.replace(/\(?(feat|with)\.?\s.*\)?$/i, '').trim();
 };
@@ -121,23 +126,25 @@ export async function matchingLyrics(
   const queryName1 = queryName.toLowerCase();
   const queryName2 = sify(queryName1);
   const queryName3 = getHalfSizeText(queryName2);
-  const queryName4 = removeSongFeat(queryName3);
-  const queryName5 = getText(queryName3);
+  const queryName4 = ignoreAccented(queryName3);
+  const queryName5 = removeSongFeat(queryName4);
+  const queryName6 = getText(queryName3);
   const queryArtistsArr = artists
     .split(',')
     .map((e) => e.trim())
     .sort();
   const queryArtistsArr1 = queryArtistsArr.map((e) => e.toLowerCase());
   const queryArtistsArr2 = queryArtistsArr1.map((e) => sify(e));
-  const queryArtistsArr3 = queryArtistsArr1.map((e) => getHalfSizeText(e));
+  const queryArtistsArr3 = queryArtistsArr2.map((e) => getHalfSizeText(e));
+  const queryArtistsArr4 = queryArtistsArr3.map((e) => ignoreAccented(e));
 
   const singerAlias = onlySearchName ? {} : await fetchChineseName(queryArtistsArr2.join());
 
-  const queryArtistsArr4 = queryArtistsArr1.map((e) => singerAlias[e] || (SINGER as any)[e] || e);
+  const queryArtistsArr5 = queryArtistsArr1.map((e) => singerAlias[e] || (SINGER as any)[e] || e);
 
   const searchString = onlySearchName
-    ? queryName4
-    : `${sify(queryArtistsArr4.join())} ${queryName4}`;
+    ? queryName5
+    : `${sify(queryArtistsArr5.join())} ${queryName5}`;
   const songs = await fetchData(searchString);
   const list: Song[] = [];
   const listIdSet = new Set<number>();
@@ -161,23 +168,28 @@ export async function matchingLyrics(
         } else {
           songName = getHalfSizeText(songName);
           if (songName === queryName3) {
-            currentScore += 8.1;
+            currentScore += 8.2;
           } else {
-            songName = removeSongFeat(songName);
+            songName = ignoreAccented(songName);
             if (songName === queryName4) {
-              currentScore += 8;
+              currentScore += 8.1;
             } else {
-              songName = getText(songName);
+              songName = removeSongFeat(songName);
               if (songName === queryName5) {
-                currentScore += 7;
-              } else if (
-                (songName.length > 5 || charCodeTotal(songName) > 5 * 128) &&
-                (queryName5.length > 5 || charCodeTotal(queryName5) > 5 * 128) &&
-                (songName.startsWith(queryName5) || queryName5.startsWith(songName))
-              ) {
-                currentScore += 6;
-              } else if (songName.includes(queryName5) || queryName5.includes(songName)) {
-                currentScore += 3;
+                currentScore += 8;
+              } else {
+                songName = getText(songName);
+                if (songName === queryName6) {
+                  currentScore += 7;
+                } else if (
+                  (songName.length > 5 || charCodeTotal(songName) > 5 * 128) &&
+                  (queryName6.length > 5 || charCodeTotal(queryName6) > 5 * 128) &&
+                  (songName.startsWith(queryName6) || queryName6.startsWith(songName))
+                ) {
+                  currentScore += 6;
+                } else if (songName.includes(queryName6) || queryName6.includes(songName)) {
+                  currentScore += 3;
+                }
               }
             }
           }
@@ -193,35 +205,42 @@ export async function matchingLyrics(
       songArtistsArr = songArtistsArr.map((e) => e.toLowerCase());
       if (
         queryArtistsArr1.join() === songArtistsArr.join() ||
-        queryArtistsArr4.join() === songArtistsArr.join()
+        queryArtistsArr5.join() === songArtistsArr.join()
       ) {
-        currentScore += 5.4;
+        currentScore += 5.5;
       } else if (new Set([...queryArtistsArr1, ...songArtistsArr]).size < len) {
-        currentScore += 5.3;
+        currentScore += 5.4;
       } else {
         songArtistsArr = songArtistsArr.map((e) => sify(e));
         if (queryArtistsArr2.join() === songArtistsArr.join()) {
-          currentScore += 5.2;
+          currentScore += 5.3;
         } else {
           songArtistsArr = songArtistsArr.map((e) => getHalfSizeText(e));
           if (queryArtistsArr3.join() === songArtistsArr.join()) {
-            currentScore += 5.1;
-          } else if (
-            new Set([...queryArtistsArr2, ...songArtistsArr]).size < len ||
-            new Set([...queryArtistsArr4, ...songArtistsArr]).size < len
-          ) {
-            currentScore += 5;
+            currentScore += 5.2;
           } else {
-            songArtistsArr = songArtistsArr.map((e) => getText(e));
-            if (
-              songArtistsArr.some(
-                (artist) =>
-                  queryName2.includes(artist) ||
-                  queryArtistsArr2.join().includes(artist) ||
-                  queryArtistsArr4.join().includes(artist),
-              )
-            ) {
-              currentScore += 3;
+            songArtistsArr = songArtistsArr.map((e) => ignoreAccented(e));
+            if (queryArtistsArr4.join() === songArtistsArr.join()) {
+              currentScore += 5.1;
+            } else {
+              if (
+                new Set([...queryArtistsArr2, ...songArtistsArr]).size < len ||
+                new Set([...queryArtistsArr5, ...songArtistsArr]).size < len
+              ) {
+                currentScore += 5;
+              } else {
+                songArtistsArr = songArtistsArr.map((e) => getText(e));
+                if (
+                  songArtistsArr.some(
+                    (artist) =>
+                      queryName2.includes(artist) ||
+                      queryArtistsArr2.join().includes(artist) ||
+                      queryArtistsArr5.join().includes(artist),
+                  )
+                ) {
+                  currentScore += 3;
+                }
+              }
             }
           }
         }
