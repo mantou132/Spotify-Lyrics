@@ -1,6 +1,6 @@
 {
   "name": "__MSG_extensionName__",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "manifest_version": 2,
   "description": "__MSG_extensionDescription__",
   "default_locale": "en",
@@ -16,7 +16,7 @@
     "gecko": {
       "id": "{d5bcc68d-856a-41e2-8021-d4c51f3b8e4a}"
     }
-  },  
+  },
   "background": {
     "scripts": [
       "background.js"
