@@ -28,8 +28,8 @@ export class Select extends GemElement {
   @emitter input: Emitter;
 
   // https://bugzilla.mozilla.org/show_bug.cgi?id=1655937
-  inputHandler = () => {
-    this.input(null, { composed: true, bubbles: true });
+  inputHandler = (e: Event) => {
+    if (!e.composed) this.input(null, { composed: true, bubbles: true });
   };
 
   get control() {

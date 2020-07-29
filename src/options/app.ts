@@ -40,6 +40,7 @@ export class Test extends GemElement<State> {
   }
 
   inputHandler = async () => {
+    console.log(await getOptions());
     if (!this.formRef.element) return;
     updateOptions(Object.fromEntries(this.formRef.element.value));
 
