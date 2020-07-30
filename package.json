@@ -1,6 +1,6 @@
 {
   "name": "spotify-lyrics",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "",
   "scripts": {
     "lint": "tsc --noEmit && eslint --ext .ts --fix src/",
