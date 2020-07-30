@@ -9,7 +9,7 @@ describe('parse lyrics', () => {
     expect(parseLyrics('[ar:Beyond]')).toEqual<Lyric>([{ startTime: null, text: 'AR: Beyond' }]);
   });
   test('lyrics line', () => {
-    expect(parseLyrics('[02:01]\n')).toEqual<Lyric>([{ startTime: 121, text: ' ' }]);
+    expect(parseLyrics('[02:01]\n')).toEqual<Lyric>([{ startTime: 121, text: '' }]);
     expect(parseLyrics('[02:01]编')).toEqual<Lyric>([{ startTime: 121, text: '编' }]);
     expect(parseLyrics('[02:01]编：')).toEqual<Lyric>([{ startTime: 121, text: '编：' }]);
     expect(parseLyrics('[02:01]编：', true)).toEqual<Lyric>([{ startTime: null, text: '' }]);
