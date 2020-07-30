@@ -64,6 +64,10 @@ const getHalfSizeText = (s: string) => {
     .replace(/‘|’/g, "'");
 };
 
+const normalize = (s: string) => {
+  return s.replace(/\s+/g, ' ').replace(/　/g, ' ');
+};
+
 // https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript
 const ignoreAccented = (s: string) => {
   return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -122,7 +126,7 @@ export async function matchingLyrics(
   const { SINGER } = await config;
   const { name = '', artists = '' } = query;
 
-  const queryName = name;
+  const queryName = normalize(name);
   const queryName1 = queryName.toLowerCase();
   const queryName2 = sify(queryName1);
   const queryName3 = getHalfSizeText(queryName2);
@@ -131,7 +135,7 @@ export async function matchingLyrics(
   const queryName6 = getText(queryName3);
   const queryArtistsArr = artists
     .split(',')
-    .map((e) => e.trim())
+    .map((e) => normalize(e.trim()))
     .sort();
   const queryArtistsArr1 = queryArtistsArr.map((e) => e.toLowerCase());
   const queryArtistsArr2 = queryArtistsArr1.map((e) => sify(e));
@@ -154,7 +158,7 @@ export async function matchingLyrics(
   songs.forEach((song) => {
     let currentScore = 0;
 
-    let songName = song.name;
+    let songName = normalize(song.name);
     if (songName === queryName) {
       currentScore += 10;
     } else {
@@ -197,7 +201,7 @@ export async function matchingLyrics(
       }
     }
 
-    let songArtistsArr = song.artists.map((e) => e.name).sort();
+    let songArtistsArr = song.artists.map((e) => normalize(e.name)).sort();
     const len = queryArtistsArr.length + songArtistsArr.length;
     if (queryArtistsArr.join() === songArtistsArr.join()) {
       currentScore += 6;
