@@ -6,31 +6,37 @@ import { getLyricsBtn } from './btn';
 import { loggedPromise } from './observer';
 import config from './config';
 
-export const video = document.createElement('video');
+export const lyricVideo = document.createElement('video');
+lyricVideo.muted = true;
+lyricVideo.width = 640;
+lyricVideo.height = 640;
 
-video.muted = true;
-video.width = 640;
-video.height = 640;
+export const lyricCanvas = document.createElement('canvas');
+lyricCanvas.width = lyricVideo.width;
+lyricCanvas.height = lyricVideo.height;
+export const lyricCtx = lyricCanvas.getContext('2d')!;
+// Firefox Issue: NS_ERROR_NOT_INITIALIZED
+// https://bugzilla.mozilla.org/show_bug.cgi?id=1572422
+lyricVideo.srcObject = lyricCanvas.captureStream();
+// Failed to execute 'requestPictureInPicture' on 'HTMLVideoElement': Metadata for the video element are not loaded yet.
+// Ensure that the lyrics button can be clicked
+lyricCtx.fillRect(0, 0, 1, 1);
+lyricVideo.play();
 
-export const canvas = document.createElement('canvas');
-canvas.width = video.width;
-canvas.height = video.height;
-canvas.getContext('2d');
-video.srcObject = canvas.captureStream();
-
-export const videoMetadataloaded = new Promise((res) => {
-  video.addEventListener('loadedmetadata', () => res());
-});
+export const coverCanvas = document.createElement('canvas');
+coverCanvas.width = lyricVideo.width;
+coverCanvas.height = lyricVideo.height;
+export const coverCtx = coverCanvas.getContext('2d')!;
 
 const setPopupState = (active: boolean) => {
   const msg: Message = { type: Event.POPUP_ACTIVE, data: active };
   window.postMessage(msg, '*');
 };
 
-video.addEventListener('enterpictureinpicture', () => {
+lyricVideo.addEventListener('enterpictureinpicture', () => {
   setPopupState(true);
 });
-video.addEventListener('leavepictureinpicture', () => {
+lyricVideo.addEventListener('leavepictureinpicture', () => {
   setPopupState(false);
 });
 // When the lyrics are displayed on the page
@@ -86,14 +92,14 @@ audioPromise.then((audio) => {
   // safari not support media session, pip contorl video
   // safari turning off pip will also cause the video to pause
   let time = performance.now();
-  video.addEventListener('pause', () => {
+  lyricVideo.addEventListener('pause', () => {
     const now = performance.now();
     if (now - time > 300) {
       time = now;
       audio.pause();
     }
   });
-  video.addEventListener('play', () => {
+  lyricVideo.addEventListener('play', () => {
     // video need't seek, because it is stream
     audio.play();
   });
@@ -101,11 +107,11 @@ audioPromise.then((audio) => {
   if (navigator.mediaSession) {
     const mediaSession = navigator.mediaSession;
     audio.addEventListener('play', () => {
-      video.play();
+      lyricVideo.play();
       mediaSession.playbackState = 'playing';
     });
     audio.addEventListener('pause', () => {
-      video.pause();
+      lyricVideo.pause();
       mediaSession.playbackState = 'paused';
     });
   }

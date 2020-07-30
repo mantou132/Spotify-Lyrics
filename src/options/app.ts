@@ -15,7 +15,7 @@ import './elements/switch';
 
 import { getOptions, updateOptions } from './store';
 
-export const isSupportSmoothScroll =
+const isSupportSmoothScroll =
   (() => {
     try {
       /xx/su;

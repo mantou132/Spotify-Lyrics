@@ -10,7 +10,6 @@ export function generateCover(ctx: CanvasRenderingContext2D) {
   if (randomNumber === randomNumber2) {
     randomNumber2 = randomNumber + 1;
   } else if (randomNumber === 7 && randomNumber2 === 7) {
-    console.log('seven');
     randomNumber2 = randomNumber - 1;
   }
 

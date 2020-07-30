@@ -1,6 +1,6 @@
 import config from './config';
 
-import { video, canvas } from './element';
+import { coverCtx } from './element';
 import { insetLyricsBtn } from './btn';
 import { sharedData } from './share-data';
 import { generateCover } from './cover';
@@ -27,48 +27,46 @@ config.then(({ ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR, LOGGED_MARK_SELECTOR }
       // https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
       // YouTube video has no cors
       cover.crossOrigin = 'anonymous';
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
       // May load multiple times in a short time
       // Need to remember the last cover image
       let largeImage: HTMLImageElement;
       cover.addEventListener('load', () => {
         const drawSmallCover = () => {
-          ctx.save();
-          ctx.imageSmoothingEnabled = false;
+          coverCtx.save();
+          coverCtx.imageSmoothingEnabled = false;
           const blur = 10;
-          ctx.filter = `blur(${blur}px)`;
-          ctx.drawImage(
+          coverCtx.filter = `blur(${blur}px)`;
+          coverCtx.drawImage(
             cover,
             -blur * 2,
             -blur * 2,
-            video.width + 4 * blur,
-            video.height + 4 * blur,
+            coverCtx.canvas.width + 4 * blur,
+            coverCtx.canvas.height + 4 * blur,
           );
-          ctx.restore();
+          coverCtx.restore();
         };
         // https://github.com/mantou132/Spotify-Lyrics/issues/26#issuecomment-638019333
         const reg = /00004851(?=\w{24}$)/;
         if (cover.naturalWidth >= 480) {
-          ctx.drawImage(cover, 0, 0, video.width, video.height);
+          coverCtx.drawImage(cover, 0, 0, coverCtx.canvas.width, coverCtx.canvas.height);
         } else if (reg.test(cover.src)) {
           const largeUrl = cover.src.replace(reg, '0000b273');
           largeImage = new Image();
           largeImage.crossOrigin = 'anonymous';
           largeImage.addEventListener('load', function () {
             if (this !== largeImage) return;
-            ctx.drawImage(largeImage, 0, 0, video.width, video.height);
+            coverCtx.drawImage(largeImage, 0, 0, coverCtx.canvas.width, coverCtx.canvas.height);
           });
           largeImage.addEventListener('error', drawSmallCover);
           largeImage.src = largeUrl;
-        } else if ('filter' in ctx) {
+        } else if ('filter' in coverCtx) {
           drawSmallCover();
         } else {
-          generateCover(ctx);
+          generateCover(coverCtx);
         }
       });
       cover.addEventListener('error', () => {
-        generateCover(ctx);
+        generateCover(coverCtx);
       });
       const infoEleObserver = new MutationObserver(() => {
         sharedData.updateTrack();

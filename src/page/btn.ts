@@ -1,8 +1,7 @@
 import { sendEvent, events } from '../common/ga';
 
 import config, { localConfig } from './config';
-
-import { video, audioPromise, videoMetadataloaded } from './element';
+import { lyricVideo, audioPromise } from './element';
 import { appendStyle, css, captureException } from './utils';
 import { sharedData } from './share-data';
 import { optionsPromise } from './options';
@@ -47,10 +46,6 @@ window.addEventListener(
 );
 
 export const insetLyricsBtn = async () => {
-  // Failed to execute 'requestPictureInPicture' on 'HTMLVideoElement': Metadata for the video element are not loaded yet.
-  // Ensure that the inserted button can be clicked
-  await videoMetadataloaded;
-
   await audioPromise;
 
   const options = await optionsPromise;
@@ -67,33 +62,34 @@ export const insetLyricsBtn = async () => {
   lyricsBtn.classList.add(localConfig.LYRICS_CLASSNAME);
 
   if (document.pictureInPictureElement) {
-    if (document.pictureInPictureElement !== video) {
-      video.requestPictureInPicture().catch(() => document.exitPictureInPicture());
+    if (document.pictureInPictureElement !== lyricVideo) {
+      lyricVideo.requestPictureInPicture().catch(() => document.exitPictureInPicture());
     } else {
       lyricsBtn.classList.add(localConfig.LYRICS_ACTIVE_CLASSNAME);
     }
   }
 
   lyricsBtn.title = 'Toggle lyrics(L)';
-  if (document.pictureInPictureElement === video)
+  if (document.pictureInPictureElement === lyricVideo)
     lyricsBtn.classList.add(localConfig.LYRICS_ACTIVE_CLASSNAME);
-  video.addEventListener('enterpictureinpicture', () => {
+  lyricVideo.addEventListener('enterpictureinpicture', () => {
     lyricsBtn.classList.add(localConfig.LYRICS_ACTIVE_CLASSNAME);
   });
-  video.addEventListener('leavepictureinpicture', () => {
+  lyricVideo.addEventListener('leavepictureinpicture', () => {
     lyricsBtn.classList.remove(localConfig.LYRICS_ACTIVE_CLASSNAME);
   });
-  lyricsBtn.addEventListener('click', () => {
+  lyricsBtn.addEventListener('click', async () => {
     sendEvent(options.cid, events.clickToggleLyrics);
-    if (document.pictureInPictureElement) {
-      document.exitPictureInPicture();
-    } else {
-      video
-        .requestPictureInPicture()
-        .then(() => {
-          sharedData.updateTrack(true);
-        })
-        .catch(captureException);
+    try {
+      if (document.pictureInPictureElement) {
+        await document.exitPictureInPicture();
+        sharedData.removeLyrics();
+      } else {
+        await lyricVideo.requestPictureInPicture();
+        sharedData.updateTrack(true);
+      }
+    } catch (e) {
+      captureException(e);
     }
   });
   btnWrapper.append(lyricsBtn);

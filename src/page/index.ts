@@ -1,85 +1,59 @@
 import { Event, Options } from '../common/consts';
 import { sendEvent, events } from '../common/ga';
-
 import { PopupStore } from '../popup/store';
 
 import { renderLyricsWithCanvas, RenderOptions } from './canvas-renderer';
 import { renderLyricsWithSVG } from './svg-renderer';
-import { video, audioPromise } from './element';
+import { coverCanvas, lyricCtx, audioPromise } from './element';
 import { sharedData } from './share-data';
-
-import './pip';
-import './observer';
-
 import { optionsPromise } from './options';
 import { appendStyle } from './utils';
 import { localConfig } from './config';
 
+import './pip';
+import './observer';
+
 const INTERVAL = 80;
 
-const weakMap = new WeakMap<MediaStream, CanvasCaptureMediaStreamTrack>();
-
-const lyricCanvas = document.createElement('canvas');
-const ctx = lyricCanvas.getContext('2d');
-// Firefox Issue: NS_ERROR_NOT_INITIALIZED
-// https://bugzilla.mozilla.org/show_bug.cgi?id=1572422
-const lyricTrack = lyricCanvas.captureStream().getVideoTracks()[0] as CanvasCaptureMediaStreamTrack;
-lyricCanvas.width = video.width;
-lyricCanvas.height = video.height;
 let options: Options;
 
 const update = async () => {
-  if (!ctx) return;
   const audio = await audioPromise;
-  // Do not check `document.pictureInPictureElement`
-  // safari enters pip needs a video that is playing
-  if (
-    !(video.srcObject instanceof MediaStream) ||
-    // Safari needs to refresh the video all the time to open pip
-    (!document.pictureInPictureElement && !/Version\/.*Safari\/.*/.test(navigator.userAgent))
-  ) {
-    return setTimeout(update, INTERVAL);
-  }
-  if (!weakMap.get(video.srcObject)) {
-    // song change
-    // change coverTrack
-    const coverTrack = video.srcObject.getVideoTracks()[0] as CanvasCaptureMediaStreamTrack;
-    if (!coverTrack.canvas) {
-      // Firefox Issue: https://bugzilla.mozilla.org/show_bug.cgi?id=1231131
-      coverTrack.canvas = (video.srcObject as CanvasCaptureMediaStream).canvas;
-    }
-    const stream = new MediaStream([lyricTrack]);
-    video.srcObject = stream;
-    weakMap.set(video.srcObject, coverTrack);
-    if (video.paused) {
-      video.play();
-    }
-  }
-  const coverTrack = weakMap.get(video.srcObject) as CanvasCaptureMediaStreamTrack;
-  const drawCover = () => {
-    ctx.canvas.width = ctx.canvas.width;
-    ctx.drawImage(coverTrack.canvas, 0, 0, video.width, video.height);
-  };
 
-  if (options['only-cover'] === 'on') {
-    drawCover();
-    setTimeout(update, INTERVAL);
-    return;
-  }
+  const isOnlyCover = options['only-cover'] === 'on';
+  const isSmoothScroll = options['lyrics-smooth-scroll'] === 'on';
+  const isOpen = !!document.pictureInPictureElement;
+  const { width, height } = lyricCtx.canvas;
+
+  const drawCover = () => {
+    lyricCtx.canvas.width = width;
+    lyricCtx.drawImage(coverCanvas, 0, 0, width, height);
+  };
 
   const renderOptions: RenderOptions = {
     focusLineFontSize: Number(options['font-size']),
     align: options['lyrics-align'],
   };
 
-  if (options['lyrics-smooth-scroll'] === 'on') {
+  if (isOnlyCover) {
     drawCover();
-    renderLyricsWithCanvas(ctx, sharedData.lyrics, audio.currentTime, renderOptions);
+  } else if (isSmoothScroll) {
+    drawCover();
+    renderLyricsWithCanvas(lyricCtx, sharedData.lyrics, audio.currentTime, renderOptions);
+  } else {
+    const img = await renderLyricsWithSVG(
+      lyricCtx,
+      sharedData.lyrics,
+      audio.currentTime,
+      renderOptions,
+    );
+    drawCover();
+    img && lyricCtx.drawImage(img, 0, 0, width, height);
+  }
+
+  if (isSmoothScroll && isOpen && sharedData.lyrics?.length) {
     requestAnimationFrame(update);
   } else {
-    const img = await renderLyricsWithSVG(ctx, sharedData.lyrics, audio.currentTime, renderOptions);
-    drawCover();
-    img && ctx.drawImage(img, 0, 0, video.width, video.height);
     setTimeout(update, INTERVAL);
   }
 };
