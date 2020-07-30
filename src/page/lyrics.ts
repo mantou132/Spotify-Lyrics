@@ -305,7 +305,7 @@ export function parseLyrics(lyricStr: string, enabledCleanLyrics = false) {
       // ["[03:10]", "[03:10]", "永远高唱我歌"]
       const matchResult = line.match(/(\[.*?\])|([^\[\]]+)/g) || [line];
       const textIndex = matchResult.findIndex((slice) => !slice.endsWith(']'));
-      let text = ' ';
+      let text = '';
       if (textIndex > -1) {
         text = matchResult.splice(textIndex, 1)[0].trim();
       }
@@ -339,7 +339,7 @@ export function parseLyrics(lyricStr: string, enabledCleanLyrics = false) {
     .filter(({ text }, index, arr) => {
       if (index) {
         const prevEle = arr[index - 1];
-        if (prevEle.text === text && text === ' ') {
+        if (prevEle.text === text && text === '') {
           return false;
         }
       }

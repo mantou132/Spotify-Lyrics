@@ -193,7 +193,7 @@ export function renderLyricsWithCanvas(
     return;
   }
 
-  let currentIndex = 0;
+  let currentIndex = -1;
   let progress = 1;
   lyrics.forEach(({ startTime }, index) => {
     if (startTime && currentTime > startTime - animateDuration) {

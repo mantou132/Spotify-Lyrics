@@ -58,7 +58,7 @@ function generateSVG(lyric: Lyric, currentTime = 0, options: RenderOptions) {
     }
   `;
 
-  let currentIndex = 0;
+  let currentIndex = -1;
   let current = '';
   let before = '';
   let after = '';
