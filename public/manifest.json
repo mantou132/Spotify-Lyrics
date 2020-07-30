@@ -5,7 +5,7 @@
   "description": "__MSG_extensionDescription__",
   "default_locale": "en",
   "web_accessible_resources": [
-    "page.js"
+    "*"
   ],
   "permissions": [
     "contextMenus",

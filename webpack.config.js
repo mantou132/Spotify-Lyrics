@@ -13,7 +13,7 @@ module.exports = {
   mode: 'development',
   entry: {
     content: './src/content',
-    page: './src/page',
+    page: process.env.TEST === 'matchrate' ? './script/matchrate' : './src/page',
     popup: './src/popup',
     options: './src/options',
     background: './src/background',
