@@ -143,8 +143,8 @@ function initOffscreenCtx(ctx: CanvasRenderingContext2D) {
     offscreenCtx = offscreenCanvas.getContext('2d') as CanvasRenderingContext2D;
     gradient = offscreenCtx.createLinearGradient(0, 0, 0, ctx.canvas.height);
     gradient.addColorStop(0.08, 'transparent');
-    gradient.addColorStop(0.35, 'white');
-    gradient.addColorStop(0.65, 'white');
+    gradient.addColorStop(0.15, 'white');
+    gradient.addColorStop(0.85, 'white');
     gradient.addColorStop(0.92, 'transparent');
   }
   offscreenCtx.canvas.width = ctx.canvas.width;

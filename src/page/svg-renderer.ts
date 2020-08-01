@@ -17,11 +17,11 @@ function generateSVG(lyric: Lyric, currentTime = 0, options: RenderOptions) {
       -webkit-mask-image: linear-gradient(
         to bottom,
         transparent 8%,
-        black 35%,
-        black 65%,
+        black 15%,
+        black 85%,
         transparent 92%
       );
-      mask-image: linear-gradient(to bottom, transparent 8%, black 35%, black 65%, transparent 92%);
+      mask-image: linear-gradient(to bottom, transparent 8%, black 15%, black 85%, transparent 92%);
       width: 100%;
       height: 100%;
       display: flex;
