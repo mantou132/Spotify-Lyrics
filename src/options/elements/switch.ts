@@ -40,9 +40,9 @@ export class Switch extends GemElement {
       .btn {
         position: absolute;
         border-radius: 100%;
-        width: 1.3rem;
-        height: 1.3rem;
-        left: .13rem;
+        width: 1.3em;
+        height: 1.3em;
+        left: .13em;
         background: currentColor;
         opacity: .5;
         transition: left .2s;
@@ -57,7 +57,7 @@ export class Switch extends GemElement {
         color: rgb(${theme.primaryRGB});
       }
       input:checked ~ label .btn {
-        left: calc(100% - 1.3rem - .13rem);
+        left: calc(100% - 1.3em - .13em);
         opacity: 1;
       }
       input:focus {

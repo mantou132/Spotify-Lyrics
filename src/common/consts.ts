@@ -1,6 +1,7 @@
 import type { Value } from '../options/elements/switch';
 
 export const isProd = process.env.NODE_ENV === 'production';
+export const isWebApp = location.protocol.startsWith('http');
 
 export interface Message<T = any> {
   type: Event;
@@ -14,6 +15,7 @@ export enum Event {
   CONFIRMED_SONG = 'confirmed-song',
   GET_OPTIONS = 'get-options',
   SEND_OPTIONS = 'send-options',
+  OPEN_OPTIONS = 'open-options',
   POPUP_ACTIVE = 'popup-active',
   CAPTURE_EXCEPTION = 'capture-exception',
 }

@@ -1,7 +1,7 @@
 import { customElement, GemElement, html, refobject, RefObject } from '@mantou/gem';
 
 import { Options, LyricsPositions, LyricsAlign } from '../common/consts';
-
+import { sendEvent, events } from '../common/ga';
 import { theme } from '../common/theme';
 
 import { i18n } from '../i18n';
@@ -35,7 +35,9 @@ export class Test extends GemElement<State> {
   };
 
   async mounted() {
-    this.setState({ options: await getOptions() });
+    const options = await getOptions();
+    sendEvent(options.cid, events.openOptionsPage);
+    this.setState({ options });
   }
 
   inputHandler = async () => {
@@ -50,6 +52,8 @@ export class Test extends GemElement<State> {
       <style>
         :host {
           display: block;
+          padding: 0.8em 1.6em 1.6em;
+          color: rgb(${theme.blackRGB});
         }
         ele-form {
           margin-bottom: 1em;
@@ -58,9 +62,9 @@ export class Test extends GemElement<State> {
           border-bottom: 1px solid rgba(${theme.blackRGB}, 0.1);
         }
         .tip {
-          font-size: 1.2rem;
+          font-size: 1.2em;
           font-style: italic;
-          color: rgba(${theme.blackRGB}, 0.5);
+          opacity: 0.5;
           margin: 1em 0;
         }
       </style>

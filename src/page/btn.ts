@@ -1,4 +1,5 @@
 import { sendEvent, events } from '../common/ga';
+import { Event, Message } from '../common/consts';
 
 import config, { localConfig } from './config';
 import { lyricVideo, audioPromise } from './element';
@@ -78,6 +79,15 @@ export const insetLyricsBtn = async () => {
   lyricVideo.addEventListener('leavepictureinpicture', () => {
     lyricsBtn.classList.remove(localConfig.LYRICS_ACTIVE_CLASSNAME);
   });
+  lyricsBtn.addEventListener(
+    'contextmenu',
+    (e) => {
+      window.postMessage({ type: Event.OPEN_OPTIONS } as Message, '*');
+      e.stopPropagation();
+      e.preventDefault();
+    },
+    true,
+  );
   lyricsBtn.addEventListener('click', async () => {
     sendEvent(options.cid, events.clickToggleLyrics);
     try {

@@ -2,7 +2,7 @@
 // https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
 // Support extension origin and spotify origin, And share ga cid
 
-import { isProd } from './consts';
+import { isProd, isWebApp } from './consts';
 
 const postReq = (params: Record<string, string>) => {
   fetch('https://www.google-analytics.com/collect', {
@@ -82,7 +82,7 @@ export function sendEvent(
     ...gaRequiredPayload,
     ...payload,
     ...customOptions,
-    ...(location.protocol.startsWith('http')
+    ...(isWebApp
       ? {
           vp: `${innerWidth}x${innerHeight}`,
           cs: matchMedia('(display-mode: standalone), (display-mode: minimal-ui)').matches

@@ -21,7 +21,7 @@ export class Form extends GemElement {
       <style>
         :host {
           display: block;
-          font-size: 1.3rem;
+          font-size: 1.3em;
         }
       </style>
       <slot></slot>

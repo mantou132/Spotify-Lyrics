@@ -32,6 +32,15 @@
         "content.js"
       ],
       "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "*://open.spotify.com/*",
+        "*://music.youtube.com/*"
+      ],
+      "js": [
+        "options.js"
+      ]
     }
   ],
   "browser_action": {
