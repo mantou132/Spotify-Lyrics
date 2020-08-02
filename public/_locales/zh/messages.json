@@ -55,6 +55,14 @@
     "message": "CPU 使用率将变高，并且换行可能不正确"
   },
 
+  "optionsHDCover": {
+    "message": "使用高清封面"
+  },
+
+  "optionsHDCoverDetail": {
+    "message": "高清封面加载失败时回退到高斯模糊封面"
+  },
+
   "optionsShowLyrics": {
     "message": "仅显示封面"
   },

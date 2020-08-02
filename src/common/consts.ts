@@ -34,6 +34,7 @@ export interface Options {
   'lyrics-smooth-scroll': Value;
   'only-cover': Value;
   'clean-lyrics': Value;
+  'hd-cover': Value;
   'show-on': typeof LyricsPositions[number];
   'lyrics-align': typeof LyricsAlign[number];
   // Deprecated

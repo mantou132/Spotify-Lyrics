@@ -1,9 +1,11 @@
-import { GemElement, customElement, html, attribute } from '@mantou/gem';
+import { GemElement, customElement, html, attribute, boolattribute } from '@mantou/gem';
 
 @customElement('ele-form-item')
 export class FormItem extends GemElement {
   @attribute label: string;
   @attribute description: string;
+
+  @boolattribute disabled: boolean;
 
   render() {
     return html`
@@ -14,6 +16,10 @@ export class FormItem extends GemElement {
         }
         :host([hidden]) {
           display: none;
+        }
+        :host([disabled]) {
+          pointer-events: none;
+          opacity: 0.3;
         }
         .text {
           display: flex;

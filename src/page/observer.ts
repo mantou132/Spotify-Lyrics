@@ -1,6 +1,6 @@
 import config from './config';
 
-import { coverCtx } from './element';
+import { coverCtx, coverHDCtx } from './element';
 import { insetLyricsBtn } from './btn';
 import { sharedData } from './share-data';
 import { generateCover } from './cover';
@@ -31,42 +31,41 @@ config.then(({ ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR, LOGGED_MARK_SELECTOR }
       // Need to remember the last cover image
       let largeImage: HTMLImageElement;
       cover.addEventListener('load', () => {
-        const drawSmallCover = () => {
-          coverCtx.save();
-          coverCtx.imageSmoothingEnabled = false;
+        const drawSmallCover = (ctx: CanvasRenderingContext2D) => {
+          if (!('filter' in ctx)) {
+            return generateCover([coverCtx]);
+          }
+          const { width, height } = ctx.canvas;
+          ctx.save();
+          ctx.imageSmoothingEnabled = false;
           const blur = 10;
-          coverCtx.filter = `blur(${blur}px)`;
-          coverCtx.drawImage(
-            cover,
-            -blur * 2,
-            -blur * 2,
-            coverCtx.canvas.width + 4 * blur,
-            coverCtx.canvas.height + 4 * blur,
-          );
-          coverCtx.restore();
+          ctx.filter = `blur(${blur}px)`;
+          ctx.drawImage(cover, -blur * 2, -blur * 2, width + 4 * blur, height + 4 * blur);
+          ctx.restore();
         };
+        drawSmallCover(coverCtx);
+
+        const { width, height } = coverHDCtx.canvas;
         // https://github.com/mantou132/Spotify-Lyrics/issues/26#issuecomment-638019333
         const reg = /00004851(?=\w{24}$)/;
         if (cover.naturalWidth >= 480) {
-          coverCtx.drawImage(cover, 0, 0, coverCtx.canvas.width, coverCtx.canvas.height);
+          coverHDCtx.drawImage(cover, 0, 0, width, height);
         } else if (reg.test(cover.src)) {
           const largeUrl = cover.src.replace(reg, '0000b273');
           largeImage = new Image();
           largeImage.crossOrigin = 'anonymous';
           largeImage.addEventListener('load', function () {
             if (this !== largeImage) return;
-            coverCtx.drawImage(largeImage, 0, 0, coverCtx.canvas.width, coverCtx.canvas.height);
+            coverHDCtx.drawImage(largeImage, 0, 0, width, height);
           });
-          largeImage.addEventListener('error', drawSmallCover);
+          largeImage.addEventListener('error', () => drawSmallCover(coverHDCtx));
           largeImage.src = largeUrl;
-        } else if ('filter' in coverCtx) {
-          drawSmallCover();
         } else {
-          generateCover(coverCtx);
+          drawSmallCover(coverHDCtx);
         }
       });
       cover.addEventListener('error', () => {
-        generateCover(coverCtx);
+        generateCover([coverCtx, coverHDCtx]);
       });
       const infoEleObserver = new MutationObserver(() => {
         sharedData.updateTrack();

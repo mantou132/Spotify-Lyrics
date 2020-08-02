@@ -6,6 +6,7 @@ const defaultOptions: Options = {
   cid: `${Date.now()}-${Math.random()}`,
   'lyrics-smooth-scroll': 'on',
   'only-cover': 'off',
+  'hd-cover': 'off',
   'clean-lyrics': 'off',
   'show-on': 'pip',
   'lyrics-align': 'left',
@@ -34,18 +35,20 @@ export async function getOptions() {
 
 export async function updateOptions(value: Partial<Options>) {
   await browser.storage.sync.set(value);
+  const options = await getOptions();
   if (isWebApp) {
     window.postMessage({ type: Event.SEND_OPTIONS, data: await getOptions() }, '*');
-    return;
+  } else {
+    const manifest = browser.runtime.getManifest() as typeof import('../../public/manifest.json');
+    const tabs = await browser.tabs.query({ url: manifest.content_scripts[0].matches });
+    tabs.forEach((tab) => {
+      if (tab.id) {
+        browser.tabs.sendMessage(tab.id, {
+          type: Event.SEND_OPTIONS,
+          data: options,
+        } as Message);
+      }
+    });
   }
-  const manifest = browser.runtime.getManifest() as typeof import('../../public/manifest.json');
-  const tabs = await browser.tabs.query({ url: manifest.content_scripts[0].matches });
-  tabs.forEach(async (tab) => {
-    if (tab.id) {
-      browser.tabs.sendMessage(tab.id, {
-        type: Event.SEND_OPTIONS,
-        data: await getOptions(),
-      } as Message);
-    }
-  });
+  return options;
 }

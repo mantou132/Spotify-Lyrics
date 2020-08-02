@@ -42,7 +42,8 @@ export class Test extends GemElement<State> {
 
   inputHandler = async () => {
     if (!this.formRef.element) return;
-    updateOptions(Object.fromEntries(this.formRef.element.value));
+    const options = await updateOptions(Object.fromEntries(this.formRef.element.value));
+    this.setState({ options });
   };
   render() {
     const { options } = this.state;
@@ -132,6 +133,17 @@ export class Test extends GemElement<State> {
           <ele-switch
             name=${'only-cover' as keyof Options}
             default-value=${options['only-cover']}
+          ></ele-switch>
+        </ele-form-item>
+        <ele-form-item
+          ?hidden=${!('filter' in CanvasRenderingContext2D.prototype)}
+          ?disabled=${options['only-cover'] === 'on'}
+          label=${i18n.optionsHDCover()}
+          description=${i18n.optionsHDCoverDetail()}
+        >
+          <ele-switch
+            name=${'hd-cover' as keyof Options}
+            default-value=${options['hd-cover']}
           ></ele-switch>
         </ele-form-item>
       </ele-form>

@@ -4,7 +4,7 @@ import { PopupStore } from '../popup/store';
 
 import { renderLyricsWithCanvas, RenderOptions } from './canvas-renderer';
 import { renderLyricsWithSVG } from './svg-renderer';
-import { coverCanvas, lyricCtx, audioPromise } from './element';
+import { coverCanvas, coverHDCanvas, lyricCtx, audioPromise } from './element';
 import { sharedData } from './share-data';
 import { optionsPromise } from './options';
 import { appendStyle } from './utils';
@@ -21,13 +21,14 @@ const update = async () => {
   const audio = await audioPromise;
 
   const isOnlyCover = options['only-cover'] === 'on';
+  const isHDCover = options['hd-cover'] === 'on';
   const isSmoothScroll = options['lyrics-smooth-scroll'] === 'on';
   const isOpen = !!document.pictureInPictureElement;
   const { width, height } = lyricCtx.canvas;
 
   const drawCover = () => {
     lyricCtx.canvas.width = width;
-    lyricCtx.drawImage(coverCanvas, 0, 0, width, height);
+    lyricCtx.drawImage(isOnlyCover || isHDCover ? coverHDCanvas : coverCanvas, 0, 0, width, height);
   };
 
   const renderOptions: RenderOptions = {

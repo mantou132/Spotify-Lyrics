@@ -74,6 +74,16 @@
     "description": "Use lyrics smooth scroll detail"
   },
 
+  "optionsHDCover": {
+    "message": "Use high-resolution cover as the lyrics background",
+    "description": "Use high-resolution cover as the lyrics background"
+  },
+
+  "optionsHDCoverDetail": {
+    "message": "Fall back to the blurred cover when the high-resolution cover fails to load",
+    "description": "Use high-resolution cover as the lyrics background detail"
+  },
+
   "optionsShowLyrics": {
     "message": "Only show cover",
     "description": "Only show cover option"

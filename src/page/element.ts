@@ -28,6 +28,11 @@ coverCanvas.width = lyricVideo.width;
 coverCanvas.height = lyricVideo.height;
 export const coverCtx = coverCanvas.getContext('2d')!;
 
+export const coverHDCanvas = document.createElement('canvas');
+coverHDCanvas.width = lyricVideo.width;
+coverHDCanvas.height = lyricVideo.height;
+export const coverHDCtx = coverHDCanvas.getContext('2d')!;
+
 const setPopupState = (active: boolean) => {
   const msg: Message = { type: Event.POPUP_ACTIVE, data: active };
   window.postMessage(msg, '*');
