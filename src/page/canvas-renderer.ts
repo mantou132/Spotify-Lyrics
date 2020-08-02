@@ -134,22 +134,49 @@ function drawParagraph(ctx: CanvasRenderingContext2D, str = '', options: Options
   };
 }
 
+function drawBackground(ctx: CanvasRenderingContext2D) {
+  ctx.save();
+  ctx.fillStyle = '#000000b0';
+  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  ctx.restore();
+}
+
+export function drawNoLyrics(ctx: CanvasRenderingContext2D) {
+  ctx.save();
+  const fontSize = 32;
+  ctx.fillStyle = 'white';
+  ctx.font = `bold ${fontSize}px sans-serif`;
+  drawParagraph(ctx, 'No lyrics', {
+    vCenter: true,
+    hCenter: true,
+    left: 0,
+    right: 0,
+    lineHeight: fontSize,
+  });
+  ctx.restore();
+}
+
 let offscreenCanvas: HTMLCanvasElement;
 let offscreenCtx: CanvasRenderingContext2D;
-let gradient: CanvasGradient;
+let gradient1: CanvasGradient;
+let gradient2: CanvasGradient;
 function initOffscreenCtx(ctx: CanvasRenderingContext2D) {
   if (!offscreenCtx) {
     offscreenCanvas = document.createElement('canvas');
     offscreenCtx = offscreenCanvas.getContext('2d') as CanvasRenderingContext2D;
-    gradient = offscreenCtx.createLinearGradient(0, 0, 0, ctx.canvas.height);
-    gradient.addColorStop(0.08, 'transparent');
-    gradient.addColorStop(0.15, 'white');
-    gradient.addColorStop(0.85, 'white');
-    gradient.addColorStop(0.92, 'transparent');
+    gradient1 = offscreenCtx.createLinearGradient(0, 0, 0, ctx.canvas.height);
+    gradient1.addColorStop(0.08, 'transparent');
+    gradient1.addColorStop(0.15, 'white');
+    gradient1.addColorStop(0.85, 'white');
+    gradient1.addColorStop(0.92, 'transparent');
+    gradient2 = offscreenCtx.createLinearGradient(0, 0, 0, ctx.canvas.height);
+    gradient2.addColorStop(0.0, 'white');
+    gradient2.addColorStop(0.7, 'white');
+    gradient2.addColorStop(0.925, 'transparent');
   }
   offscreenCtx.canvas.width = ctx.canvas.width;
   offscreenCtx.canvas.height = ctx.canvas.height;
-  return { offscreenCtx, gradient };
+  return { offscreenCtx, gradient1, gradient2 };
 }
 
 export interface RenderOptions {
@@ -159,7 +186,7 @@ export interface RenderOptions {
 
 export function renderLyricsWithCanvas(
   ctx: CanvasRenderingContext2D,
-  lyrics: Lyric,
+  lyrics: Exclude<Lyric, null>,
   currentTime: number, // s
   options: RenderOptions,
 ) {
@@ -170,28 +197,13 @@ export function renderLyricsWithCanvas(
   const otherLineHeight = otherLineFontSize * 1.2;
   const otherLineMargin = otherLineFontSize * 1;
   const otherLineOpacity = 0.35;
-  const marginWidth = focusLineFontSize * 1;
+  const marginWidth = ctx.canvas.width * 0.075;
   const animateDuration = 0.3;
-  const backgroundColor = '#000000b0';
   const hCenter = options.align === 'center' ? true : false;
 
-  ctx.save();
-  ctx.fillStyle = backgroundColor;
-  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  drawBackground(ctx);
 
-  if (!lyrics) {
-    const fontSize = 32;
-    ctx.fillStyle = 'white';
-    ctx.font = `bold ${fontSize}px sans-serif`;
-    drawParagraph(ctx, 'No lyrics', {
-      vCenter: true,
-      hCenter: true,
-      left: 0,
-      right: 0,
-      lineHeight: fontSize,
-    });
-    return;
-  }
+  ctx.save();
 
   let currentIndex = -1;
   let progress = 1;
@@ -204,7 +216,7 @@ export function renderLyricsWithCanvas(
     }
   });
 
-  const { offscreenCtx, gradient } = initOffscreenCtx(ctx);
+  const { offscreenCtx, gradient1 } = initOffscreenCtx(ctx);
   offscreenCtx.save();
 
   // focus line
@@ -281,11 +293,72 @@ export function renderLyricsWithCanvas(
   }
 
   offscreenCtx.globalCompositeOperation = 'source-in';
-  offscreenCtx.fillStyle = gradient;
+  offscreenCtx.fillStyle = gradient1;
   offscreenCtx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
+  offscreenCtx.restore();
   ctx.drawImage(offscreenCtx.canvas, 0, 0);
 
   ctx.restore();
+}
+
+export function drawLoading(ctx: CanvasRenderingContext2D) {
+  drawBackground(ctx);
+}
+
+const weakLyricsTime = new WeakMap<string[], number>();
+export function drawHighlightLyrics(
+  ctx: CanvasRenderingContext2D,
+  lyrics: string[],
+  options: RenderOptions,
+) {
+  const DURATION = 10_1000;
+
+  drawBackground(ctx);
+  ctx.save();
+  if (!weakLyricsTime.has(lyrics)) {
+    weakLyricsTime.set(lyrics, performance.now());
+  }
+  const timeDiff = performance.now() - weakLyricsTime.get(lyrics)!; // ms
+  const index = Math.floor(timeDiff / DURATION) % lyrics.length;
+  const marginWidth = ctx.canvas.width * 0.075;
+
+  const { offscreenCtx, gradient2 } = initOffscreenCtx(ctx);
+  offscreenCtx.save();
+  offscreenCtx.fillStyle = 'white';
+  offscreenCtx.font = `bold ${options.focusLineFontSize}px sans-serif`;
+  drawParagraph(offscreenCtx, lyrics[index], {
+    hCenter: options.align === 'center' ? true : false,
+    lineHeight: options.focusLineFontSize * 1.3,
+    top: marginWidth,
+    left: marginWidth,
+    right: marginWidth,
+  });
+  offscreenCtx.globalCompositeOperation = 'source-in';
+  offscreenCtx.fillStyle = gradient2;
+  offscreenCtx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   offscreenCtx.restore();
+  ctx.drawImage(offscreenCtx.canvas, 0, 0);
+
+  const fontSize = ctx.canvas.width * 0.05;
+  ctx.fillStyle = 'yellow';
+  ctx.font = `bold ${fontSize}px sans-serif`;
+  const text = 'HIGHLIGHT';
+  const pos = drawParagraph(ctx, text, {
+    hCenter: true,
+    left: marginWidth,
+    right: marginWidth,
+    bottom: ctx.canvas.height - marginWidth,
+    lineHeight: fontSize,
+  });
+  ctx.strokeStyle = 'white';
+  ctx.lineWidth = 3;
+  const y = ctx.canvas.height - pos.height / 2 - marginWidth;
+  ctx.beginPath();
+  ctx.moveTo(marginWidth, y);
+  ctx.lineTo((ctx.canvas.width - pos.width) / 2 - fontSize / 2, y);
+  ctx.moveTo((ctx.canvas.width + pos.width) / 2 + fontSize / 2, y);
+  ctx.lineTo(ctx.canvas.width - marginWidth, y);
+  ctx.stroke();
+
+  ctx.restore();
 }

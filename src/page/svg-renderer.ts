@@ -1,8 +1,8 @@
 import { Lyric } from './lyrics';
 import { RenderOptions } from './canvas-renderer';
-import { svg, html, css, captureException, getSVGDataUrl } from './utils';
+import { svg, css, captureException, getSVGDataUrl } from './utils';
 
-function generateSVG(lyric: Lyric, currentTime = 0, options: RenderOptions) {
+function generateSVG(lyric: Exclude<Lyric, null>, currentTime = 0, options: RenderOptions) {
   const style = css`
     :root {
       background: #000000b0;
@@ -51,53 +51,41 @@ function generateSVG(lyric: Lyric, currentTime = 0, options: RenderOptions) {
     .after {
       top: 100%;
     }
-    .hit {
-      font-size: 0.667em;
-      text-align: center;
-    }
   `;
 
   let currentIndex = -1;
   let current = '';
   let before = '';
   let after = '';
-  let content = '';
 
-  if (!lyric) {
-    content = html`<div class="hit">No lyrics</div>`;
-  } else {
-    lyric.forEach(({ startTime }, index) => {
-      if (startTime && currentTime > startTime) {
-        currentIndex = index;
-      }
-    });
-    lyric.forEach(({ text }, index) => {
-      const safeHTML = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      if (index < currentIndex) {
-        before += `<p>${safeHTML}</p>`;
-      } else if (index > currentIndex) {
-        after += `<p>${safeHTML}</p>`;
-      } else {
-        current = `<p>${safeHTML}</p>`;
-      }
-    });
-    content = html`
-      <div class="before">
-        ${before}
-      </div>
-      ${current}
-      <div class="after">
-        ${after}
-      </div>
-    `;
-  }
+  lyric.forEach(({ startTime }, index) => {
+    if (startTime && currentTime > startTime) {
+      currentIndex = index;
+    }
+  });
+  lyric.forEach(({ text }, index) => {
+    const safeHTML = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    if (index < currentIndex) {
+      before += `<p>${safeHTML}</p>`;
+    } else if (index > currentIndex) {
+      after += `<p>${safeHTML}</p>`;
+    } else {
+      current = `<p>${safeHTML}</p>`;
+    }
+  });
   return svg`
     <svg width="640" height="640" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
       <foreignObject width="640" height="640">
         <style>${style}</style>
         <body xmlns="http://www.w3.org/1999/xhtml">
           <div class="container">
-          ${content}
+            <div class="before">
+              ${before}
+            </div>
+            ${current}
+            <div class="after">
+              ${after}
+            </div>
           </div>
         </body>
       </foreignObject>
@@ -109,7 +97,7 @@ const errorReport: Record<string, number> = {};
 
 export async function renderLyricsWithSVG(
   ctx: CanvasRenderingContext2D,
-  lyrics: Lyric,
+  lyrics: Exclude<Lyric, null>,
   currentTime: number, // s
   options: RenderOptions,
 ): Promise<HTMLImageElement | undefined> {

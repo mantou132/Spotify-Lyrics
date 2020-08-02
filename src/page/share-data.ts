@@ -4,10 +4,11 @@ import { sendEvent, events } from '../common/ga';
 import { PopupStore } from '../popup/store';
 
 import { Song, Lyric, fetchLyric, parseLyrics, matchingLyrics } from './lyrics';
-import config from './config';
+import { fetchSongList, fetchHighlightLyrics } from './genius';
 import { setSongId, getSongId } from './store';
 import { optionsPromise } from './options';
 import { captureException } from './utils';
+import config from './config';
 
 export class SharedData {
   name = '';
@@ -16,6 +17,7 @@ export class SharedData {
   aId = 0;
   list: Song[] = [];
   lyrics: Lyric = [];
+  highlightLyrics: string[] | null = [];
 
   get cd1() {
     return `${this.name} - ${this.artists}`;
@@ -25,8 +27,18 @@ export class SharedData {
     return `${this.id}`;
   }
 
-  removeLyrics() {
+  get query() {
+    return { name: this.name, artists: this.artists };
+  }
+
+  async hasHighlight() {
+    const options = await optionsPromise;
+    return options['lyrics-smooth-scroll'] === 'on';
+  }
+
+  async removeLyrics() {
     this.lyrics = [];
+    this.highlightLyrics = (await this.hasHighlight()) ? [] : null;
   }
 
   // can only modify `lyrics`
@@ -43,19 +55,31 @@ export class SharedData {
         this.lyrics = parseLyrics(lyricsStr, options['clean-lyrics'] === 'on');
       }
     }
+    if (!this.lyrics && (await this.hasHighlight())) {
+      await this.fetchHighlight();
+    }
+  }
+
+  async fetchHighlight() {
+    const fetchTransName = async () => ({});
+    const { id } = await matchingLyrics(this.query, false, fetchSongList, fetchTransName);
+    if (id === 0) {
+      this.highlightLyrics = null;
+    } else {
+      this.highlightLyrics = await fetchHighlightLyrics(id);
+    }
   }
 
   // can only modify `lyrics`/`id`/`aId`/`list`
   async matching() {
     const options = await optionsPromise;
-    const query = { name: this.name, artists: this.artists };
     sendEvent(options.cid, events.searchLyrics, { cd1: this.cd1 });
-    const { list, id } = await matchingLyrics(query);
+    const { list, id } = await matchingLyrics(this.query);
     if (id === 0) {
       sendEvent(options.cid, events.notMatch, { cd1: this.cd1 });
     }
     this.list = list;
-    this.id = (await getSongId(query)) || id;
+    this.id = (await getSongId(this.query)) || id;
     this.aId = this.id;
     await this.updateLyrics();
   }
@@ -100,7 +124,7 @@ export class SharedData {
     this.id = 0;
     this.aId = 0;
     this.list = [];
-    this.lyrics = [];
+    await this.removeLyrics();
     try {
       await this.matching();
     } catch (e) {
