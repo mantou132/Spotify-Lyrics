@@ -4,7 +4,7 @@ import { Message, Event, Options, isWebApp } from '../common/consts';
 
 const defaultOptions: Options = {
   cid: `${Date.now()}-${Math.random()}`,
-  'lyrics-smooth-scroll': 'off',
+  'lyrics-smooth-scroll': 'on',
   'only-cover': 'off',
   'clean-lyrics': 'off',
   'show-on': 'pip',
