@@ -292,13 +292,13 @@ class Line {
 
 export type Lyric = Line[] | null;
 
-function isOtherInfo(text: string) {
-  return /^(作?\s*(词|詞)|作?\s*曲|(编|編)\s*曲?|(监|監)\s*制?|制作|出品|混音|后期|翻唱|题字|文案|海报|古筝|二胡|钢琴|吉他|贝斯|.*编写|.*和声|.*提琴|.*录音|.*工程|.*混音|.*设计|.*剪辑|producers|writers).*(:|：)/i.test(
-    text,
-  );
-}
-
 export function parseLyrics(lyricStr: string, enabledCleanLyrics = false) {
+  const text1 = `作?\\s*(词|詞)|作?\\s*曲|(编|編)\\s*曲?|(监|監)\\s*制?`;
+  const text2 = '.*编写|.*和音|.*和声|.*提琴|.*录|.*工程|.*工作室|.*设计|.*剪辑';
+  const text3 = '制作|发行|出品|混音|缩混|后期|翻唱|题字|文案|海报|古筝|二胡|钢琴|吉他|贝斯|笛子';
+  const text4 = 'lrc|publish|vocal|guitar|program|produce|write';
+  const otherInfoRegexp = new RegExp(`^(${text1}|${text2}|${text3}|${text4}).*(:|：)`, 'i');
+
   const lines = lyricStr.split('\n').map((line) => line.trim());
   const lyrics = lines
     .map((line) => {
@@ -318,11 +318,11 @@ export function parseLyrics(lyricStr: string, enabledCleanLyrics = false) {
         const [key, value] = slice.match(/[^\[\]]+/g)?.[0].split(':') || [];
         const [min, sec] = [parseFloat(key), parseFloat(value)];
         if (!isNaN(min)) {
-          if (enabledCleanLyrics && isOtherInfo(text)) {
+          if (enabledCleanLyrics && otherInfoRegexp.test(text)) {
             result.text = '';
           } else {
             result.startTime = min * 60 + sec;
-            result.text = text;
+            result.text = text.replace(/（/g, '(').replace(/）/g, ')');
           }
         } else {
           result.text = enabledCleanLyrics ? '' : `${key?.toUpperCase()}: ${value}`;
