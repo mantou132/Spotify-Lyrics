@@ -7,7 +7,7 @@ const defaultOptions: Options = {
   'lyrics-smooth-scroll': 'on',
   'only-cover': 'off',
   'hd-cover': 'off',
-  'clean-lyrics': 'off',
+  'clean-lyrics': 'on',
   'show-on': 'pip',
   'lyrics-align': 'left',
   'font-size': '48',
