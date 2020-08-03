@@ -89,6 +89,7 @@ export const insetLyricsBtn = async () => {
     true,
   );
   lyricsBtn.addEventListener('click', async () => {
+    lyricsBtn.blur();
     sendEvent(options.cid, events.clickToggleLyrics);
     try {
       if (document.pictureInPictureElement) {
