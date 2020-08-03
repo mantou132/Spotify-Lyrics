@@ -14,18 +14,7 @@ const defaultOptions: Options = {
   'toggle-shortcut': 'l',
 };
 
-// Remove in future versions
-const copyLegacyOptionsPromise = new Promise(async (res) => {
-  const legacyOptions: Options = JSON.parse(localStorage.getItem('config') || '{}');
-  delete legacyOptions['strict-mode'];
-  await browser.storage.sync.set(legacyOptions);
-  localStorage.removeItem('config');
-  res();
-});
-
 export async function getOptions() {
-  await copyLegacyOptionsPromise;
-
   const options = (await browser.storage.sync.get(defaultOptions)) as Options;
   if (options.cid === defaultOptions.cid) {
     await browser.storage.sync.set({ cid: options.cid });
