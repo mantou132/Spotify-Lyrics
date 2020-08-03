@@ -120,8 +120,9 @@ async function fetchSongList(s: string): Promise<Song[]> {
 
 export async function matchingLyrics(
   query: Query,
-  fetchData = fetchSongList,
   onlySearchName = false,
+  fetchData = fetchSongList,
+  fetchTransName = fetchChineseName,
 ): Promise<{ list: Song[]; id: number }> {
   const { SINGER } = await config;
   const { name = '', artists = '' } = query;
@@ -142,7 +143,7 @@ export async function matchingLyrics(
   const queryArtistsArr3 = queryArtistsArr2.map((e) => getHalfSizeText(e));
   const queryArtistsArr4 = queryArtistsArr3.map((e) => ignoreAccented(e));
 
-  const singerAlias = onlySearchName ? {} : await fetchChineseName(queryArtistsArr2.join());
+  const singerAlias = onlySearchName ? {} : await fetchTransName(queryArtistsArr2.join());
 
   const queryArtistsArr5 = queryArtistsArr1.map((e) => singerAlias[e] || (SINGER as any)[e] || e);
 
@@ -264,7 +265,7 @@ export async function matchingLyrics(
   });
   if (id === 0) {
     if (!onlySearchName) {
-      const { id, list: listForMissingName } = await matchingLyrics(query, fetchData, true);
+      const { id, list: listForMissingName } = await matchingLyrics(query, true);
       listForMissingName.forEach((song) => {
         if (!listIdSet.has(song.id)) {
           list.push(song);

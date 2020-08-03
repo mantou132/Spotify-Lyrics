@@ -24,11 +24,12 @@ describe('matching track', () => {
       { id: 2, artists: [{ name: '张卫健', alias: [] }], name: '夜雪', album: { name: '' } },
     ];
     let search = '';
-    const getData = async (s: string) => {
+    const fetchData = async (s: string) => {
       search = s;
       return songs;
     };
-    const result = await matchingLyrics(query, getData);
+    const fetchTransName = async () => ({});
+    const result = await matchingLyrics(query, false, fetchData, fetchTransName);
     expect(search).toBe('张卫健 夜雪');
     expect(result.id).toBe(2);
   });
