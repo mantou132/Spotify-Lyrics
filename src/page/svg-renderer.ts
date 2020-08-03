@@ -42,7 +42,6 @@ function generateSVG(lyric: Lyric, currentTime = 0, options: RenderOptions) {
     .before,
     .after {
       opacity: 0.35;
-      font-size: 0.75em;
       position: absolute;
       width: 100%;
     }
