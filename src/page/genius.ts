@@ -59,6 +59,6 @@ export async function fetchHighlightLyrics(songId: number) {
   const doc = domParser.parseFromString(html, 'text/html');
   const highlights = [...doc.querySelectorAll('.lyrics a')]
     .map((e) => e.textContent?.replace(/\.?\n/g, '. ') || '')
-    .filter((e) => !!e);
+    .filter((e) => e.length > 30);
   return highlights.length ? highlights : null;
 }

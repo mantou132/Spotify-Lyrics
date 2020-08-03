@@ -47,6 +47,7 @@ const update = async () => {
   if (isOnlyCover) {
     drawCover();
   } else if (!lyrics && !highlightLyrics) {
+    drawCover();
     drawNoLyrics(lyricCtx);
   } else if (lyrics?.length) {
     if (isSmoothScroll) {
@@ -66,7 +67,7 @@ const update = async () => {
     drawHighlightLyrics(lyricCtx, highlightLyrics, renderOptions);
   }
 
-  if (isSmoothScroll && isOpen && lyrics?.length) {
+  if (!isOnlyCover && isSmoothScroll && isOpen && lyrics?.length) {
     requestAnimationFrame(update);
   } else {
     setTimeout(update, INTERVAL);

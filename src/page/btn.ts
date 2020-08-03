@@ -82,6 +82,7 @@ export const insetLyricsBtn = async () => {
   lyricsBtn.addEventListener(
     'contextmenu',
     (e) => {
+      lyricsBtn.blur();
       window.postMessage({ type: Event.OPEN_OPTIONS } as Message, '*');
       e.stopPropagation();
       e.preventDefault();

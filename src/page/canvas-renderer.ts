@@ -142,6 +142,7 @@ function drawBackground(ctx: CanvasRenderingContext2D) {
 }
 
 export function drawNoLyrics(ctx: CanvasRenderingContext2D) {
+  drawBackground(ctx);
   ctx.save();
   const fontSize = 32;
   ctx.fillStyle = 'white';
@@ -311,7 +312,7 @@ export function drawHighlightLyrics(
   lyrics: string[],
   options: RenderOptions,
 ) {
-  const DURATION = 10_1000;
+  const DURATION = 20_000;
 
   drawBackground(ctx);
   ctx.save();
