@@ -11,4 +11,13 @@ test('line break', () => {
     ' ',
     'english.',
   ]);
+  expect(getWords(`cause i can't read`)).toEqual(['cause', ' ', 'i', ' ', `can't`, ' ', 'read']);
+  expect(getWords(`callin' you`)).toEqual([`callin'`, ' ', 'you']);
+  expect(getWords(`callin 'you`)).toEqual(['callin', ' ', `'you`]);
+
+  expect(getWords('ฉันจะพาเธอไป ที่ไม่ใช่ที่ไหน')).toEqual([
+    'ฉันจะพาเธอไป',
+    ' ',
+    'ที่ไม่ใช่ที่ไหน',
+  ]);
 });

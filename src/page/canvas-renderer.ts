@@ -11,10 +11,10 @@ export function getWords(str: string) {
   let tempWord = '';
   words.forEach((word = ' ') => {
     if (word) {
-      if (tempWord && /(“|')$/.test(tempWord)) {
+      if (tempWord && /(“|')$/.test(tempWord) && word !== ' ') {
         // End of line not allowed
         tempWord += word;
-      } else if (/(,|\.|\?|:|;|'|，|。|？|：|；|”)/.test(word)) {
+      } else if (/(,|\.|\?|:|;|'|，|。|？|：|；|”)/.test(word) && tempWord !== ' ') {
         // Start of line not allowed
         tempWord += word;
       } else {
