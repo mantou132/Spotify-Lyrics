@@ -9,7 +9,6 @@ import {
   drawHighlightLyrics,
   drawLoading,
 } from './canvas-renderer';
-import { renderLyricsWithSVG } from './svg-renderer';
 import { coverCanvas, coverHDCanvas, lyricCtx, audioPromise } from './element';
 import { sharedData } from './share-data';
 import { optionsPromise } from './options';
@@ -18,8 +17,6 @@ import { localConfig } from './config';
 
 import './pip';
 import './observer';
-
-const INTERVAL = 80;
 
 let options: Options;
 
@@ -45,33 +42,23 @@ const update = async () => {
 
   const { lyrics, highlightLyrics } = sharedData;
 
-  if (isOnlyCover) {
-    drawCover();
-  } else if (!lyrics && !highlightLyrics) {
-    drawCover();
-    drawNoLyrics(lyricCtx);
-  } else if (lyrics?.length) {
-    if (isSmoothScroll) {
-      drawCover();
+  drawCover();
+  if (!isOnlyCover) {
+    if (!lyrics && !highlightLyrics) {
+      drawNoLyrics(lyricCtx);
+    } else if (lyrics?.length) {
       renderLyricsWithCanvas(lyricCtx, lyrics, audio.currentTime, renderOptions);
-    } else {
-      const img = await renderLyricsWithSVG(lyricCtx, lyrics, audio.currentTime, renderOptions);
-      drawCover();
-      img && lyricCtx.drawImage(img, 0, 0, width, height);
+    } else if (lyrics?.length === 0 || highlightLyrics?.length === 0) {
+      drawLoading(lyricCtx);
+    } else if (!lyrics && highlightLyrics?.length) {
+      drawHighlightLyrics(lyricCtx, highlightLyrics, renderOptions);
     }
-  } else if (lyrics?.length === 0 || highlightLyrics?.length === 0) {
-    // loading
-    drawCover();
-    drawLoading(lyricCtx);
-  } else if (!lyrics && highlightLyrics?.length) {
-    drawCover();
-    drawHighlightLyrics(lyricCtx, highlightLyrics, renderOptions);
   }
 
   if (!isOnlyCover && isSmoothScroll && isOpen && (lyrics?.length || highlightLyrics?.length)) {
     requestAnimationFrame(update);
   } else {
-    setTimeout(update, INTERVAL);
+    setTimeout(update, 80);
   }
 };
 

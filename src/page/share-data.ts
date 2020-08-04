@@ -31,15 +31,9 @@ export class SharedData {
     return { name: this.name, artists: this.artists };
   }
 
-  async hasHighlight() {
-    // Highlight only support canvas renderer
-    const options = await optionsPromise;
-    return options['lyrics-smooth-scroll'] === 'on';
-  }
-
-  async removeLyrics() {
+  removeLyrics() {
     this.lyrics = [];
-    this.highlightLyrics = (await this.hasHighlight()) ? [] : null;
+    this.highlightLyrics = [];
   }
 
   // can only modify `lyrics`
@@ -56,7 +50,7 @@ export class SharedData {
         this.lyrics = parseLyrics(lyricsStr, options['clean-lyrics'] === 'on');
       }
     }
-    if (!this.lyrics && (await this.hasHighlight())) {
+    if (!this.lyrics) {
       await this.fetchHighlight();
     }
   }
@@ -125,7 +119,7 @@ export class SharedData {
     this.id = 0;
     this.aId = 0;
     this.list = [];
-    await this.removeLyrics();
+    this.removeLyrics();
     try {
       await this.matching();
     } catch (e) {
