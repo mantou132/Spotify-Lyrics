@@ -27,7 +27,7 @@ The extension also supports Youtube Music, but does not support videos well.
 
 ## Compatibility
 
-- Firefox does not currently support [PiP WebAPI](https://bugzilla.mozilla.org/show_bug.cgi?id=1463402)
+- Firefox [78+](https://bugzilla.mozilla.org/show_bug.cgi?id=1361876) (Not support [PiP](https://bugzilla.mozilla.org/show_bug.cgi?id=1463402))
 - Chrome [70+](https://caniuse.com/#feat=picture-in-picture)
 - Safari [14+](https://developer.apple.com/documentation/safariservices/safari_web_extensions)
 

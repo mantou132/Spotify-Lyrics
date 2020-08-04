@@ -15,16 +15,6 @@ import './elements/switch';
 
 import { getOptions, updateOptions } from './store';
 
-const isSupportSmoothScroll =
-  (() => {
-    try {
-      /xx/su;
-      return true;
-    } catch {
-      return false;
-    }
-  })() && 'actualBoundingBoxAscent' in TextMetrics.prototype;
-
 type State = { options: Options | null };
 @customElement('options-app')
 export class Test extends GemElement<State> {
@@ -88,7 +78,6 @@ export class Test extends GemElement<State> {
           ></ele-select>
         </ele-form-item>
         <ele-form-item
-          ?hidden=${!isSupportSmoothScroll}
           label=${i18n.optionsSmoothScroll()}
           description=${i18n.optionsSmoothScrollDetail()}
         >
