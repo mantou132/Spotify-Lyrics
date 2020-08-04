@@ -40,6 +40,7 @@ const update = async () => {
   const renderOptions: RenderOptions = {
     focusLineFontSize: Number(options['font-size']),
     align: options['lyrics-align'],
+    smooth: isSmoothScroll,
   };
 
   const { lyrics, highlightLyrics } = sharedData;
@@ -67,7 +68,7 @@ const update = async () => {
     drawHighlightLyrics(lyricCtx, highlightLyrics, renderOptions);
   }
 
-  if (!isOnlyCover && isSmoothScroll && isOpen && lyrics?.length) {
+  if (!isOnlyCover && isSmoothScroll && isOpen && (lyrics?.length || highlightLyrics?.length)) {
     requestAnimationFrame(update);
   } else {
     setTimeout(update, INTERVAL);

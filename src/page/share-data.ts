@@ -32,6 +32,7 @@ export class SharedData {
   }
 
   async hasHighlight() {
+    // Highlight only support canvas renderer
     const options = await optionsPromise;
     return options['lyrics-smooth-scroll'] === 'on';
   }
