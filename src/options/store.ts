@@ -6,7 +6,7 @@ const defaultOptions: Options = {
   cid: `${Date.now()}-${Math.random()}`,
   'lyrics-smooth-scroll': 'on',
   'only-cover': 'off',
-  'hd-cover': 'off',
+  'hd-cover': 'filter' in CanvasRenderingContext2D.prototype ? 'off' : 'on',
   'clean-lyrics': 'on',
   'show-on': 'pip',
   'lyrics-align': 'left',
