@@ -105,7 +105,7 @@ export class SharedData {
   async updateTrack(isTrust = false) {
     if (!document.pictureInPictureElement) return;
 
-    const { TRACK_NAME_SELECTOR, TRACK_ARTIST_SELECTOR } = await config;
+    const { TRACK_NAME_SELECTOR, TRACK_ARTIST_SELECTOR, BTN_LIKE_SELECTOR } = await config;
     const name = document.querySelector(TRACK_NAME_SELECTOR)?.textContent;
     const artists = document.querySelector(TRACK_ARTIST_SELECTOR)?.textContent;
     if (!name || !artists) {
@@ -120,6 +120,13 @@ export class SharedData {
     this.aId = 0;
     this.list = [];
     this.removeLyrics();
+
+    const likeBtn = document.querySelector(BTN_LIKE_SELECTOR);
+    const likeBtnRect = likeBtn?.getBoundingClientRect();
+    if (!likeBtnRect?.width || !likeBtnRect.height) {
+      return;
+    }
+
     try {
       await this.matching();
     } catch (e) {
