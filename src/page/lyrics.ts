@@ -312,7 +312,8 @@ export function parseLyrics(lyricStr: string, enabledCleanLyrics = false) {
       const textIndex = matchResult.findIndex((slice) => !slice.endsWith(']'));
       let text = '';
       if (textIndex > -1) {
-        text = matchResult.splice(textIndex, 1)[0].trim();
+        text = matchResult.splice(textIndex, 1)[0];
+        text = text.trim().replace(/（/g, '(').replace(/）/g, ')');
       }
       return matchResult.map((slice) => {
         const result = new Line();
@@ -323,7 +324,7 @@ export function parseLyrics(lyricStr: string, enabledCleanLyrics = false) {
             result.text = '';
           } else {
             result.startTime = min * 60 + sec;
-            result.text = text.replace(/（/g, '(').replace(/）/g, ')');
+            result.text = text;
           }
         } else {
           result.text = enabledCleanLyrics ? '' : `${key?.toUpperCase()}: ${value}`;
