@@ -2,6 +2,8 @@ import { browser } from 'webextension-polyfill-ts';
 
 import { Message, Event, Options, isWebApp } from '../common/consts';
 
+const uiLanguage = browser.i18n.getUILanguage();
+
 const defaultOptions: Options = {
   cid: `${Date.now()}-${Math.random()}`,
   'lyrics-smooth-scroll': 'on',
@@ -12,6 +14,7 @@ const defaultOptions: Options = {
   'lyrics-align': 'left',
   'font-size': '48',
   'toggle-shortcut': 'l',
+  'traditional-chinese-lyrics': uiLanguage === 'zh-TW' || uiLanguage === 'zh-HK' ? 'on' : 'off',
 };
 
 export async function getOptions() {

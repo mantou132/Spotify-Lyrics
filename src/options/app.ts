@@ -95,6 +95,12 @@ export class Test extends GemElement<State> {
             default-value=${options['clean-lyrics']}
           ></ele-switch>
         </ele-form-item>
+        <ele-form-item label=${i18n.optionsTraditionalChineseLyrics()}>
+          <ele-switch
+            name=${'traditional-chinese-lyrics' as keyof Options}
+            default-value=${options['traditional-chinese-lyrics']}
+          ></ele-switch>
+        </ele-form-item>
         <ele-form-item
           ?hidden=${!document.pictureInPictureEnabled}
           label="${i18n.optionsLyricsPosition()}"

@@ -37,6 +37,7 @@ export interface Options {
   'hd-cover': Value;
   'show-on': typeof LyricsPositions[number];
   'lyrics-align': typeof LyricsAlign[number];
+  'traditional-chinese-lyrics': Value;
   // Deprecated
   'strict-mode'?: Value;
 }

@@ -47,7 +47,10 @@ export class SharedData {
         sendEvent(options.cid, events.noLyrics, { cd1: this.cd1, cd2: this.cd2 });
         this.lyrics = null;
       } else {
-        this.lyrics = parseLyrics(lyricsStr, options['clean-lyrics'] === 'on');
+        this.lyrics = parseLyrics(lyricsStr, {
+          cleanLyrics: options['clean-lyrics'] === 'on',
+          useTChinese: options['traditional-chinese-lyrics'] === 'on',
+        });
       }
     }
     if (!this.lyrics) {

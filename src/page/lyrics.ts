@@ -1,7 +1,6 @@
-import sify from 'chinese-conv/tongwen/tongwen-ts';
+import { sify, tify } from 'chinese-conv';
 
 import config from './config';
-
 import { captureException } from './utils';
 
 export interface Query {
@@ -293,8 +292,13 @@ class Line {
 
 export type Lyric = Line[] | null;
 
-export function parseLyrics(lyricStr: string, enabledCleanLyrics = false) {
-  const text1 = `作?\\s*(词|詞)|作?\\s*曲|(编|編)\\s*曲?|(监|監)\\s*制?`;
+export interface ParseLyricsOptions {
+  cleanLyrics?: boolean;
+  useTChinese?: boolean;
+}
+
+export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) {
+  const text1 = `作?\\s*词|作?\\s*曲|编\\s*曲?|监\\s*制?`;
   const text2 = '.*编写|.*和音|.*和声|.*提琴|.*录|.*工程|.*工作室|.*设计|.*剪辑';
   const text3 = '制作|发行|出品|混音|缩混|后期|翻唱|题字|文案|海报|古筝|二胡|钢琴|吉他|贝斯|笛子';
   const text4 = 'lrc|publish|vocal|guitar|program|produce|write';
@@ -314,20 +318,21 @@ export function parseLyrics(lyricStr: string, enabledCleanLyrics = false) {
       if (textIndex > -1) {
         text = matchResult.splice(textIndex, 1)[0];
         text = text.trim().replace(/（/g, '(').replace(/）/g, ')');
+        text = sify(text);
       }
       return matchResult.map((slice) => {
         const result = new Line();
         const [key, value] = slice.match(/[^\[\]]+/g)?.[0].split(':') || [];
         const [min, sec] = [parseFloat(key), parseFloat(value)];
         if (!isNaN(min)) {
-          if (enabledCleanLyrics && otherInfoRegexp.test(text)) {
+          if (options.cleanLyrics && otherInfoRegexp.test(text)) {
             result.text = '';
           } else {
             result.startTime = min * 60 + sec;
-            result.text = text;
+            result.text = options.useTChinese ? tify(text) : text;
           }
         } else {
-          result.text = enabledCleanLyrics ? '' : `${key?.toUpperCase()}: ${value}`;
+          result.text = options.cleanLyrics ? '' : `${key?.toUpperCase()}: ${value}`;
         }
         return result;
       });

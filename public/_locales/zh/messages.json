@@ -75,6 +75,10 @@
     "message": "隐藏作词作曲等信息"
   },
 
+  "optionsTraditionalChineseLyrics": {
+    "message": "繁体中文歌词"
+  },
+
   "optionsLyricsPosition": {
     "message": "歌词显示位置 *"
   },

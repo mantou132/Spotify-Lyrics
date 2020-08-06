@@ -1,6 +1,6 @@
-declare module 'chinese-conv/tongwen/tongwen-ts' {
-  const TS: (s: string) => string;
-  export default TS;
+declare module 'chinese-conv' {
+  export const sify: (s: string) => string;
+  export const tify: (s: string) => string;
 }
 
 interface HTMLCanvasElement {

@@ -99,6 +99,11 @@
     "description": "Show clean lyrics option detail"
   },
 
+  "optionsTraditionalChineseLyrics": {
+    "message": "Traditional chinese lyrics",
+    "description": "Lyrics use traditional chinese"
+  },
+
   "optionsLyricsPosition": {
     "message": "Where the lyrics show *",
     "description": "Lyrics position option"
