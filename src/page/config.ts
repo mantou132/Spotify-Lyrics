@@ -1,7 +1,7 @@
 /**
  * The default is Spotify configuration
  */
-import { isProd } from '../common/consts';
+import { isProd, Platform } from '../common/consts';
 
 import config from './config.json';
 import { css, svg, getSVGDataUrl } from './utils';
@@ -9,9 +9,9 @@ import { css, svg, getSVGDataUrl } from './utils';
 const REMOTE_URL =
   'https://raw.githubusercontent.com/mantou132/Spotify-Lyrics/master/src/page/config.json';
 
-// Identify service name
-// Identify the service name, the service name should be the same as in config.json
-const currentService = (() => {
+// Identify platform
+// Identify the platform, the platform should be the same as in config.json
+export const currentPlatform: Platform = (() => {
   if (location.host.includes('youtube')) return 'YOUTUBE';
   return 'SPOTIFY';
 })();
@@ -23,7 +23,7 @@ async function getConfig() {
       result = (await (await fetch(REMOTE_URL)).json()) as typeof config;
     } catch {}
   }
-  return currentService === 'SPOTIFY' ? result : Object.assign(result, result[currentService]);
+  return currentPlatform === 'SPOTIFY' ? result : Object.assign(result, result[currentPlatform]);
 }
 
 // Remote configuration, the modification takes effect immediately
@@ -47,7 +47,7 @@ export const localConfig: LocalConfig = (() => {
   const LYRICS_CLASSNAME = 'spoticon-lyrics-16';
   const LYRICS_ACTIVE_CLASSNAME = 'active';
 
-  if (currentService === 'YOUTUBE') {
+  if (currentPlatform === 'YOUTUBE') {
     const iconUrl = getSVGDataUrl(svg`
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="18px" height="18px">
         <path d="M12 20c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2s-2 .9-2 2v12c0 1.1.9 2 2 2zm-6 0c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2s-2 .9-2 2v4c0 1.1.9 2 2 2zm10-9v7c0 1.1.9 2 2 2s2-.9 2-2v-7c0-1.1-.9-2-2-2s-2 .9-2 2z"/>

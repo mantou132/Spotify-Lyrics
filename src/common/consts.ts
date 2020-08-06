@@ -42,4 +42,6 @@ export interface Options {
   'strict-mode'?: Value;
 }
 
+export type Platform = 'SPOTIFY' | 'YOUTUBE';
+
 export const USER_SELECT_USE_LOCAL = true;
