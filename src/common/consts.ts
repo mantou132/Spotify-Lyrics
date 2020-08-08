@@ -43,5 +43,3 @@ export interface Options {
 }
 
 export type Platform = 'SPOTIFY' | 'YOUTUBE';
-
-export const USER_SELECT_USE_LOCAL = true;

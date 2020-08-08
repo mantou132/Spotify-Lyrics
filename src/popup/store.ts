@@ -1,7 +1,7 @@
 import { browser } from 'webextension-polyfill-ts';
 import { createStore, updateStore } from '@mantou/gem';
 
-import { Event, Message, USER_SELECT_USE_LOCAL } from '../common/consts';
+import { Event, Message } from '../common/consts';
 
 import { Song } from '../page/lyrics';
 
@@ -37,7 +37,7 @@ export function sendMessage(msg: Message) {
 }
 
 export function changeSong(id: number) {
-  updateStore(store, { id, aId: USER_SELECT_USE_LOCAL ? id : store.aId });
+  updateStore(store, { id, aId: store.aId });
 
   const msg: Message<PopupStore> = {
     type: Event.SELECT_SONG,

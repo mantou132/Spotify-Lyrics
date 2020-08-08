@@ -13,6 +13,7 @@
     "build": "cross-env NODE_ENV=production webpack",
     "build:xpi": "npm run build && web-ext --config web-ext.config.js sign",
     "build:zip": "npm run build && web-ext --config web-ext.config.js build",
+    "start:firebase": "npm --prefix functions run build && firebase emulators:start",
     "s:singer": "deno run --allow-read --allow-net script/singer.ts"
   },
   "author": "mantou132",

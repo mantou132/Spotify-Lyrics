@@ -1,4 +1,4 @@
-import { Message, Event, USER_SELECT_USE_LOCAL } from '../common/consts';
+import { Message, Event } from '../common/consts';
 import { sendEvent, events } from '../common/ga';
 
 import { PopupStore } from '../popup/store';
@@ -100,7 +100,6 @@ export class SharedData {
       await this.matching();
       this.sendToContentScript();
     } else {
-      if (USER_SELECT_USE_LOCAL) this.confirmedMId();
       await this.updateLyrics();
     }
   }

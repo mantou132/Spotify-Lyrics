@@ -15,5 +15,5 @@
     "lib": ["es2020", "dom", "DOM.Iterable"],
     "typeRoots": ["node_modules/@types", "src/types"]
   },
-  "include": ["src", "script"]
+  "include": ["src", "script", "functions"]
 }
