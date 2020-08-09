@@ -91,7 +91,7 @@ audioPromise.then((audio) => {
 
   // when next track
   audio.addEventListener('emptied', () => {
-    sharedData.removeLyrics();
+    sharedData.resetData();
   });
 
   // safari not support media session, pip contorl video
