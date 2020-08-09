@@ -46,8 +46,19 @@ export function changeSong(id: number) {
   sendMessage(msg);
 }
 
+export function cancelMId() {
+  updateStore(store, { id: store.aId });
+
+  const msg: Message<PopupStore> = {
+    type: Event.SELECT_SONG,
+    data: store,
+  };
+  sendMessage(msg);
+}
+
 export function confirmedMId() {
   sendMessage({ type: Event.CONFIRMED_SONG });
+  setTimeout(window.close, 300);
 }
 
 browser.runtime.onMessage.addListener((msg: Message) => {

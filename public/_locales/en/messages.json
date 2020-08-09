@@ -24,9 +24,9 @@
     "description": "Save user selection"
   },
 
-  "popupConfirmReset" : {
-    "message": "Reset",
-    "description": "Automatically match lyrics"
+  "popupConfirmCancel" : {
+    "message": "Cancel",
+    "description": "Cancel manually set lyrics"
   },
 
   "popupMatchDescription1": {

@@ -19,8 +19,8 @@
     "message": "保存"
   },
 
-  "popupConfirmReset" : {
-    "message": "重设"
+  "popupConfirmCancel" : {
+    "message": "取消"
   },
 
   "popupMatchDescription1": {

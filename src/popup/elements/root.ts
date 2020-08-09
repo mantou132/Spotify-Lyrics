@@ -2,7 +2,7 @@ import { html, customElement, connectStore, GemElement } from '@mantou/gem';
 
 import './list';
 
-import { store, changeSong, confirmedMId } from '../store';
+import { store, changeSong, confirmedMId, cancelMId } from '../store';
 import { events, sendEvent } from '../../common/ga';
 import { getOptions } from '../../options/store';
 import { theme } from '../../common/theme';
@@ -53,6 +53,9 @@ export class SongList extends GemElement {
           margin: 0;
           flex-grow: 1;
         }
+        .highlight {
+          color: rgba(${theme.primaryRGB}, 1);
+        }
         .header .button {
           border-bottom: 1px dotted;
         }
@@ -89,9 +92,9 @@ export class SongList extends GemElement {
       <div class="header">
         ${store.id && store.id !== store.aId
           ? html`
-              <p>${i18n.popupConfirmTip()}</p>
-              <button @click=${this.autoSelect}>
-                ${i18n.popupConfirmReset()}
+              <p class="highlight">${i18n.popupConfirmTip()}</p>
+              <button @click=${cancelMId}>
+                ${i18n.popupConfirmCancel()}
               </button>
               <button @click=${confirmedMId}>
                 ${i18n.popupConfirmSave()}
