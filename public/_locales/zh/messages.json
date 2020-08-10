@@ -63,6 +63,14 @@
     "message": "高清封面加载失败时回退到高斯模糊封面"
   },
 
+  "optionsUseUnreviewedLyrics": {
+    "message": "使用未审核的歌词"
+  },
+
+  "optionsUseUnreviewedLyricsDetail": {
+    "message": "使用其他用户上传但没有经过审核的歌词"
+  },
+
   "optionsShowLyrics": {
     "message": "仅显示封面"
   },

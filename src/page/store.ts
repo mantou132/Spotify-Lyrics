@@ -1,7 +1,7 @@
 /**
  * temporary plan: Stored in webpage localStorage
  */
-import { Lyric, LyricsResponse } from '../../functions/src/type';
+import type { Lyric, LyricsResponse } from '../../functions/src/type';
 
 import { Query } from './lyrics';
 import { optionsPromise } from './options';
@@ -37,7 +37,7 @@ optionsPromise.then(async ({ cid }) => {
   }
 });
 
-export async function getSongId(data: Query) {
+export async function getSong(data: Query) {
   const { cid } = await optionsPromise;
   const res: LyricsResponse<Lyric | undefined> = await (
     await request('/getLyric', {
@@ -47,15 +47,16 @@ export async function getSongId(data: Query) {
       platform: currentPlatform,
     })
   ).json();
-  return res.data?.neteaseID || 0;
+  return res.data;
 }
 
-export async function setSongId(data: Query & { id: number }) {
+export async function setSong(data: Query & { id?: number; lyric?: string }) {
   const { cid } = await optionsPromise;
   await request('/setLyric', {
     name: data.name,
     artists: data.artists,
     neteaseID: data.id,
+    lyric: data.lyric,
     user: cid,
     platform: currentPlatform,
   });

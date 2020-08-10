@@ -142,6 +142,15 @@ export class Test extends GemElement<State> {
             default-value=${options['hd-cover']}
           ></ele-switch>
         </ele-form-item>
+        <ele-form-item
+          label=${i18n.optionsUseUnreviewedLyrics()}
+          description=${i18n.optionsUseUnreviewedLyricsDetail()}
+        >
+          <ele-switch
+            name=${'use-unreviewed-lyrics' as keyof Options}
+            default-value=${options['use-unreviewed-lyrics']}
+          ></ele-switch>
+        </ele-form-item>
       </ele-form>
       <p class="tip">${i18n.optionsSaveTip()}</p>
     `;

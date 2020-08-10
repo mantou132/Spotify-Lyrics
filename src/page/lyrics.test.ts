@@ -6,6 +6,7 @@ describe('parse lyrics', () => {
     expect(parseLyrics(' ')).toEqual<Lyric>(null);
     expect(parseLyrics('\n')).toEqual<Lyric>(null);
     expect(parseLyrics('BY:MT')).toEqual<Lyric>(null);
+    expect(parseLyrics('BY:MT\nBY:MT')).toEqual<Lyric>(null);
     expect(parseLyrics('[ar:Beyond]')).toEqual<Lyric>([{ startTime: null, text: 'AR: Beyond' }]);
   });
   test('lyrics line', () => {

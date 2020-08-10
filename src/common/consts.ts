@@ -35,6 +35,7 @@ export interface Options {
   'only-cover': Value;
   'clean-lyrics': Value;
   'hd-cover': Value;
+  'use-unreviewed-lyrics': Value;
   'show-on': typeof LyricsPositions[number];
   'lyrics-align': typeof LyricsAlign[number];
   'traditional-chinese-lyrics': Value;

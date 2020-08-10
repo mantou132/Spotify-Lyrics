@@ -50,15 +50,23 @@ export async function fetchSongList(q: string): Promise<Song[]> {
 }
 
 const domParser = new DOMParser();
-export async function fetchHighlightLyrics(songId: number) {
-  const html = await (
-    await fetch(`https://cors-anywhere.herokuapp.com/https://genius.com/songs/${songId}`, {
+export async function fetchGeniusLyrics(songId: number) {
+  const res = await fetch(
+    `https://cors-anywhere.herokuapp.com/https://genius.com/songs/${songId}`,
+    {
       headers: { 'x-requested-with': location.origin },
-    })
-  ).text();
+    },
+  );
+  if (!res.ok) return { text: '', highlights: null };
+  const html = await res.text();
   const doc = domParser.parseFromString(html, 'text/html');
-  const highlights = [...doc.querySelectorAll('.lyrics a')]
-    .map((e) => e.textContent?.replace(/\.?\n/g, '. ') || '')
+  const lyricsEle = doc.querySelector('.lyrics') as HTMLElement | null;
+  if (!lyricsEle) {
+    throw new Error('Not found genius lyrics element');
+  }
+  const text = lyricsEle.innerText;
+  const highlights = [...lyricsEle.querySelectorAll('a')]
+    .map((e) => e.innerText.replace(/\.?\n/g, '. ').trim())
     .filter((e) => e.length > 30);
-  return highlights.length ? highlights : null;
+  return { text, highlights: highlights.length ? highlights : null };
 }

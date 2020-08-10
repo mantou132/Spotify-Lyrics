@@ -6,6 +6,7 @@ import { lyricVideo, audioPromise } from './element';
 import { appendStyle, css, captureException } from './utils';
 import { sharedData } from './share-data';
 import { optionsPromise } from './options';
+import { openEditor } from './editor';
 
 config.then(({ PIP_BTN_SELECTOR }) => {
   appendStyle(css`
@@ -89,6 +90,10 @@ export const insetLyricsBtn = async () => {
     },
     true,
   );
+  lyricsBtn.addEventListener('auxclick', () => {
+    lyricsBtn.blur();
+    openEditor();
+  });
   lyricsBtn.addEventListener('click', async () => {
     lyricsBtn.blur();
     sendEvent(options.cid, events.clickToggleLyrics);

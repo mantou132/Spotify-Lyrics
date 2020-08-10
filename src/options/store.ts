@@ -13,6 +13,7 @@ const defaultOptions: Options = {
   'show-on': 'pip',
   'lyrics-align': 'left',
   'font-size': '48',
+  'use-unreviewed-lyrics': 'on',
   'toggle-shortcut': 'l',
   'traditional-chinese-lyrics': uiLanguage === 'zh-TW' || uiLanguage === 'zh-HK' ? 'on' : 'off',
 };

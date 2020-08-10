@@ -4,8 +4,8 @@ import { sendEvent, events } from '../common/ga';
 import { PopupStore } from '../popup/store';
 
 import { Song, Lyric, fetchLyric, parseLyrics, matchingLyrics } from './lyrics';
-import { fetchSongList, fetchHighlightLyrics } from './genius';
-import { setSongId, getSongId } from './store';
+import { fetchSongList, fetchGeniusLyrics } from './genius';
+import { setSong, getSong } from './store';
 import { optionsPromise } from './options';
 import { captureException } from './utils';
 import config from './config';
@@ -17,6 +17,7 @@ export class SharedData {
   aId = 0;
   list: Song[] = [];
   lyrics: Lyric = [];
+  text = '';
   highlightLyrics: string[] | null = [];
 
   get cd1() {
@@ -36,15 +37,16 @@ export class SharedData {
     this.aId = 0;
     this.list = [];
     this.lyrics = [];
+    this.text = '';
     this.highlightLyrics = [];
   }
 
   // can only modify `lyrics`
   async updateLyrics() {
-    const options = await optionsPromise;
     if (this.id === 0) {
       this.lyrics = null;
     } else {
+      const options = await optionsPromise;
       const lyricsStr = await fetchLyric(this.id);
       if (lyricsStr === '') {
         sendEvent(options.cid, events.noLyrics, { cd1: this.cd1, cd2: this.cd2 });
@@ -56,9 +58,6 @@ export class SharedData {
         });
       }
     }
-    if (!this.lyrics) {
-      await this.fetchHighlight();
-    }
   }
 
   async fetchHighlight() {
@@ -67,27 +66,50 @@ export class SharedData {
     if (id === 0) {
       this.highlightLyrics = null;
     } else {
-      this.highlightLyrics = await fetchHighlightLyrics(id);
+      const { text, highlights } = await fetchGeniusLyrics(id);
+      this.text = text;
+      this.highlightLyrics = highlights;
     }
   }
 
   // can only modify `lyrics`/`id`/`aId`/`list`
   async matching() {
     const options = await optionsPromise;
+    const parseLyricsOptions = {
+      cleanLyrics: options['clean-lyrics'] === 'on',
+      useTChinese: options['traditional-chinese-lyrics'] === 'on',
+    };
     sendEvent(options.cid, events.searchLyrics, { cd1: this.cd1 });
     const { list, id } = await matchingLyrics(this.query);
     if (id === 0) {
       sendEvent(options.cid, events.notMatch, { cd1: this.cd1 });
     }
     this.list = list;
-    this.id = (await getSongId(this.query)) || id;
-    this.aId = this.id;
-    await this.updateLyrics();
+    const remoteData = await getSong(this.query);
+    if (remoteData?.user === options.cid && remoteData.lyric) {
+      this.lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
+    } else {
+      this.id =
+        (remoteData?.user === options.cid
+          ? remoteData?.neteaseID || id
+          : id || remoteData?.neteaseID) || 0;
+      this.aId = this.id;
+      await this.updateLyrics();
+    }
+    // User-made lyrics need to be reviewed
+    if (
+      !this.lyrics &&
+      remoteData?.lyric &&
+      (options['use-unreviewed-lyrics'] === 'on' || remoteData.reviewed)
+    ) {
+      this.lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
+    }
+    await this.fetchHighlight();
   }
 
   async confirmedMId() {
     const { name, artists, id } = this;
-    await setSongId({ name, artists, id });
+    await setSong({ name, artists, id });
     this.aId = id;
     this.sendToContentScript();
   }
@@ -99,7 +121,7 @@ export class SharedData {
     this.lyrics = [];
     if (id === 0) {
       // reset
-      await setSongId({ name, artists, id });
+      await setSong({ name, artists, id });
       await this.matching();
       this.sendToContentScript();
     } else {

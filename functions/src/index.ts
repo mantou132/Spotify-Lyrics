@@ -33,6 +33,7 @@ export const getLyric = functions.https.onRequest(
     }
     const lyricsRef = db.collection(COLLECTION);
     const query = lyricsRef
+      .orderBy('reviewed', 'desc')
       .where('name', '==', params.name)
       .where('artists', '==', params.artists)
       .where('platform', '==', params.platform);

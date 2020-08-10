@@ -84,6 +84,16 @@
     "description": "Use high-resolution cover as the lyrics background detail"
   },
 
+  "optionsUseUnreviewedLyrics": {
+    "message": "Use unreviewed lyrics",
+    "description": "Use unreviewed lyrics"
+  },
+
+  "optionsUseUnreviewedLyricsDetail": {
+    "message": "Use lyrics uploaded by other users but not reviewed",
+    "description": "Use unreviewed lyrics detail"
+  },
+
   "optionsShowLyrics": {
     "message": "Only show cover",
     "description": "Only show cover option"
