@@ -1,4 +1,5 @@
-import { customElement, GemElement, html, refobject, RefObject } from '@mantou/gem';
+import { customElement, refobject, RefObject } from '@mantou/gem/lib/decorators';
+import { GemElement, html } from '@mantou/gem/lib/element';
 
 import { Options, LyricsPositions, LyricsAlign } from '../common/consts';
 import { sendEvent, events } from '../common/ga';

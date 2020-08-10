@@ -1,4 +1,5 @@
-import { GemElement, customElement, html } from '@mantou/gem';
+import { customElement } from '@mantou/gem/lib/decorators';
+import { GemElement, html } from '@mantou/gem/lib/element';
 
 @customElement('ele-form')
 export class Form extends GemElement {

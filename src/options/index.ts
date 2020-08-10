@@ -1,7 +1,7 @@
 // https://bugs.chromium.org/p/chromium/issues/detail?id=390807
 import '@webcomponents/webcomponentsjs';
 import { browser } from 'webextension-polyfill-ts';
-import { render, html } from '@mantou/gem';
+import { render, html } from '@mantou/gem/lib/element';
 
 import { isWebApp } from '../common/consts';
 

@@ -1,14 +1,13 @@
+import { GemElement, html } from '@mantou/gem/lib/element';
 import {
-  GemElement,
   customElement,
-  html,
   attribute,
   property,
   refobject,
   RefObject,
   emitter,
   Emitter,
-} from '@mantou/gem';
+} from '@mantou/gem/lib/decorators';
 
 import { theme } from '../../common/theme';
 

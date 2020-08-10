@@ -1,4 +1,5 @@
-import { GemElement, customElement, html, attribute, refobject, RefObject } from '@mantou/gem';
+import { GemElement, html } from '@mantou/gem/lib/element';
+import { customElement, attribute, refobject, RefObject } from '@mantou/gem/lib/decorators';
 
 import { theme } from '../../common/theme';
 
