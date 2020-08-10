@@ -264,7 +264,12 @@ export async function matchingLyrics(
   });
   if (id === 0) {
     if (!onlySearchName) {
-      const { id, list: listForMissingName } = await matchingLyrics(query, true);
+      const { id, list: listForMissingName } = await matchingLyrics(
+        query,
+        true,
+        fetchData,
+        fetchTransName,
+      );
       listForMissingName.forEach((song) => {
         if (!listIdSet.has(song.id)) {
           list.push(song);
