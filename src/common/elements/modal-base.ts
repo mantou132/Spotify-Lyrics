@@ -75,7 +75,7 @@ export class Modal extends GemElement {
         .body > :first-child {
           width: 45em;
           max-height: 90vh;
-          overflow: scroll;
+          overflow: auto;
         }
       </style>
       <div class="root">
