@@ -38,8 +38,11 @@ Requirement: [Node.js](https://nodejs.org)
 ```bash
 # install dependencies
 npm install
+npm --prefix functions install
 # start develop
 npm run start
+# optional: start firebase function simulation
+npm run start:firebase
 ```
 
 Build:
