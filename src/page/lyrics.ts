@@ -49,7 +49,10 @@ const charCodeTotal = (s: string) => {
 };
 
 const getText = (s: string) => {
-  const text = s.replace(/\(.*\)|（.*）|- .*remix$/i, '').trim();
+  const text = s
+    .replace(/\(.*\)|（.*）|- .*remix$/i, '')
+    .replace(/\s*\/\s*/g, '/')
+    .trim();
   return text.length > 2 ? text : s;
 };
 
