@@ -90,9 +90,12 @@ export const insetLyricsBtn = async () => {
     },
     true,
   );
-  lyricsBtn.addEventListener('auxclick', () => {
-    lyricsBtn.blur();
-    openEditor();
+  lyricsBtn.addEventListener('auxclick', (e) => {
+    // This event is first triggered when right-clicking in Firefox
+    if (e.button === 1) {
+      lyricsBtn.blur();
+      openEditor();
+    }
   });
   lyricsBtn.addEventListener('click', async () => {
     lyricsBtn.blur();
