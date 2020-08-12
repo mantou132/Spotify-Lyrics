@@ -44,16 +44,15 @@ export class EditorApp extends GemElement<State> {
   @emitter close: Emitter;
   @refobject tbody: RefObject<HTMLTableSectionElement>;
 
-  originLyrics: Lyric = null;
+  originLyrics = sharedData.lyrics;
+  initialLyrics = sharedData.lyrics || initLyrics(sharedData.text);
 
   state: State = {
     currentIndex: -1,
-    lyrics: sharedData.lyrics || initLyrics(sharedData.text),
+    lyrics: this.initialLyrics,
   };
 
   mounted() {
-    this.originLyrics = sharedData.lyrics;
-
     let resetTimer = 0;
     const timeUpdateHandler = async () => {
       const audio = await audioPromise;
@@ -77,7 +76,7 @@ export class EditorApp extends GemElement<State> {
       const audio = await audioPromise;
       const lyrics = initLyrics(e.clipboardData?.getData('text') || '');
       audio.currentTime = 0;
-      this.setState({ currentIndex: -1, lyrics });
+      this.setState({ lyrics, currentIndex: -1 });
     };
     document.addEventListener('paste', pasteHandler);
     return async () => {
@@ -122,7 +121,9 @@ export class EditorApp extends GemElement<State> {
     });
     const audio = await audioPromise;
     audio.currentTime = 0;
-    this.setState({ lyrics: initLyrics(sharedData.text), currentIndex: -1 });
+    const lyrics = initLyrics(sharedData.text);
+    this.setState({ lyrics, currentIndex: -1 });
+    sharedData.lyrics = lyrics;
   };
 
   saveRemote = async () => {
@@ -191,15 +192,15 @@ export class EditorApp extends GemElement<State> {
         .marked {
           opacity: 1;
         }
-        .marked .timestamp {
-          cursor: pointer;
-        }
         .timestamp {
           font-family: sans-serif;
           user-select: none;
         }
         .placeholder {
           opacity: 0.5;
+        }
+        .timestamp:not(.placeholder) {
+          cursor: pointer;
         }
         .btns {
           display: flex;
