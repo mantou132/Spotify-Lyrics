@@ -89,10 +89,7 @@ export class SharedData {
     if (remoteData?.user === options.cid && remoteData.lyric) {
       this.lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
     } else {
-      this.id =
-        (remoteData?.user === options.cid
-          ? remoteData?.neteaseID || id
-          : id || remoteData?.neteaseID) || 0;
+      this.id = remoteData?.neteaseID || id || 0;
       this.aId = this.id;
       await this.updateLyrics();
     }
