@@ -86,19 +86,19 @@ export class SharedData {
     }
     this.list = list;
     const remoteData = await getSong(this.query);
+    const reviewed = options['use-unreviewed-lyrics'] === 'on' || remoteData?.reviewed;
     if (remoteData?.user === options.cid && remoteData.lyric) {
       this.lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
     } else {
-      this.id = remoteData?.neteaseID || id || 0;
+      this.id =
+        (remoteData?.user === options.cid || reviewed
+          ? remoteData?.neteaseID || id
+          : id || remoteData?.neteaseID) || 0;
       this.aId = this.id;
       await this.updateLyrics();
     }
     // User-made lyrics need to be reviewed
-    if (
-      !this.lyrics &&
-      remoteData?.lyric &&
-      (options['use-unreviewed-lyrics'] === 'on' || remoteData.reviewed)
-    ) {
+    if (!this.lyrics && remoteData?.lyric && reviewed) {
       this.lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
     }
     await this.fetchHighlight();
