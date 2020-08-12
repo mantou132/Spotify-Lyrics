@@ -31,9 +31,17 @@ export const events = {
     ec: 'Load',
     ea: 'NotMatchLyrics',
   },
+  useRemoteMatch: {
+    ec: 'Load',
+    ea: 'UseRemoteMatch',
+  },
   noLyrics: {
     ec: 'Load',
     ea: 'NoLyrics',
+  },
+  useRemoteLyrics: {
+    ec: 'Load',
+    ea: 'UseRemoteLyrics',
   },
   selectTrack: {
     ec: 'Click',

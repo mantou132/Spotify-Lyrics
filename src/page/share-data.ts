@@ -97,9 +97,13 @@ export class SharedData {
       this.aId = this.id;
       await this.updateLyrics();
     }
+    if (this.lyrics && this.id !== id) {
+      sendEvent(options.cid, events.useRemoteMatch);
+    }
     // User-made lyrics need to be reviewed
     if (!this.lyrics && remoteData?.lyric && reviewed) {
       this.lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
+      sendEvent(options.cid, events.useRemoteLyrics);
     }
     await this.fetchHighlight();
   }
