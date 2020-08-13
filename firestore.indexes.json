@@ -1,4 +1,26 @@
 {
-  "indexes": [],
+  "indexes": [
+    {
+      "collectionGroup": "lyrics-v3",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "name", "order": "ASCENDING" },
+        { "fieldPath": "artists", "order": "ASCENDING" },
+        { "fieldPath": "platform", "order": "ASCENDING" },
+        { "fieldPath": "user", "order": "ASCENDING" },
+        { "fieldPath": "reviewed", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "lyrics-v3",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "name", "order": "ASCENDING" },
+        { "fieldPath": "artists", "order": "ASCENDING" },
+        { "fieldPath": "platform", "order": "ASCENDING" },
+        { "fieldPath": "reviewed", "order": "DESCENDING" }
+      ]
+    }
+  ],
   "fieldOverrides": []
 }

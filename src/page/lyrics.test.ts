@@ -31,7 +31,7 @@ describe('matching track', () => {
     ];
     let search = '';
     const fetchData = async (s: string) => {
-      search = s;
+      if (!search) search = s;
       return songs;
     };
     const fetchTransName = async () => ({});

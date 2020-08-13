@@ -40,34 +40,28 @@ interface SongResult {
   };
 }
 
-const charCodeTotal = (s: string) => {
-  let code = 0;
-  for (let i = 0; i < s.length; i++) {
-    code += s.charCodeAt(i);
-  }
-  return code;
-};
-
-const getText = (s: string) => {
-  const text = s
-    .replace(/\(.*\)|（.*）|- .*remix$/i, '')
-    .replace(/\s*\/\s*/g, '/')
-    .trim();
-  return text.length > 2 ? text : s;
-};
-
-const getHalfSizeText = (s: string) => {
+const normalize = (s: string) => {
   return s
     .replace(/（/g, '(')
     .replace(/）/g, ')')
+    .replace(/【/g, '[')
+    .replace(/】/g, ']')
     .replace(/，/g, ',')
     .replace(/。/g, '.')
     .replace(/、/g, ',')
-    .replace(/‘|’/g, "'");
+    .replace(/‘|’/g, "'")
+    .replace(/　/g, ' ')
+    .replace(/\//g, ' ')
+    .replace(/-/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
 };
 
-const normalize = (s: string) => {
-  return s.replace(/\s+/g, ' ').replace(/　/g, ' ');
+const plainText = (s: string) => {
+  return s
+    .replace(/\(|\)|\[|\]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
 };
 
 // https://stackoverflow.com/questions/990904/remove-accents-diacritics-in-a-string-in-javascript
@@ -77,6 +71,13 @@ const ignoreAccented = (s: string) => {
 
 const removeSongFeat = (s: string) => {
   return s.replace(/\(?(feat|with)\.?\s.*\)?$/i, '').trim();
+};
+
+const getText = (s: string) => {
+  return s
+    .replace(/\(.*?\)|\[.*?\]|\sremix$|\sversion$/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
 };
 
 async function fetchChineseName(s: string) {
@@ -94,7 +95,7 @@ async function fetchChineseName(s: string) {
     const artists = result?.artists || [];
     artists.forEach((artist) => {
       const alia = artist.alias
-        .map((e) => e.toLowerCase())
+        .map((e) => sify(e).toLowerCase())
         .sort()
         .join();
       // Chinese singer's English name as an alias
@@ -125,33 +126,32 @@ export async function matchingLyrics(
   onlySearchName = false,
   fetchData = fetchSongList,
   fetchTransName = fetchChineseName,
-): Promise<{ list: Song[]; id: number }> {
+): Promise<{ list: Song[]; id: number; score: number }> {
   const { SINGER } = await config;
   const { name = '', artists = '' } = query;
 
   const queryName = normalize(name);
   const queryName1 = queryName.toLowerCase();
   const queryName2 = sify(queryName1);
-  const queryName3 = getHalfSizeText(queryName2);
+  const queryName3 = plainText(queryName2);
   const queryName4 = ignoreAccented(queryName3);
   const queryName5 = removeSongFeat(queryName4);
-  const queryName6 = getText(queryName3);
+  const queryName6 = getText(removeSongFeat(ignoreAccented(queryName2)));
   const queryArtistsArr = artists
     .split(',')
     .map((e) => normalize(e.trim()))
     .sort();
   const queryArtistsArr1 = queryArtistsArr.map((e) => e.toLowerCase());
   const queryArtistsArr2 = queryArtistsArr1.map((e) => sify(e));
-  const queryArtistsArr3 = queryArtistsArr2.map((e) => getHalfSizeText(e));
-  const queryArtistsArr4 = queryArtistsArr3.map((e) => ignoreAccented(e));
+  const queryArtistsArr3 = queryArtistsArr2.map((e) => ignoreAccented(e));
 
-  const singerAlias = onlySearchName ? {} : await fetchTransName(queryArtistsArr2.join());
+  const singerAlias = await fetchTransName(queryArtistsArr2.join());
 
-  const queryArtistsArr5 = queryArtistsArr1.map((e) => singerAlias[e] || (SINGER as any)[e] || e);
+  const queryArtistsArr4 = queryArtistsArr1
+    .map((e) => singerAlias[e] || (SINGER as Record<string, string>)[e] || e)
+    .map((e) => sify(e).toLowerCase());
 
-  const searchString = onlySearchName
-    ? queryName5
-    : `${sify(queryArtistsArr5.join())} ${queryName5}`;
+  const searchString = onlySearchName ? queryName5 : `${queryArtistsArr4.join()} ${queryName5}`;
   const songs = await fetchData(searchString);
   const list: Song[] = [];
   const listIdSet = new Set<number>();
@@ -170,10 +170,14 @@ export async function matchingLyrics(
         currentScore += 9.1;
       } else {
         songName = sify(songName);
-        if (songName === queryName2) {
+        if (
+          songName === queryName2 ||
+          songName.endsWith(`(${queryName2})`) ||
+          queryName2.endsWith(`(${songName})`)
+        ) {
           currentScore += 9;
         } else {
-          songName = getHalfSizeText(songName);
+          songName = plainText(songName);
           if (songName === queryName3) {
             currentScore += 8.2;
           } else {
@@ -185,14 +189,14 @@ export async function matchingLyrics(
               if (songName === queryName5) {
                 currentScore += 8;
               } else {
-                songName = getText(songName);
+                songName = getText(
+                  removeSongFeat(ignoreAccented(sify(normalize(song.name).toLowerCase()))),
+                );
                 if (songName === queryName6) {
+                  // name & name (abc)
+                  // name & name remix
                   currentScore += 7;
-                } else if (
-                  (songName.length > 5 || charCodeTotal(songName) > 5 * 128) &&
-                  (queryName6.length > 5 || charCodeTotal(queryName6) > 5 * 128) &&
-                  (songName.startsWith(queryName6) || queryName6.startsWith(songName))
-                ) {
+                } else if (songName.startsWith(queryName6) || queryName6.startsWith(songName)) {
                   currentScore += 6;
                 } else if (songName.includes(queryName6) || queryName6.includes(songName)) {
                   currentScore += 3;
@@ -212,7 +216,7 @@ export async function matchingLyrics(
       songArtistsArr = songArtistsArr.map((e) => e.toLowerCase());
       if (
         queryArtistsArr1.join() === songArtistsArr.join() ||
-        queryArtistsArr5.join() === songArtistsArr.join()
+        queryArtistsArr4.join() === songArtistsArr.join()
       ) {
         currentScore += 5.5;
       } else if (new Set([...queryArtistsArr1, ...songArtistsArr]).size < len) {
@@ -222,31 +226,26 @@ export async function matchingLyrics(
         if (queryArtistsArr2.join() === songArtistsArr.join()) {
           currentScore += 5.3;
         } else {
-          songArtistsArr = songArtistsArr.map((e) => getHalfSizeText(e));
+          songArtistsArr = songArtistsArr.map((e) => ignoreAccented(e));
           if (queryArtistsArr3.join() === songArtistsArr.join()) {
-            currentScore += 5.2;
+            currentScore += 5.1;
           } else {
-            songArtistsArr = songArtistsArr.map((e) => ignoreAccented(e));
-            if (queryArtistsArr4.join() === songArtistsArr.join()) {
-              currentScore += 5.1;
+            if (
+              new Set([...queryArtistsArr2, ...songArtistsArr]).size < len ||
+              new Set([...queryArtistsArr4, ...songArtistsArr]).size < len
+            ) {
+              currentScore += 5;
             } else {
+              songArtistsArr = songArtistsArr.map((e) => getText(e));
               if (
-                new Set([...queryArtistsArr2, ...songArtistsArr]).size < len ||
-                new Set([...queryArtistsArr5, ...songArtistsArr]).size < len
+                songArtistsArr.some(
+                  (artist) =>
+                    queryName2.includes(artist) ||
+                    queryArtistsArr2.join().includes(artist) ||
+                    queryArtistsArr4.join().includes(artist),
+                )
               ) {
-                currentScore += 5;
-              } else {
-                songArtistsArr = songArtistsArr.map((e) => getText(e));
-                if (
-                  songArtistsArr.some(
-                    (artist) =>
-                      queryName2.includes(artist) ||
-                      queryArtistsArr2.join().includes(artist) ||
-                      queryArtistsArr5.join().includes(artist),
-                  )
-                ) {
-                  currentScore += 3;
-                }
+                currentScore += 3;
               }
             }
           }
@@ -265,24 +264,22 @@ export async function matchingLyrics(
       listIdSet.add(song.id);
     }
   });
-  if (id === 0) {
-    if (!onlySearchName) {
-      const { id, list: listForMissingName } = await matchingLyrics(
-        query,
-        true,
-        fetchData,
-        fetchTransName,
-      );
-      listForMissingName.forEach((song) => {
-        if (!listIdSet.has(song.id)) {
-          list.push(song);
-        }
-      });
-      return { id, list };
-    }
-    console.log('Not matched:', { query, songs, list, rank: score });
+  if (!onlySearchName) {
+    const {
+      id: idForMissingName,
+      list: listForMissingName,
+      score: scoreForMissingName,
+    } = await matchingLyrics(query, true, fetchData, async () => singerAlias);
+    listForMissingName.forEach((song) => {
+      if (!listIdSet.has(song.id)) {
+        list.push(song);
+      }
+    });
+    const resultId = scoreForMissingName > score ? idForMissingName : id;
+    const resultScore = Math.max(scoreForMissingName, score);
+    return { id: resultId, list, score: resultScore };
   }
-  return { list, id };
+  return { id, list, score };
 }
 
 export async function fetchLyric(songId: number) {

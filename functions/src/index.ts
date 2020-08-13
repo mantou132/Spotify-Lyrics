@@ -6,7 +6,7 @@ import { Lyric, LyricsResponse } from './type';
 admin.initializeApp();
 const db = admin.firestore();
 
-const COLLECTION = 'lyrics';
+const COLLECTION = 'lyrics-v3';
 
 const corsHandler = (req: functions.https.Request, res: functions.Response) => {
   res.set('Access-Control-Allow-Origin', '*');
@@ -64,27 +64,20 @@ export const setLyric = functions.https.onRequest(
       .where('user', '==', params.user);
     const snapshot = await query.get();
     if (snapshot.empty) {
-      lyricsRef.add(params);
+      if (params.neteaseID || params.lyric) {
+        await lyricsRef.add(
+          Object.assign({ neteaseID: 0, lyric: '', reviewed: false } as Lyric, params),
+        );
+      }
     } else {
-      snapshot.docs[0].ref.update(params);
+      const doc = snapshot.docs[0];
+      const data = Object.assign(doc.data(), params);
+      if (data.neteaseID || data.lyric) {
+        await doc.ref.update(params);
+      } else {
+        await doc.ref.delete();
+      }
     }
-    res.send({ message: 'OK' });
-  },
-);
-
-export const addLyrics = functions.https.onRequest(
-  async (req, res: functions.Response<LyricsResponse<any>>) => {
-    if (corsHandler(req, res)) return;
-    const params: Lyric[] = req.body;
-    if (!params?.some || params.some((e) => !isValidRequest(e))) {
-      res.status(400).send({ message: 'Params error' });
-      return;
-    }
-
-    const batch = db.batch();
-    const lyricsRef = db.collection(COLLECTION);
-    params.forEach((e) => lyricsRef.add(e));
-    await batch.commit();
     res.send({ message: 'OK' });
   },
 );

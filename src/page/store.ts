@@ -18,24 +18,8 @@ async function request(pathname: string, params: Lyric | Lyric[]) {
   });
 }
 
-// Legacy code, remove for later
-optionsPromise.then(async ({ cid }) => {
-  const KEY = 'spotify.lyrics.extension';
-  let store: Record<string, number> = {};
-
-  try {
-    store = JSON.parse(localStorage[KEY]);
-  } catch {}
-  const storeMap = Object.entries(store);
-  const data: Lyric[] = storeMap.map(([key, value]) => {
-    const [_, name, artists] = key.match(/(.*)-(.*)/)!;
-    return { name, artists, platform: currentPlatform, user: cid, neteaseID: value };
-  });
-
-  if (!data.length || (await request('/addLyrics', data)).ok) {
-    localStorage.removeItem(KEY);
-  }
-});
+// Previously used localStorage
+// const KEY = 'spotify.lyrics.extension';
 
 export async function getSong(data: Query) {
   const { cid } = await optionsPromise;
