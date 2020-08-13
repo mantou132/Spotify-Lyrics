@@ -110,7 +110,9 @@ export class SharedData {
 
   async confirmedMId() {
     const { name, artists, id } = this;
-    await setSong({ name, artists, id });
+    if (this.lyrics) {
+      await setSong({ name, artists, id });
+    }
     this.aId = id;
     this.sendToContentScript();
   }
