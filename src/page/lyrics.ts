@@ -11,6 +11,7 @@ export interface Query {
 export interface Artist {
   name: string;
   alias: string[];
+  transNames?: string[];
 }
 export interface Album {
   name: string;
@@ -94,7 +95,7 @@ async function fetchChineseName(s: string) {
     ).json();
     const artists = result?.artists || [];
     artists.forEach((artist) => {
-      const alia = artist.alias
+      const alia = [...artist.alias, ...(artist.transNames || [])]
         .map((e) => sify(e).toLowerCase())
         .sort()
         .join();
