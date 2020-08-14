@@ -302,6 +302,10 @@ export interface ParseLyricsOptions {
   useTChinese?: boolean;
 }
 
+function capitalize(s: string) {
+  return s.replace(/^(\w)/, ($1) => $1.toUpperCase());
+}
+
 export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) {
   const text1 = `作?\\s*词|作?\\s*曲|编\\s*曲?|监\\s*制?`;
   const text2 = '.*编写|.*和音|.*和声|.*提琴|.*录|.*工程|.*工作室|.*设计|.*剪辑';
@@ -322,7 +326,7 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
       let text = '';
       if (textIndex > -1) {
         text = matchResult.splice(textIndex, 1)[0];
-        text = text.trim().replace(/（/g, '(').replace(/）/g, ')');
+        text = capitalize(text.trim()).replace(/（/g, '(').replace(/）/g, ')');
         text = sify(text);
       }
       return matchResult.map((slice) => {
@@ -363,4 +367,34 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
     });
 
   return lyrics.length ? lyrics : null;
+}
+
+export function correctionLyrics(lyrics: Lyric, str: string) {
+  // ignore traditional Chinese
+  if (!lyrics) return lyrics;
+  const normalizeStr = normalize(str);
+  const regularization = (s: string) =>
+    new RegExp(
+      normalize(s)
+        .toLowerCase()
+        .replace(/\./g, '\\.')
+        .replace(/\*/g, '.')
+        .replace(/\(/g, '\\(')
+        .replace(/\)/g, '\\)')
+        .replace(/\[/g, '\\[')
+        .replace(/\]/g, '\\]'),
+      'i',
+    );
+  return lyrics.map(({ startTime, text }) => {
+    let match: RegExpMatchArray | null = null;
+    if (text.replace(/\*/g, '').length > 5) {
+      try {
+        match = normalizeStr.match(regularization(text));
+      } catch {}
+    }
+    return {
+      startTime,
+      text: capitalize(match?.[0] || text),
+    };
+  });
 }

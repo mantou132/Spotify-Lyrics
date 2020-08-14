@@ -3,7 +3,7 @@ import { sendEvent, events } from '../common/ga';
 
 import { PopupStore } from '../popup/store';
 
-import { Song, Lyric, fetchLyric, parseLyrics, matchingLyrics } from './lyrics';
+import { Song, Lyric, fetchLyric, parseLyrics, matchingLyrics, correctionLyrics } from './lyrics';
 import { fetchSongList, fetchGeniusLyrics } from './genius';
 import { setSong, getSong } from './store';
 import { optionsPromise } from './options';
@@ -67,6 +67,7 @@ export class SharedData {
       this.highlightLyrics = null;
     } else {
       const { text, highlights } = await fetchGeniusLyrics(id);
+      this.lyrics = correctionLyrics(this.lyrics, text);
       this.text = text;
       this.highlightLyrics = highlights;
     }
