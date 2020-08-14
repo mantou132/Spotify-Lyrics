@@ -17,15 +17,23 @@ const gaRequiredPayload = {
   tid: isProd ? 'UA-163443161-1' : 'UA-88601817-2',
 };
 
-interface EventParams {
+interface EventRequiredParams {
   ec: string; // event category
   ea: string; // event action
 }
 
+interface EventOptionalParams {
+  el: string; // event label
+  ev: string; // event value
+}
+type EventFullParams = EventRequiredParams & EventOptionalParams;
+type EventParams = EventRequiredParams | EventFullParams;
+
 export const events = {
-  searchLyrics: {
+  loadLyrics: {
     ec: 'Load',
     ea: 'LoadLyrics',
+    el: 'LoadLyricsTime',
   },
   notMatch: {
     ec: 'Load',
