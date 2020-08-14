@@ -66,14 +66,14 @@ export const setLyric = functions.https.onRequest(
     if (snapshot.empty) {
       if (params.neteaseID || params.lyric) {
         await lyricsRef.add(
-          Object.assign({ neteaseID: 0, lyric: '', reviewed: false } as Lyric, params),
+          Object.assign({ neteaseID: 0, lyric: '' } as Lyric, params, { reviewed: false } as Lyric),
         );
       }
     } else {
       const doc = snapshot.docs[0];
       const data = Object.assign(doc.data(), params);
       if (data.neteaseID || data.lyric) {
-        await doc.ref.update(params);
+        await doc.ref.update(Object.assign(params, { reviewed: false } as Lyric));
       } else {
         await doc.ref.delete();
       }
