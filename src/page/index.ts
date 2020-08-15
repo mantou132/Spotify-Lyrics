@@ -5,7 +5,7 @@ import { PopupStore } from '../popup/store';
 import {
   renderLyricsWithCanvas,
   RenderOptions,
-  drawNoLyrics,
+  drawText,
   drawHighlightLyrics,
   drawLoading,
 } from './canvas-renderer';
@@ -40,12 +40,14 @@ const update = async () => {
     smooth: isSmoothScroll,
   };
 
-  const { lyrics, highlightLyrics } = sharedData;
+  const { error, lyrics, highlightLyrics } = sharedData;
 
   drawCover();
   if (!isOnlyCover) {
-    if (!lyrics && !highlightLyrics) {
-      drawNoLyrics(lyricCtx);
+    if (error) {
+      drawText(lyricCtx, `Error: ${error.message}`, 'red');
+    } else if (!lyrics && !highlightLyrics) {
+      drawText(lyricCtx, 'No lyrics');
     } else if (lyrics?.length) {
       renderLyricsWithCanvas(lyricCtx, lyrics, audio.currentTime, renderOptions);
     } else if (lyrics?.length === 0 || highlightLyrics?.length === 0) {

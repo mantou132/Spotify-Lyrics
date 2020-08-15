@@ -17,6 +17,7 @@ export class SharedData {
   aId = 0;
   list: Song[] = [];
   lyrics: Lyric = [];
+  error: Error | null = null;
   text = '';
   highlightLyrics: string[] | null = [];
 
@@ -32,11 +33,16 @@ export class SharedData {
     return { name: this.name, artists: this.artists };
   }
 
+  resetLyrics() {
+    this.lyrics = [];
+    this.error = null;
+  }
+
   resetData() {
+    this.resetLyrics();
     this.id = 0;
     this.aId = 0;
     this.list = [];
-    this.lyrics = [];
     this.text = '';
     this.highlightLyrics = [];
   }
@@ -113,25 +119,33 @@ export class SharedData {
 
   async confirmedMId() {
     const { name, artists, id } = this;
-    if (this.lyrics) {
-      await setSong({ name, artists, id });
+    try {
+      if (this.lyrics) {
+        await setSong({ name, artists, id });
+      }
+      this.aId = id;
+      this.sendToContentScript();
+    } catch (e) {
+      this.error = e;
     }
-    this.aId = id;
-    this.sendToContentScript();
   }
 
   async chooseLyricsTrack({ id, name, artists }: PopupStore) {
     if (id === this.id) return;
     if (name !== this.name || artists !== this.artists) return;
     this.id = id;
-    this.lyrics = [];
-    if (id === 0) {
-      // reset
-      await setSong({ name, artists, id });
-      await this.matching();
-      this.sendToContentScript();
-    } else {
-      await this.updateLyrics();
+    this.resetLyrics();
+    try {
+      if (id === 0) {
+        // reset
+        await setSong({ name, artists, id });
+        await this.matching();
+        this.sendToContentScript();
+      } else {
+        await this.updateLyrics();
+      }
+    } catch (e) {
+      this.error = e;
     }
   }
 
@@ -141,19 +155,20 @@ export class SharedData {
     const { TRACK_NAME_SELECTOR, TRACK_ARTIST_SELECTOR } = await config;
     const name = document.querySelector(TRACK_NAME_SELECTOR)?.textContent;
     const artists = document.querySelector(TRACK_ARTIST_SELECTOR)?.textContent;
-    if (!name || !artists) {
-      if (isTrust) {
-        captureException(new Error(`Track info not found`));
-      }
-      return;
-    }
-    this.name = name;
-    this.artists = artists;
-    this.resetData();
 
     try {
+      if (!name || !artists) {
+        if (isTrust) {
+          throw new Error(`Track info not found`);
+        }
+        return;
+      }
+      this.name = name;
+      this.artists = artists;
+      this.resetData();
       await this.matching();
     } catch (e) {
+      this.error = e;
       captureException(e);
     }
     this.sendToContentScript();

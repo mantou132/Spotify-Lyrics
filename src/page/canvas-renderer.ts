@@ -141,13 +141,13 @@ function drawBackground(ctx: CanvasRenderingContext2D) {
   ctx.restore();
 }
 
-export function drawNoLyrics(ctx: CanvasRenderingContext2D) {
+export function drawText(ctx: CanvasRenderingContext2D, text: string, color = 'white') {
   drawBackground(ctx);
   ctx.save();
   const fontSize = 32;
-  ctx.fillStyle = 'white';
+  ctx.fillStyle = color;
   ctx.font = `bold ${fontSize}px sans-serif`;
-  drawParagraph(ctx, 'No lyrics', {
+  drawParagraph(ctx, text, {
     vCenter: true,
     hCenter: true,
     left: 0,
