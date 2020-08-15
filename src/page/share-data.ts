@@ -108,7 +108,7 @@ export class SharedData {
     }
     const ev = (performance.now() - startTime).toFixed();
     sendEvent(options.cid, { ev, ...events.loadLyrics }, { cd1: this.cd1 });
-    await this.fetchHighlight();
+    this.fetchHighlight();
   }
 
   async confirmedMId() {
