@@ -152,6 +152,26 @@ export class EditorApp extends GemElement<State> {
     this.setState({ currentIndex: index });
   };
 
+  dragOver = (e: DragEvent) => {
+    if (e.dataTransfer) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'none';
+    }
+  };
+
+  pasteText = (e: ClipboardEvent) => {
+    if (e.clipboardData) {
+      e.stopPropagation();
+      e.preventDefault();
+      const text = e.clipboardData.getData('text/plain');
+      document.execCommand('insertHTML', false, text);
+    }
+  };
+
+  modifyLine = (e: InputEvent, index: number) => {
+    this.state.lyrics[index].text = (e.target as HTMLTableCellElement).innerText;
+  };
+
   render() {
     const { currentIndex, lyrics } = this.state;
     return html`
@@ -188,6 +208,10 @@ export class EditorApp extends GemElement<State> {
         }
         td {
           padding: 0;
+          vertical-align: baseline;
+        }
+        td:focus {
+          outline: none;
         }
         .marked {
           opacity: 1;
@@ -195,6 +219,9 @@ export class EditorApp extends GemElement<State> {
         .timestamp {
           font-family: sans-serif;
           user-select: none;
+          width: 1px;
+          padding-right: 1em;
+          white-space: nowrap;
         }
         .placeholder {
           opacity: 0.5;
@@ -207,7 +234,7 @@ export class EditorApp extends GemElement<State> {
           justify-content: space-between;
         }
       </style>
-      <p class="title">Lyrics Editor: ${sharedData.name} - ${sharedData.artists}</p>
+      <p class="title">LRC Editor: ${sharedData.name} - ${sharedData.artists}</p>
       <div class="body" tabindex="-1">
         <table>
           <tbody ref=${this.tbody.ref}>
@@ -220,7 +247,14 @@ export class EditorApp extends GemElement<State> {
                   >
                     ${startTime === null ? '00:00.00' : formatLRCTime(startTime)}
                   </td>
-                  <td>${text}</td>
+                  <td
+                    contenteditable
+                    @dragover=${this.dragOver}
+                    @paste=${this.pasteText}
+                    @input=${(e: InputEvent) => this.modifyLine(e, index)}
+                  >
+                    ${text}
+                  </td>
                 </tr>
               `,
             )}
