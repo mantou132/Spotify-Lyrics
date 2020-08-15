@@ -41,8 +41,8 @@ interface SongResult {
   };
 }
 
-const normalize = (s: string) => {
-  return s
+const normalize = (s: string, emptySymbol = true) => {
+  const result = s
     .replace(/（/g, '(')
     .replace(/）/g, ')')
     .replace(/【/g, '[')
@@ -51,11 +51,11 @@ const normalize = (s: string) => {
     .replace(/。/g, '.')
     .replace(/、/g, ',')
     .replace(/‘|’/g, "'")
-    .replace(/　/g, ' ')
-    .replace(/\//g, ' ')
-    .replace(/-/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+    .replace(/　/g, ' ');
+  if (emptySymbol) {
+    result.replace(/-/g, ' ').replace(/\//g, ' ');
+  }
+  return result.replace(/\s+/g, ' ').trim();
 };
 
 const plainText = (s: string) => {
@@ -373,10 +373,10 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
 export function correctionLyrics(lyrics: Lyric, str: string) {
   // ignore traditional Chinese
   if (!lyrics) return lyrics;
-  const normalizeStr = normalize(str);
+  const normalizeStr = normalize(str, false);
   const regularization = (s: string) =>
     new RegExp(
-      normalize(s)
+      normalize(s, false)
         .toLowerCase()
         .replace(/\./g, '\\.')
         .replace(/\*/g, '.')
