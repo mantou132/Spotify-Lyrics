@@ -77,7 +77,7 @@ export const audioPromise = new Promise<HTMLAudioElement>((res) => {
         await loggedPromise;
         captureException(new Error('Audio not found'));
       }
-    }, 3000);
+    }, 5_000);
   });
 });
 
