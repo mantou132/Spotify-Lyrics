@@ -50,6 +50,7 @@ const normalize = (s: string, emptySymbol = true) => {
     .replace(/，/g, ',')
     .replace(/。/g, '.')
     .replace(/、/g, ',')
+    .replace(/・/g, '·')
     .replace(/‘|’/g, "'")
     .replace(/　/g, ' ');
   if (emptySymbol) {
