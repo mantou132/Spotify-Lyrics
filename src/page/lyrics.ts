@@ -50,9 +50,13 @@ const normalize = (s: string, emptySymbol = true) => {
     .replace(/】/g, ']')
     .replace(/，/g, ',')
     .replace(/。/g, '.')
+    .replace(/：/g, ':')
+    .replace(/？/g, '?')
+    .replace(/！/g, '!')
     .replace(/、/g, ',')
     .replace(/・/g, '·')
     .replace(/‘|’/g, "'")
+    .replace(/“|”/g, '"')
     .replace(/　/g, ' ');
   if (emptySymbol) {
     result.replace(/-/g, ' ').replace(/\//g, ' ');
@@ -62,7 +66,7 @@ const normalize = (s: string, emptySymbol = true) => {
 
 const plainText = (s: string) => {
   return s
-    .replace(/\(|\)|\[|\]/g, ' ')
+    .replace(/[\(\)\[\]\-.,?!:'"]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 };
@@ -165,7 +169,7 @@ export async function matchingLyrics(
     .sort();
   const queryArtistsArr1 = queryArtistsArr.map((e) => e.toLowerCase());
   const queryArtistsArr2 = queryArtistsArr1.map((e) => sify(e));
-  const queryArtistsArr3 = queryArtistsArr2.map((e) => ignoreAccented(e));
+  const queryArtistsArr3 = queryArtistsArr2.map((e) => ignoreAccented(plainText(e)));
 
   const singerAlias = await fetchTransName(queryArtistsArr2.join());
 
@@ -253,7 +257,7 @@ export async function matchingLyrics(
         if (queryArtistsArr2.join() === songArtistsArr.join()) {
           currentScore += 5.3;
         } else {
-          songArtistsArr = songArtistsArr.map((e) => ignoreAccented(e));
+          songArtistsArr = songArtistsArr.map((e) => ignoreAccented(plainText(e)));
           if (queryArtistsArr3.join() === songArtistsArr.join()) {
             currentScore += 5.1;
           } else {
