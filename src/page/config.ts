@@ -59,6 +59,9 @@ export const localConfig: LocalConfig = (() => {
         yt-bubble-hint-renderer {
           display: none;
         }
+        ytmusic-player {
+          --ytmusic-mini-player-height: 0px !important;
+        }
         .${LYRICS_CLASSNAME} {
           margin-left: var(--ytmusic-like-button-renderer-button-spacing, 8px);
         }
