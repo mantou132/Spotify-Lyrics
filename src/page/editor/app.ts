@@ -141,7 +141,7 @@ export class EditorApp extends GemElement<State> {
     const text = serializedLyrics(this.state.lyrics);
     const blob = new Blob([text], { type: 'text/plain' });
     link.href = URL.createObjectURL(blob);
-    link.download = `${sharedData.name} - ${sharedData.artists} lyrics.txt`;
+    link.download = `${sharedData.name} - ${sharedData.artists}.lrc`;
     link.click();
   };
 
