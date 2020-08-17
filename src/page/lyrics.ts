@@ -21,6 +21,7 @@ export interface Song {
   name: string;
   artists: Artist[];
   album: Album;
+  duration?: number; // ms
 }
 
 interface SearchSongsResult {
@@ -110,6 +111,7 @@ async function fetchChineseName(s: string) {
   }
   return singerAlias;
 }
+
 async function fetchSongList(s: string): Promise<Song[]> {
   const { API_HOST } = await config;
   const searchQuery = new URLSearchParams({
@@ -123,12 +125,30 @@ async function fetchSongList(s: string): Promise<Song[]> {
   return result?.songs || [];
 }
 
+interface MatchingLyricsOptions {
+  onlySearchName?: boolean;
+  getAudioElement?: () => Promise<HTMLAudioElement>;
+  fetchData?: (s: string) => Promise<Song[]>;
+  fetchTransName?: (s: string) => Promise<Record<string, string>>;
+}
 export async function matchingLyrics(
   query: Query,
-  onlySearchName = false,
-  fetchData = fetchSongList,
-  fetchTransName = fetchChineseName,
+  options: MatchingLyricsOptions = {},
 ): Promise<{ list: Song[]; id: number; score: number }> {
+  const {
+    getAudioElement,
+    onlySearchName = false,
+    fetchData = fetchSongList,
+    fetchTransName = fetchChineseName,
+  } = options;
+
+  let audio: HTMLAudioElement | null = null;
+  if (getAudioElement) {
+    audio = await getAudioElement();
+    if (!audio.duration) {
+      await new Promise((res) => audio!.addEventListener('loadedmetadata', res, { once: true }));
+    }
+  }
   const { SINGER } = await config;
   const { name = '', artists = '' } = query;
 
@@ -161,7 +181,12 @@ export async function matchingLyrics(
   let id = 0;
   let score = 0;
   songs.forEach((song) => {
-    let currentScore = 0;
+    const DURATION_WEIGHT = 5;
+    let currentScore = audio ? 0 : DURATION_WEIGHT;
+
+    if (audio && song.duration && Math.abs(audio.duration - song.duration / 1000) < 1) {
+      currentScore += DURATION_WEIGHT;
+    }
 
     let songName = normalize(song.name);
     if (songName === queryName) {
@@ -256,7 +281,7 @@ export async function matchingLyrics(
     }
 
     if (currentScore > score) {
-      if (currentScore > 10) {
+      if (currentScore > 10 + DURATION_WEIGHT) {
         id = song.id;
       }
       score = currentScore;
@@ -271,7 +296,12 @@ export async function matchingLyrics(
       id: idForMissingName,
       list: listForMissingName,
       score: scoreForMissingName,
-    } = await matchingLyrics(query, true, fetchData, async () => singerAlias);
+    } = await matchingLyrics(query, {
+      getAudioElement,
+      onlySearchName: true,
+      fetchData,
+      fetchTransName: async () => singerAlias,
+    });
     listForMissingName.forEach((song) => {
       if (!listIdSet.has(song.id)) {
         list.push(song);
@@ -333,7 +363,8 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
       }
       return matchResult.map((slice) => {
         const result = new Line();
-        const [key, value] = slice.match(/[^\[\]]+/g)?.[0].split(':') || [];
+        const matchResut = slice.match(/[^\[\]]+/g);
+        const [key, value] = matchResut?.[0].split(':') || [];
         const [min, sec] = [parseFloat(key), parseFloat(value)];
         if (!isNaN(min)) {
           if (options.cleanLyrics && otherInfoRegexp.test(text)) {

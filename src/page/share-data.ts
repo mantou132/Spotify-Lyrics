@@ -8,6 +8,7 @@ import { fetchSongList, fetchGeniusLyrics } from './genius';
 import { setSong, getSong } from './store';
 import { optionsPromise } from './options';
 import { captureException } from './utils';
+import { audioPromise } from './element';
 import config from './config';
 
 export class SharedData {
@@ -68,7 +69,11 @@ export class SharedData {
 
   async fetchHighlight() {
     const fetchTransName = async () => ({});
-    const { id } = await matchingLyrics(this.query, false, fetchSongList, fetchTransName);
+    const { id } = await matchingLyrics(this.query, {
+      onlySearchName: false,
+      fetchData: fetchSongList,
+      fetchTransName,
+    });
     if (id === 0) {
       this.highlightLyrics = null;
     } else {
@@ -87,7 +92,9 @@ export class SharedData {
       cleanLyrics: options['clean-lyrics'] === 'on',
       useTChinese: options['traditional-chinese-lyrics'] === 'on',
     };
-    const { list, id } = await matchingLyrics(this.query);
+    const { list, id } = await matchingLyrics(this.query, {
+      getAudioElement: () => audioPromise,
+    });
     if (id === 0) {
       sendEvent(options.cid, events.notMatch, { cd1: this.cd1 });
     }
