@@ -25,7 +25,8 @@ const update = async () => {
 
   const isOnlyCover = options['only-cover'] === 'on';
   const isHDCover = options['hd-cover'] === 'on';
-  const isSmoothScroll = options['lyrics-smooth-scroll'] === 'on';
+  const isSmoothScroll =
+    document.visibilityState === 'visible' && options['lyrics-smooth-scroll'] === 'on';
   const isOpen = !!document.pictureInPictureElement;
   const { width, height } = lyricCtx.canvas;
 
