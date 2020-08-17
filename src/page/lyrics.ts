@@ -188,7 +188,7 @@ export async function matchingLyrics(
     const DURATION_WEIGHT = 5;
     let currentScore = audio ? 0 : DURATION_WEIGHT;
 
-    if (audio && song.duration && Math.abs(audio.duration - song.duration / 1000) < 1) {
+    if (audio && song.duration && Math.abs(audio.duration - song.duration / 1000) < 2) {
       currentScore += DURATION_WEIGHT;
     }
 
