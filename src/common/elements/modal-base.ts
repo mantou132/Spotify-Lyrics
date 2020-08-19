@@ -1,9 +1,9 @@
-import { GemElement, html, TemplateResult } from '@mantou/gem/lib/element';
+import { GemElement, html } from '@mantou/gem/lib/element';
 
 export class Modal extends GemElement {
   static instance: GemElement | null = null;
 
-  static open(content: TemplateResult) {
+  static open(content: Element | string) {
     if (this.instance) return;
     this.instance = new this(content);
     document.body.append(this.instance);
@@ -14,9 +14,9 @@ export class Modal extends GemElement {
     this.instance = null;
   }
 
-  content: TemplateResult;
+  content: Element | string;
 
-  constructor(content: TemplateResult) {
+  constructor(content: Element | string) {
     super();
     this.content = content;
     this.addEventListener('close', this.close);

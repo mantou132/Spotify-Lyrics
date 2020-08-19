@@ -7,7 +7,7 @@ import { sharedData } from '../share-data';
 import { Lyric } from '../lyrics';
 import { setSong } from '../store';
 
-import './elements/button';
+import { Button } from './elements/button';
 
 function initLyrics(text: string) {
   return text
@@ -52,7 +52,15 @@ export class EditorApp extends GemElement<State> {
     lyrics: this.initialLyrics,
   };
 
+  constructor() {
+    super();
+    this.addEventListener('keydown', (e: KeyboardEvent) => {
+      e.stopPropagation();
+    });
+  }
+
   mounted() {
+    if (!document.pictureInPictureElement) return;
     let resetTimer = 0;
     const timeUpdateHandler = async () => {
       const audio = await audioPromise;
@@ -173,6 +181,21 @@ export class EditorApp extends GemElement<State> {
   };
 
   render() {
+    if (!document.pictureInPictureElement) {
+      return html`
+        <style>
+          :host {
+            font-size: 1.5em;
+            text-align: center;
+            display: block;
+            padding: 2em 1em 0;
+            margin-bottom: 2em;
+            color: rgb(${theme.blackRGB});
+          }
+        </style>
+        Please open the lyrics first
+      `;
+    }
     const { currentIndex, lyrics } = this.state;
     return html`
       <style>
@@ -263,11 +286,11 @@ export class EditorApp extends GemElement<State> {
         ${lyrics.length === 0 ? html`<p class="tip">Paste lyrics plain text</p>` : ''}
       </div>
       <div class="btns">
-        <sl-ext-ele-button @click=${this.mark}>Mark Line</sl-ext-ele-button>
-        <sl-ext-ele-button @click=${this.insertLine}>Inset Line</sl-ext-ele-button>
-        <sl-ext-ele-button @click=${this.resetRemote}>Reset</sl-ext-ele-button>
-        <sl-ext-ele-button @click=${this.download}>Download</sl-ext-ele-button>
-        <sl-ext-ele-button @click=${this.saveRemote}>Save</sl-ext-ele-button>
+        ${new Button({ clickHandle: this.mark, content: 'Mark Line' })}
+        ${new Button({ clickHandle: this.insertLine, content: 'Inset Line' })}
+        ${new Button({ clickHandle: this.resetRemote, content: 'Reset' })}
+        ${new Button({ clickHandle: this.download, content: 'Download' })}
+        ${new Button({ clickHandle: this.saveRemote, content: 'Save' })}
       </div>
     `;
   }

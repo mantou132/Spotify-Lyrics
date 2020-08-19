@@ -18,7 +18,7 @@ import { getOptions, updateOptions } from './store';
 
 type State = { options: Options | null };
 @customElement('options-app')
-export class Test extends GemElement<State> {
+export class OptionsApp extends GemElement<State> {
   @refobject formRef: RefObject<Form>;
 
   state: State = {
