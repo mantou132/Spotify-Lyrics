@@ -14,6 +14,7 @@ import { sharedData } from './share-data';
 import { optionsPromise } from './options';
 import { appendStyle } from './utils';
 import { localConfig } from './config';
+import { getFPS } from './fps';
 
 import './pip';
 import './observer';
@@ -25,8 +26,7 @@ const update = async () => {
 
   const isOnlyCover = options['only-cover'] === 'on';
   const isHDCover = options['hd-cover'] === 'on';
-  const isSmoothScroll =
-    document.visibilityState === 'visible' && options['lyrics-smooth-scroll'] === 'on';
+  const isSmoothScroll = getFPS() >= 30 && options['lyrics-smooth-scroll'] === 'on';
   const isOpen = !!document.pictureInPictureElement;
   const { width, height } = lyricCtx.canvas;
 
