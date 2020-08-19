@@ -12,7 +12,10 @@ export class SongItem extends GemElement {
 
   render() {
     if (!this.song) return null;
-    const { id, name, artists, album } = this.song;
+    const { id, name, artists, album, duration } = this.song;
+    const durationText = duration
+      ? `${Math.floor(duration / 1000 / 60)}:${((duration / 1000) % 60).toFixed().padStart(2, '0')}`
+      : '';
     const checked = id === store.id;
     return html`
       <style>
@@ -47,7 +50,8 @@ export class SongItem extends GemElement {
       <div class="track-info">
         <div class="track-name">${name}</div>
         <div class="artist-name">
-          <span>${artists.map(({ name }) => name).join(',')}</span> • <span>${album.name}</span>
+          <span>${durationText}</span>
+          • <span>${artists.map(({ name }) => name).join(',')}</span> • <span>${album.name}</span>
         </div>
       </div>
       ${checked ? html`<div class="status">✓</div>` : null}
