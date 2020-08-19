@@ -3,11 +3,11 @@ import { sendEvent, events } from '../common/ga';
 import { PopupStore } from '../popup/store';
 
 import {
-  renderLyricsWithCanvas,
-  RenderOptions,
   drawText,
-  drawHighlightLyrics,
-  drawLoading,
+  drawBackground,
+  drawLyrics,
+  drawHighlight,
+  RenderLyricsOptions,
 } from './canvas-renderer';
 import { coverCanvas, coverHDCanvas, lyricCtx, audioPromise } from './element';
 import { sharedData } from './share-data';
@@ -21,53 +21,50 @@ import './observer';
 
 let options: Options;
 
-const update = async () => {
+const tick = async () => {
   const audio = await audioPromise;
 
   const isOnlyCover = options['only-cover'] === 'on';
   const isHDCover = options['hd-cover'] === 'on';
   const isSmoothScroll = getFPS() >= 30 && options['lyrics-smooth-scroll'] === 'on';
   const isOpen = !!document.pictureInPictureElement;
-  const { width, height } = lyricCtx.canvas;
+  const { error, lyrics, highlightLyrics } = sharedData;
 
-  const drawCover = () => {
-    lyricCtx.canvas.width = width;
-    lyricCtx.drawImage(isOnlyCover || isHDCover ? coverHDCanvas : coverCanvas, 0, 0, width, height);
-  };
+  const bg = isOnlyCover || isHDCover ? coverHDCanvas : coverCanvas;
 
-  const renderOptions: RenderOptions = {
+  const renderOptions: RenderLyricsOptions = {
+    bg,
     focusLineFontSize: Number(options['font-size']),
     align: options['lyrics-align'],
     smooth: isSmoothScroll,
   };
 
-  const { error, lyrics, highlightLyrics } = sharedData;
-
-  drawCover();
-  if (!isOnlyCover) {
+  if (isOnlyCover) {
+    drawBackground(lyricCtx, bg);
+  } else {
     if (error) {
-      drawText(lyricCtx, `Error: ${error.message}`, 'red');
+      drawText(lyricCtx, `Error: ${error.message}`, { color: 'red', bg });
     } else if (!lyrics && !highlightLyrics) {
-      drawText(lyricCtx, 'No lyrics');
+      drawText(lyricCtx, 'No lyrics', { bg });
     } else if (lyrics?.length) {
-      renderLyricsWithCanvas(lyricCtx, lyrics, audio.currentTime, renderOptions);
+      drawLyrics(lyricCtx, lyrics, audio.currentTime, renderOptions);
     } else if (lyrics?.length === 0 || highlightLyrics?.length === 0) {
-      drawLoading(lyricCtx);
+      drawText(lyricCtx, '', { bg });
     } else if (!lyrics && highlightLyrics?.length) {
-      drawHighlightLyrics(lyricCtx, highlightLyrics, renderOptions);
+      drawHighlight(lyricCtx, highlightLyrics, renderOptions);
     }
   }
 
   if (!isOnlyCover && isSmoothScroll && isOpen && (lyrics?.length || highlightLyrics?.length)) {
-    requestAnimationFrame(update);
+    requestAnimationFrame(tick);
   } else {
-    setTimeout(update, 80);
+    setTimeout(tick, 80);
   }
 };
 
 optionsPromise.then((opts) => {
   options = opts;
-  update();
+  tick();
 
   sendEvent(opts.cid, events.startUp);
 

@@ -134,15 +134,26 @@ function drawParagraph(ctx: CanvasRenderingContext2D, str = '', options: Options
   };
 }
 
-function drawBackground(ctx: CanvasRenderingContext2D) {
+function drawMask(ctx: CanvasRenderingContext2D) {
   ctx.save();
   ctx.fillStyle = '#000000b0';
   ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   ctx.restore();
 }
 
-export function drawText(ctx: CanvasRenderingContext2D, text: string, color = 'white') {
-  drawBackground(ctx);
+export function drawBackground(ctx: CanvasRenderingContext2D, image: CanvasImageSource) {
+  ctx.canvas.width = ctx.canvas.width;
+  ctx.drawImage(image, 0, 0, ctx.canvas.width, ctx.canvas.height);
+}
+
+export interface RenderTextOptions {
+  bg: CanvasImageSource;
+  color?: string;
+}
+export function drawText(ctx: CanvasRenderingContext2D, text: string, options: RenderTextOptions) {
+  const { color = 'white', bg } = options;
+  drawBackground(ctx, bg);
+  drawMask(ctx);
   ctx.save();
   const fontSize = 32;
   ctx.fillStyle = color;
@@ -180,17 +191,18 @@ function initOffscreenCtx(ctx: CanvasRenderingContext2D) {
   return { offscreenCtx, gradient1, gradient2 };
 }
 
-export interface RenderOptions {
+export interface RenderLyricsOptions {
+  bg: CanvasImageSource;
   focusLineFontSize: number;
   align: typeof LyricsAlign[number];
   smooth: boolean;
 }
 
-export function renderLyricsWithCanvas(
+export function drawLyrics(
   ctx: CanvasRenderingContext2D,
   lyrics: Exclude<Lyric, null>,
   currentTime: number, // s
-  options: RenderOptions,
+  options: RenderLyricsOptions,
 ) {
   const focusLineFontSize = options.focusLineFontSize;
   const focusLineHeight = focusLineFontSize * 1.2;
@@ -203,10 +215,6 @@ export function renderLyricsWithCanvas(
   const animateDuration = options.smooth ? 0.3 : 0;
   const hCenter = options.align === 'center' ? true : false;
 
-  drawBackground(ctx);
-
-  ctx.save();
-
   let currentIndex = -1;
   let progress = 1;
   lyrics.forEach(({ startTime }, index) => {
@@ -217,6 +225,10 @@ export function renderLyricsWithCanvas(
       }
     }
   });
+
+  drawBackground(ctx, options.bg);
+  drawMask(ctx);
+  ctx.save();
 
   const { offscreenCtx, gradient1 } = initOffscreenCtx(ctx);
   offscreenCtx.save();
@@ -303,36 +315,34 @@ export function renderLyricsWithCanvas(
   ctx.restore();
 }
 
-export function drawLoading(ctx: CanvasRenderingContext2D) {
-  drawBackground(ctx);
-}
-
 const weakLyricsTime = new WeakMap<string[], number>();
-export function drawHighlightLyrics(
+export function drawHighlight(
   ctx: CanvasRenderingContext2D,
   lyrics: string[],
-  options: RenderOptions,
+  options: RenderLyricsOptions,
 ) {
   const DURATION = 20_000;
   const animateDuration = options.smooth ? 500 : 0;
   const marginWidth = ctx.canvas.width * 0.075;
 
-  drawBackground(ctx);
-  ctx.save();
   if (!weakLyricsTime.has(lyrics)) {
     weakLyricsTime.set(lyrics, performance.now());
   }
   const time = performance.now() - weakLyricsTime.get(lyrics)!; // ms
-  const index = Math.floor(time / DURATION) % lyrics.length;
+  const currentIndex = Math.floor(time / DURATION) % lyrics.length;
   const diff = time % DURATION;
-  const progress = (diff < DURATION / 2 ? diff : DURATION - diff) / animateDuration;
-  const opacity = progress > 1 ? 1 : progress;
+  const progress = Math.min((diff < DURATION / 2 ? diff : DURATION - diff) / animateDuration, 1);
+  const opacity = progress;
+
+  drawBackground(ctx, options.bg);
+  drawMask(ctx);
+  ctx.save();
 
   const { offscreenCtx, gradient2 } = initOffscreenCtx(ctx);
   offscreenCtx.save();
   offscreenCtx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
   offscreenCtx.font = `bold ${options.focusLineFontSize}px sans-serif`;
-  drawParagraph(offscreenCtx, lyrics[index], {
+  drawParagraph(offscreenCtx, lyrics[currentIndex], {
     hCenter: options.align === 'center' ? true : false,
     lineHeight: options.focusLineFontSize * 1.3,
     top: marginWidth,
