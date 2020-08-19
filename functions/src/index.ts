@@ -7,6 +7,7 @@ admin.initializeApp();
 const db = admin.firestore();
 
 const COLLECTION = 'lyrics-v3';
+const MANAGERS = ['1595656736449-0.6348481552032998', '1596150131865-0.8669090580915286'];
 
 const corsHandler = (req: functions.https.Request, res: functions.Response) => {
   res.set('Access-Control-Allow-Origin', '*');
@@ -62,18 +63,19 @@ export const setLyric = functions.https.onRequest(
       .where('artists', '==', params.artists)
       .where('platform', '==', params.platform)
       .where('user', '==', params.user);
+    const reviewed = MANAGERS.includes(params.user);
     const snapshot = await query.get();
     if (snapshot.empty) {
       if (params.neteaseID || params.lyric) {
         await lyricsRef.add(
-          Object.assign({ neteaseID: 0, lyric: '' } as Lyric, params, { reviewed: false } as Lyric),
+          Object.assign({ neteaseID: 0, lyric: '' } as Lyric, params, { reviewed } as Lyric),
         );
       }
     } else {
       const doc = snapshot.docs[0];
       const data = Object.assign(doc.data(), params);
       if (data.neteaseID || data.lyric) {
-        await doc.ref.update(Object.assign(params, { reviewed: false } as Lyric));
+        await doc.ref.update(Object.assign(params, { reviewed } as Lyric));
       } else {
         await doc.ref.delete();
       }
