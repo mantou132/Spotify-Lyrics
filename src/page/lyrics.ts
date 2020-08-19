@@ -185,10 +185,10 @@ export async function matchingLyrics(
   let id = 0;
   let score = 0;
   songs.forEach((song) => {
-    const DURATION_WEIGHT = 5;
-    let currentScore = audio ? 0 : DURATION_WEIGHT;
+    const DURATION_WEIGHT = 10;
+    let currentScore = 0;
 
-    if (audio && song.duration && Math.abs(audio.duration - song.duration / 1000) < 2) {
+    if (!audio || !song.duration || Math.abs(audio.duration - song.duration / 1000) < 2) {
       currentScore += DURATION_WEIGHT;
     }
 
