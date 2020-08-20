@@ -124,8 +124,13 @@
     "description": "Feedback context menus item"
   },
 
+  "menusWelcome": {
+    "message": "Welcome",
+    "description": "Welcome menus item"
+  },
+
   "menusRateMe": {
     "message": "Rate this extension",
-    "description": "rate me context menus item"
+    "description": "Rate me context menus item"
   }
 }

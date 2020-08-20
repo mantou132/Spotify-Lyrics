@@ -95,6 +95,10 @@
     "message": "反馈"
   },
 
+  "menusWelcome": {
+    "message": "欢迎"
+  },
+
   "menusRateMe": {
     "message": "评价该扩展"
   }

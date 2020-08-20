@@ -47,6 +47,12 @@ browser.runtime.onMessage.addListener((msg: Message) => {
 browser.runtime.setUninstallURL('https://forms.gle/bUWyEqfSTCU9NEwEA');
 
 browser.contextMenus.create({
+  id: ContextItems.WELCOME,
+  title: i18n.menusWelcome(),
+  contexts: ['browser_action'],
+});
+
+browser.contextMenus.create({
   id: ContextItems.FEEDBACK,
   title: i18n.menusFeedback(),
   contexts: ['browser_action'],
@@ -84,17 +90,21 @@ getRateMeLink().then((link) => {
   }
 });
 
+const openPage = async (url: string) => {
+  const { windowId } = await browser.tabs.create({ url });
+  if (windowId) browser.windows.update(windowId, { focused: true });
+};
+
 browser.contextMenus.onClicked.addListener(async function (info) {
   switch (info.menuItemId) {
+    case ContextItems.WELCOME:
+      openPage(browser.runtime.getURL('welcome.html'));
+      break;
     case ContextItems.FEEDBACK:
-      browser.tabs.create({
-        url: 'https://github.com/mantou132/Spotify-Lyrics/issues',
-      });
+      openPage('https://github.com/mantou132/Spotify-Lyrics/issues');
       break;
     case ContextItems.RATE_ME:
-      browser.tabs.create({
-        url: await getRateMeLink(),
-      });
+      openPage(await getRateMeLink());
       break;
   }
 });
