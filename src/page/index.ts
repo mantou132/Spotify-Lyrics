@@ -26,7 +26,7 @@ const tick = async () => {
 
   const isOnlyCover = options['only-cover'] === 'on';
   const isHDCover = options['hd-cover'] === 'on';
-  const isSmoothScroll = getFPS() >= 30 && options['lyrics-smooth-scroll'] === 'on';
+  const isSmoothScroll = getFPS() >= 30;
   const isOpen = !!document.pictureInPictureElement;
   const { error, lyrics, highlightLyrics } = sharedData;
 

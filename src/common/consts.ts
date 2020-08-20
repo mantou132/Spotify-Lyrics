@@ -31,7 +31,6 @@ export interface Options {
   cid: string;
   'font-size': string;
   'toggle-shortcut': string;
-  'lyrics-smooth-scroll': Value;
   'only-cover': Value;
   'clean-lyrics': Value;
   'hd-cover': Value;
@@ -40,6 +39,7 @@ export interface Options {
   'lyrics-align': typeof LyricsAlign[number];
   'traditional-chinese-lyrics': Value;
   // Deprecated
+  'lyrics-smooth-scroll'?: Value;
   'strict-mode'?: Value;
 }
 

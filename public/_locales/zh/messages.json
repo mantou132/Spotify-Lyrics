@@ -47,14 +47,6 @@
     "message": "这是一个相对尺寸，将歌词窗口的宽度视为 640px"
   },
 
-  "optionsSmoothScroll": {
-    "message": "启用歌词平滑滚动"
-  },
-
-  "optionsSmoothScrollDetail": {
-    "message": "CPU 使用率将变高，并且换行可能不正确"
-  },
-
   "optionsHDCover": {
     "message": "使用高清封面"
   },

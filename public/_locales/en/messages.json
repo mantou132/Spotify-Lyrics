@@ -64,16 +64,6 @@
     "description": "Specify font size detail"
   },
 
-  "optionsSmoothScroll": {
-    "message": "Use smooth scroll",
-    "description": "Use lyrics smooth scroll"
-  },
-
-  "optionsSmoothScrollDetail": {
-    "message": "CPU usage will become high, and line wrapping may not be correct",
-    "description": "Use lyrics smooth scroll detail"
-  },
-
   "optionsHDCover": {
     "message": "Use high-resolution cover as the lyrics background",
     "description": "Use high-resolution cover as the lyrics background"

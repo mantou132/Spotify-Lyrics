@@ -79,15 +79,6 @@ export class OptionsApp extends GemElement<State> {
           ></ele-select>
         </ele-form-item>
         <ele-form-item
-          label=${i18n.optionsSmoothScroll()}
-          description=${i18n.optionsSmoothScrollDetail()}
-        >
-          <ele-switch
-            name=${'lyrics-smooth-scroll' as keyof Options}
-            default-value=${options['lyrics-smooth-scroll']}
-          ></ele-switch>
-        </ele-form-item>
-        <ele-form-item
           label=${i18n.optionsShowCleanLyrics()}
           description=${i18n.optionsShowCleanLyricsDetail()}
         >
