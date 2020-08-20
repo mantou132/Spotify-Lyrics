@@ -5,8 +5,8 @@ import { PopupStore } from '../popup/store';
 import {
   drawText,
   drawBackground,
-  drawLyrics,
-  drawHighlight,
+  renderLyrics,
+  renderHighlight,
   RenderLyricsOptions,
 } from './canvas-renderer';
 import { coverCanvas, coverHDCanvas, lyricCtx, audioPromise } from './element';
@@ -47,11 +47,11 @@ const tick = async () => {
     } else if (!lyrics && !highlightLyrics) {
       drawText(lyricCtx, 'No lyrics', { bg });
     } else if (lyrics?.length) {
-      drawLyrics(lyricCtx, lyrics, audio.currentTime, renderOptions);
+      renderLyrics(lyricCtx, lyrics, audio.currentTime, renderOptions);
     } else if (lyrics?.length === 0 || highlightLyrics?.length === 0) {
       drawText(lyricCtx, '', { bg });
     } else if (!lyrics && highlightLyrics?.length) {
-      drawHighlight(lyricCtx, highlightLyrics, renderOptions);
+      renderHighlight(lyricCtx, highlightLyrics, renderOptions);
     }
   }
 

@@ -198,7 +198,26 @@ export interface RenderLyricsOptions {
   smooth: boolean;
 }
 
-export function drawLyrics(
+type RenderState =
+  | ({
+      lyrics: Exclude<Lyric, null> | string[];
+      currentIndex: number;
+      progress: number;
+    } & RenderLyricsOptions)
+  | undefined;
+
+// Avoid drawing again when the same
+// Do not operate canvas again in other functions
+let renderState: RenderState;
+
+function isEqualState(state1: RenderState, state2: RenderState) {
+  if (!state1 || !state2) return false;
+  return Object.keys(state1).reduce((p, c: keyof RenderState) => {
+    return p && state1[c] === state2[c];
+  }, true);
+}
+
+export function renderLyrics(
   ctx: CanvasRenderingContext2D,
   lyrics: Exclude<Lyric, null>,
   currentTime: number, // s
@@ -225,6 +244,10 @@ export function drawLyrics(
       }
     }
   });
+
+  const nextState: RenderState = { ...options, currentIndex, lyrics, progress };
+  if (isEqualState(nextState, renderState)) return;
+  renderState = nextState;
 
   drawBackground(ctx, options.bg);
   drawMask(ctx);
@@ -316,7 +339,7 @@ export function drawLyrics(
 }
 
 const weakLyricsTime = new WeakMap<string[], number>();
-export function drawHighlight(
+export function renderHighlight(
   ctx: CanvasRenderingContext2D,
   lyrics: string[],
   options: RenderLyricsOptions,
@@ -333,6 +356,10 @@ export function drawHighlight(
   const diff = time % DURATION;
   const progress = Math.min((diff < DURATION / 2 ? diff : DURATION - diff) / animateDuration, 1);
   const opacity = progress;
+
+  const nextState: RenderState = { ...options, currentIndex, lyrics, progress };
+  if (isEqualState(nextState, renderState)) return;
+  renderState = nextState;
 
   drawBackground(ctx, options.bg);
   drawMask(ctx);
