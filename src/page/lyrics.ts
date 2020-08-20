@@ -101,14 +101,15 @@ async function fetchChineseName(s: string) {
     ).json();
     const artists = result?.artists || [];
     artists.forEach((artist) => {
-      const alia = [...artist.alias, ...(artist.transNames || [])]
+      const alias = [...artist.alias, ...(artist.transNames || [])]
         .map((e) => sify(e).toLowerCase())
-        .sort()
-        .join();
+        .sort();
       // Chinese singer's English name as an alias
-      if (alia && s.includes(alia)) {
-        singerAlias[alia] = artist.name;
-      }
+      alias.forEach((alia) => {
+        if (s.includes(alia)) {
+          singerAlias[alia] = artist.name;
+        }
+      });
     });
   } catch (e) {
     captureException(e);
