@@ -149,12 +149,16 @@ export class EditorApp extends GemElement<State> {
   };
 
   saveRemote = async () => {
+    const { lyrics } = this.state;
+    if (lyrics.some(({ startTime }) => startTime === null)) {
+      return alert('Please add a timestamp to each line of text');
+    }
     await setSong({
       name: sharedData.name,
       artists: sharedData.artists,
-      lyric: serializedLyrics(this.state.lyrics),
+      lyric: serializedLyrics(lyrics),
     });
-    this.originLyrics = this.state.lyrics;
+    this.originLyrics = lyrics;
     this.close(null, { bubbles: true, composed: true });
   };
 
