@@ -48,11 +48,12 @@ export class EditorApp extends GemElement<State> {
   @refobject lyricsInput: RefObject<HTMLInputElement>;
 
   originLyrics = sharedData.lyrics;
-  initialLyrics = sharedData.lyrics || initLyrics(sharedData.text);
 
   state: State = {
     currentIndex: -1,
-    lyrics: this.initialLyrics,
+    lyrics: this.originLyrics
+      ? JSON.parse(JSON.stringify(this.originLyrics))
+      : initLyrics(sharedData.text),
   };
 
   constructor() {
