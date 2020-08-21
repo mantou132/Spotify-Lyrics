@@ -4,16 +4,18 @@ import { customElement, emitter, Emitter, refobject, RefObject } from '@mantou/g
 import { theme } from '../../common/theme';
 import { audioPromise } from '../element';
 import { sharedData } from '../share-data';
-import { Lyric } from '../lyrics';
+import { parseLyrics, Lyric } from '../lyrics';
 import { setSong } from '../store';
 
 import { Button } from './elements/button';
 
 function initLyrics(text: string) {
-  return text
-    .split('\n')
-    .map((s) => ({ startTime: null, text: s.trim() }))
-    .filter(({ text }) => !!text && !text.startsWith('['));
+  return (
+    parseLyrics(text.replace(/^\s*$(?:\r\n?|\n)/gm, ''), {
+      cleanLyrics: true,
+      keepPlainText: true,
+    }) || []
+  );
 }
 
 function formatLRCTime(s: number) {
@@ -205,6 +207,11 @@ export class EditorApp extends GemElement<State> {
           padding: 0.8em 1.6em 1.6em;
           color: rgb(${theme.blackRGB});
         }
+        a,
+        a:visited {
+          color: inherit;
+          text-decoration: none;
+        }
         .title {
           font-size: 1.3em;
           margin: 0.5em 0;
@@ -257,7 +264,15 @@ export class EditorApp extends GemElement<State> {
           justify-content: space-between;
         }
       </style>
-      <p class="title">LRC Editor: ${sharedData.name} - ${sharedData.artists}</p>
+      <p class="title">
+        LRC Editor:
+        <a
+          target="_blank"
+          title="Google search lyrics"
+          href="https://www.google.com/search?q=${sharedData.name} ${sharedData.artists} lyrics"
+          >${sharedData.name} - ${sharedData.artists}</a
+        >
+      </p>
       <div class="body" tabindex="-1">
         <table>
           <tbody ref=${this.tbody.ref}>
@@ -283,7 +298,7 @@ export class EditorApp extends GemElement<State> {
             )}
           </tbody>
         </table>
-        ${lyrics.length === 0 ? html`<p class="tip">Paste lyrics plain text</p>` : ''}
+        ${lyrics.length === 0 ? html`<p class="tip">Paste lyrics</p>` : ''}
       </div>
       <div class="btns">
         ${new Button({ clickHandle: this.mark, content: 'Mark Line' })}

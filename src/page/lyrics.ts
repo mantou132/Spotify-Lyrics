@@ -330,6 +330,10 @@ export async function fetchLyric(songId: number) {
 class Line {
   startTime: number | null = null;
   text = '';
+  constructor(text = '', starTime: number | null = null) {
+    this.startTime = starTime;
+    this.text = text;
+  }
 }
 
 export type Lyric = Line[] | null;
@@ -337,6 +341,7 @@ export type Lyric = Line[] | null;
 export interface ParseLyricsOptions {
   cleanLyrics?: boolean;
   useTChinese?: boolean;
+  keepPlainText?: boolean;
 }
 
 function capitalize(s: string) {
@@ -344,6 +349,7 @@ function capitalize(s: string) {
 }
 
 export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) {
+  if (!lyricStr) return null;
   const text1 = `作?\\s*词|作?\\s*曲|编\\s*曲?|监\\s*制?`;
   const text2 = '.*编写|.*和音|.*和声|.*提琴|.*录|.*工程|.*工作室|.*设计|.*剪辑';
   const text3 = '制作|发行|出品|混音|缩混|后期|翻唱|题字|文案|海报|古筝|二胡|钢琴|吉他|贝斯|笛子';
@@ -366,20 +372,21 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
         text = capitalize(text.trim()).replace(/（/g, '(').replace(/）/g, ')');
         text = sify(text);
       }
+      if (!matchResult.length && options.keepPlainText) {
+        return [new Line(text)];
+      }
       return matchResult.map((slice) => {
         const result = new Line();
         const matchResut = slice.match(/[^\[\]]+/g);
         const [key, value] = matchResut?.[0].split(':') || [];
         const [min, sec] = [parseFloat(key), parseFloat(value)];
         if (!isNaN(min)) {
-          if (options.cleanLyrics && otherInfoRegexp.test(text)) {
-            result.text = '';
-          } else {
+          if (!options.cleanLyrics || !otherInfoRegexp.test(text)) {
             result.startTime = min * 60 + sec;
             result.text = options.useTChinese ? tify(text) : text;
           }
-        } else {
-          result.text = options.cleanLyrics ? '' : `${key?.toUpperCase()}: ${value}`;
+        } else if (!options.cleanLyrics && key && value) {
+          result.text = `${key.toUpperCase()}: ${value}`;
         }
         return result;
       });
