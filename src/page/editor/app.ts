@@ -45,6 +45,7 @@ interface State {
 export class EditorApp extends GemElement<State> {
   @emitter close: Emitter;
   @refobject tbody: RefObject<HTMLTableSectionElement>;
+  @refobject lyricsInput: RefObject<HTMLInputElement>;
 
   originLyrics = sharedData.lyrics;
   initialLyrics = sharedData.lyrics || initLyrics(sharedData.text);
@@ -69,24 +70,19 @@ export class EditorApp extends GemElement<State> {
       if (audio.duration - audio.currentTime < 0.5 && !resetTimer) {
         resetTimer = window.setTimeout(() => {
           resetTimer = 0;
-          audio.currentTime = 0;
-          this.setState({ currentIndex: -1 });
-          setTimeout(this.scrollInto);
+          this.resetLocal();
         }, (audio.duration - audio.currentTime - 0.01) * 1000);
       }
     };
 
     audioPromise.then((audio) => {
-      audio.currentTime = 0;
-      this.setState({ currentIndex: -1 });
+      this.resetLocal();
       audio.addEventListener('timeupdate', timeUpdateHandler);
     });
 
     const pasteHandler = async (e: ClipboardEvent) => {
-      const audio = await audioPromise;
       const lyrics = initLyrics(e.clipboardData?.getData('text') || '');
-      audio.currentTime = 0;
-      this.setState({ lyrics, currentIndex: -1 });
+      this.resetLocal({ lyrics });
     };
     document.addEventListener('paste', pasteHandler);
     return async () => {
@@ -96,6 +92,17 @@ export class EditorApp extends GemElement<State> {
       sharedData.lyrics = this.originLyrics;
     };
   }
+
+  lyricsChange = () => {
+    const file = this.lyricsInput.element?.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.addEventListener('load', async (event) => {
+      const lyrics = initLyrics(event.target!.result as string);
+      this.resetLocal({ lyrics });
+    });
+    reader.readAsText(file);
+  };
 
   scrollInto = () => {
     if (!this.tbody.element) return;
@@ -123,16 +130,21 @@ export class EditorApp extends GemElement<State> {
     sharedData.lyrics = lyrics;
   };
 
+  resetLocal = async (state?: Partial<State>) => {
+    const audio = await audioPromise;
+    audio.currentTime = 0;
+    this.setState({ ...state, currentIndex: -1 });
+    setTimeout(this.scrollInto);
+  };
+
   resetRemote = async () => {
     await setSong({
       name: sharedData.name,
       artists: sharedData.artists,
       lyric: '',
     });
-    const audio = await audioPromise;
-    audio.currentTime = 0;
     const lyrics = initLyrics(sharedData.text);
-    this.setState({ lyrics, currentIndex: -1 });
+    this.resetLocal({ lyrics });
     sharedData.lyrics = lyrics;
   };
 
@@ -229,6 +241,10 @@ export class EditorApp extends GemElement<State> {
           text-align: center;
           opacity: 0.5;
         }
+        .button:hover {
+          cursor: pointer;
+          border-bottom: 1px solid;
+        }
         table {
           width: 100%;
           line-height: 1.5;
@@ -298,8 +314,20 @@ export class EditorApp extends GemElement<State> {
             )}
           </tbody>
         </table>
-        ${lyrics.length === 0 ? html`<p class="tip">Paste lyrics</p>` : ''}
+        ${lyrics.length === 0
+          ? html`
+              <p class="tip">Paste or <label for="lyrics" class="button">upload</label> lyrics</p>
+            `
+          : ''}
       </div>
+      <input
+        ref=${this.lyricsInput.ref}
+        id="lyrics"
+        @change=${this.lyricsChange}
+        type="file"
+        accept="text/plain"
+        hidden
+      />
       <div class="btns">
         ${new Button({ clickHandle: this.mark, content: 'Mark Line' })}
         ${new Button({ clickHandle: this.insertLine, content: 'Inset Line' })}
