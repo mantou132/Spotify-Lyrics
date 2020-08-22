@@ -86,14 +86,15 @@ export class SharedData {
 
   // can only modify `lyrics`/`id`/`aId`/`list`
   async matching() {
-    const startTime = performance.now();
+    const audio = await audioPromise;
+    const startTime = audio.currentSrc ? performance.now() : null;
     const options = await optionsPromise;
     const parseLyricsOptions = {
       cleanLyrics: options['clean-lyrics'] === 'on',
       useTChinese: options['traditional-chinese-lyrics'] === 'on',
     };
     const { list, id } = await matchingLyrics(this.query, {
-      getAudioElement: () => audioPromise,
+      getAudioElement: () => audio,
     });
     if (id === 0) {
       sendEvent(options.cid, events.notMatch, { cd1: this.cd1 });
@@ -119,8 +120,10 @@ export class SharedData {
       this.lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
       sendEvent(options.cid, events.useRemoteLyrics);
     }
-    const ev = (performance.now() - startTime).toFixed();
-    sendEvent(options.cid, { ev, ...events.loadLyrics }, { cd1: this.cd1 });
+    if (startTime) {
+      const ev = (performance.now() - startTime).toFixed();
+      sendEvent(options.cid, { ev, ...events.loadLyrics }, { cd1: this.cd1 });
+    }
     this.fetchHighlight();
   }
 

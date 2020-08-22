@@ -132,7 +132,7 @@ async function fetchSongList(s: string): Promise<Song[]> {
 
 interface MatchingLyricsOptions {
   onlySearchName?: boolean;
-  getAudioElement?: () => Promise<HTMLAudioElement>;
+  getAudioElement?: () => HTMLAudioElement | Promise<HTMLAudioElement>;
   fetchData?: (s: string) => Promise<Song[]>;
   fetchTransName?: (s: string) => Promise<Record<string, string>>;
 }
