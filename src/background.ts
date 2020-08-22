@@ -108,3 +108,9 @@ browser.contextMenus.onClicked.addListener(async function (info) {
       break;
   }
 });
+
+browser.runtime.onInstalled.addListener(({ reason }) => {
+  if (reason === 'install') {
+    openPage(browser.runtime.getURL('welcome.html'));
+  }
+});

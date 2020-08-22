@@ -4,6 +4,7 @@ import { browser } from 'webextension-polyfill-ts';
 import { render, html } from '@mantou/gem/lib/element';
 
 import { isWebApp } from '../common/consts';
+import { fontStyle } from '../common/font';
 
 import './app';
 import './modal';
@@ -11,10 +12,10 @@ import './modal';
 if (!isWebApp) {
   render(
     html`
+      ${fontStyle}
       <style>
         html {
           font-size: 62.5%;
-          font-family: Roboto, system-ui, sans-serif;
           background: white;
         }
         body {
