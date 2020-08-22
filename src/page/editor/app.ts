@@ -65,20 +65,12 @@ export class EditorApp extends GemElement<State> {
 
   mounted() {
     if (!document.pictureInPictureElement) return;
-    let resetTimer = 0;
-    const timeUpdateHandler = async () => {
-      const audio = await audioPromise;
-      if (audio.duration - audio.currentTime < 0.5 && !resetTimer) {
-        resetTimer = window.setTimeout(() => {
-          resetTimer = 0;
-          this.resetLocal();
-        }, (audio.duration - audio.currentTime - 0.01) * 1000);
-      }
-    };
+    this.resetLocal();
 
+    let originLoop = false;
     audioPromise.then((audio) => {
-      this.resetLocal();
-      audio.addEventListener('timeupdate', timeUpdateHandler);
+      originLoop = audio.loop;
+      audio.loop = true;
     });
 
     const pasteHandler = async (e: ClipboardEvent) => {
@@ -87,8 +79,7 @@ export class EditorApp extends GemElement<State> {
     };
     document.addEventListener('paste', pasteHandler);
     return async () => {
-      const audio = await audioPromise;
-      audio.removeEventListener('timeupdate', timeUpdateHandler);
+      (await audioPromise).loop = originLoop;
       document.removeEventListener('paste', pasteHandler);
       sharedData.lyrics = this.originLyrics;
     };
