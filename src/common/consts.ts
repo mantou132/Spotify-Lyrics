@@ -28,9 +28,11 @@ export const ContextItems = {
 
 export const LyricsPositions = ['page', 'pip'] as const;
 export const LyricsAlign = ['left', 'center'] as const;
+export const LyricsFontFamily = ['sans-serif', 'serif', 'cursive'] as const;
 export interface Options {
   cid: string;
   'font-size': string;
+  'font-family': typeof LyricsFontFamily[number] | string;
   'toggle-shortcut': string;
   'only-cover': Value;
   'clean-lyrics': Value;

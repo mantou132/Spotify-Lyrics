@@ -51,12 +51,7 @@
 
   "optionsFontSize": {
     "message": "Lyrics font size",
-    "description": "Specify font size"
-  },
-
-  "optionsLyricsAlign": {
-    "message": "Lyrics align",
-    "description": "Specify alignment"
+    "description": "Specify lyrics font size"
   },
 
   "optionsFontSizeDetail": {
@@ -64,6 +59,16 @@
     "description": "Specify font size detail"
   },
 
+
+  "optionsFontFamily": {
+    "message": "Lyrics font family",
+    "description": "Specify lyrics font family"
+  },
+
+  "optionsLyricsAlign": {
+    "message": "Lyrics align",
+    "description": "Specify alignment"
+  },
   "optionsHDCover": {
     "message": "Use high-resolution cover as the lyrics background",
     "description": "Use high-resolution cover as the lyrics background"

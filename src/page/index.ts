@@ -8,6 +8,7 @@ import {
   renderLyrics,
   renderHighlight,
   RenderLyricsOptions,
+  RenderTextOptions,
 } from './canvas-renderer';
 import { coverCanvas, coverHDCanvas, lyricCtx, audioPromise } from './element';
 import { sharedData } from './share-data';
@@ -30,26 +31,32 @@ const tick = async () => {
   const isOpen = !!document.pictureInPictureElement;
   const { error, lyrics, highlightLyrics } = sharedData;
 
-  const bg = isOnlyCover || isHDCover ? coverHDCanvas : coverCanvas;
+  const backgroundImage = isOnlyCover || isHDCover ? coverHDCanvas : coverCanvas;
+
+  const textOptions: RenderTextOptions = {
+    backgroundImage,
+    fontFamily: options['font-family'],
+  };
 
   const renderOptions: RenderLyricsOptions = {
-    bg,
+    backgroundImage,
     focusLineFontSize: Number(options['font-size']),
     align: options['lyrics-align'],
     smooth: isSmoothScroll,
+    fontFamily: options['font-family'],
   };
 
   if (isOnlyCover) {
-    drawBackground(lyricCtx, bg);
+    drawBackground(lyricCtx, backgroundImage);
   } else {
     if (error) {
-      drawText(lyricCtx, `Error: ${error.message}`, { color: 'red', bg });
+      drawText(lyricCtx, `Error: ${error.message}`, { color: 'red', ...textOptions });
     } else if (!lyrics && !highlightLyrics) {
-      drawText(lyricCtx, 'No lyrics', { bg });
+      drawText(lyricCtx, 'No lyrics', textOptions);
     } else if (lyrics?.length) {
       renderLyrics(lyricCtx, lyrics, audio.currentTime, renderOptions);
     } else if (lyrics?.length === 0 || highlightLyrics?.length === 0) {
-      drawText(lyricCtx, audio.currentSrc ? 'Loading...' : 'Waiting for music...', { bg });
+      drawText(lyricCtx, audio.currentSrc ? 'Loading...' : 'Waiting for music...', textOptions);
     } else if (!lyrics && highlightLyrics?.length) {
       renderHighlight(lyricCtx, highlightLyrics, renderOptions);
     }

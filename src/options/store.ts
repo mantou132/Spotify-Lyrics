@@ -1,6 +1,6 @@
 import { browser } from 'webextension-polyfill-ts';
 
-import { Message, Event, Options, isWebApp } from '../common/consts';
+import { Message, Event, Options, isWebApp, LyricsFontFamily } from '../common/consts';
 
 const uiLanguage = browser.i18n.getUILanguage();
 
@@ -12,6 +12,7 @@ const defaultOptions: Options = {
   'show-on': 'pip',
   'lyrics-align': 'left',
   'font-size': '48',
+  'font-family': LyricsFontFamily[0],
   'use-unreviewed-lyrics': 'on',
   'toggle-shortcut': 'l',
   'traditional-chinese-lyrics': uiLanguage === 'zh-TW' || uiLanguage === 'zh-HK' ? 'on' : 'off',

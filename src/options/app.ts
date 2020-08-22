@@ -1,7 +1,7 @@
 import { customElement, refobject, RefObject } from '@mantou/gem/lib/decorators';
 import { GemElement, html } from '@mantou/gem/lib/element';
 
-import { Options, LyricsPositions, LyricsAlign } from '../common/consts';
+import { Options, LyricsPositions, LyricsAlign, LyricsFontFamily } from '../common/consts';
 import { sendEvent, events } from '../common/ga';
 import { theme } from '../common/theme';
 
@@ -69,6 +69,13 @@ export class OptionsApp extends GemElement<State> {
               label: String(index * 2 + 32) + 'px',
               value: String(index * 2 + 32),
             }))}
+          ></ele-select>
+        </ele-form-item>
+        <ele-form-item label=${i18n.optionsFontFamily()}>
+          <ele-select
+            name=${'font-family' as keyof Options}
+            default-value=${options['font-family']}
+            .options=${LyricsFontFamily.map((e) => ({ label: e, value: e }))}
           ></ele-select>
         </ele-form-item>
         <ele-form-item label=${i18n.optionsLyricsAlign()}>

@@ -147,17 +147,18 @@ export function drawBackground(ctx: CanvasRenderingContext2D, image: CanvasImage
 }
 
 export interface RenderTextOptions {
-  bg: CanvasImageSource;
+  backgroundImage: CanvasImageSource;
+  fontFamily: string;
   color?: string;
 }
 export function drawText(ctx: CanvasRenderingContext2D, text: string, options: RenderTextOptions) {
-  const { color = 'white', bg } = options;
-  drawBackground(ctx, bg);
+  const { color = 'white', backgroundImage } = options;
+  drawBackground(ctx, backgroundImage);
   drawMask(ctx);
   ctx.save();
   const fontSize = 32;
   ctx.fillStyle = color;
-  ctx.font = `bold ${fontSize}px sans-serif`;
+  ctx.font = `bold ${fontSize}px ${options.fontFamily}, sans-serif`;
   drawParagraph(ctx, text, {
     vCenter: true,
     hCenter: true,
@@ -192,10 +193,11 @@ function initOffscreenCtx(ctx: CanvasRenderingContext2D) {
 }
 
 export interface RenderLyricsOptions {
-  bg: CanvasImageSource;
+  backgroundImage: CanvasImageSource;
   focusLineFontSize: number;
   align: typeof LyricsAlign[number];
   smooth: boolean;
+  fontFamily: string;
 }
 
 type RenderState =
@@ -233,6 +235,7 @@ export function renderLyrics(
   const marginWidth = ctx.canvas.width * 0.075;
   const animateDuration = options.smooth ? 0.3 : 0;
   const hCenter = options.align === 'center' ? true : false;
+  const fontFamily = `${options.fontFamily}, sans-serif`;
 
   let currentIndex = -1;
   let progress = 1;
@@ -249,7 +252,7 @@ export function renderLyrics(
   if (isEqualState(nextState, renderState)) return;
   renderState = nextState;
 
-  drawBackground(ctx, options.bg);
+  drawBackground(ctx, options.backgroundImage);
   drawMask(ctx);
   ctx.save();
 
@@ -266,7 +269,7 @@ export function renderLyrics(
     (otherLineFontSize / focusLineFontSize) * (ctx.canvas.width - 2 * marginWidth);
   const progressRight = marginWidth + (1 - progress) * (otherRight - marginWidth);
   offscreenCtx.fillStyle = `rgba(255, 255, 255, ${fLineOpacity})`;
-  offscreenCtx.font = `bold ${fFontSize}px sans-serif`;
+  offscreenCtx.font = `bold ${fFontSize}px ${fontFamily}`;
   const prevLineFocusHeight = drawParagraph(offscreenCtx, lyrics[currentIndex - 1]?.text, {
     vCenter: true,
     hCenter,
@@ -294,10 +297,10 @@ export function renderLyrics(
         otherLineFontSize + (1 - progress) * (focusLineFontSize - otherLineFontSize);
       const prevProgressLineOpacity = otherLineOpacity + (1 - progress) * (1 - otherLineOpacity);
       offscreenCtx.fillStyle = `rgba(255, 255, 255, ${prevProgressLineOpacity})`;
-      offscreenCtx.font = `bold ${prevProgressLineFontSize}px sans-serif`;
+      offscreenCtx.font = `bold ${prevProgressLineFontSize}px ${fontFamily}`;
     } else {
       offscreenCtx.fillStyle = `rgba(255, 255, 255, ${otherLineOpacity})`;
-      offscreenCtx.font = `bold ${otherLineFontSize}px sans-serif`;
+      offscreenCtx.font = `bold ${otherLineFontSize}px ${fontFamily}`;
     }
     lastBeforePos = drawParagraph(offscreenCtx, lyrics[currentIndex - 1 - i].text, {
       hCenter,
@@ -313,7 +316,7 @@ export function renderLyrics(
   }
   // next line
   offscreenCtx.fillStyle = `rgba(255, 255, 255, ${otherLineOpacity})`;
-  offscreenCtx.font = `bold ${otherLineFontSize}px sans-serif`;
+  offscreenCtx.font = `bold ${otherLineFontSize}px ${fontFamily}`;
   let lastAfterPos = pos;
   for (let i = currentIndex + 1; i < lyrics.length; i++) {
     lastAfterPos = drawParagraph(offscreenCtx, lyrics[i].text, {
@@ -347,6 +350,7 @@ export function renderHighlight(
   const DURATION = 20_000;
   const animateDuration = options.smooth ? 500 : 0;
   const marginWidth = ctx.canvas.width * 0.075;
+  const fontFamily = `${options.fontFamily}, sans-serif`;
 
   if (!weakLyricsTime.has(lyrics)) {
     weakLyricsTime.set(lyrics, performance.now());
@@ -361,14 +365,14 @@ export function renderHighlight(
   if (isEqualState(nextState, renderState)) return;
   renderState = nextState;
 
-  drawBackground(ctx, options.bg);
+  drawBackground(ctx, options.backgroundImage);
   drawMask(ctx);
   ctx.save();
 
   const { offscreenCtx, gradient2 } = initOffscreenCtx(ctx);
   offscreenCtx.save();
   offscreenCtx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
-  offscreenCtx.font = `bold ${options.focusLineFontSize}px sans-serif`;
+  offscreenCtx.font = `bold ${options.focusLineFontSize}px ${fontFamily}`;
   drawParagraph(offscreenCtx, lyrics[currentIndex], {
     hCenter: options.align === 'center' ? true : false,
     lineHeight: options.focusLineFontSize * 1.3,
