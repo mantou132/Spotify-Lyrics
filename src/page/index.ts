@@ -49,7 +49,7 @@ const tick = async () => {
     } else if (lyrics?.length) {
       renderLyrics(lyricCtx, lyrics, audio.currentTime, renderOptions);
     } else if (lyrics?.length === 0 || highlightLyrics?.length === 0) {
-      drawText(lyricCtx, '', { bg });
+      drawText(lyricCtx, audio.currentSrc ? 'Loading...' : 'Waiting for music...', { bg });
     } else if (!lyrics && highlightLyrics?.length) {
       renderHighlight(lyricCtx, highlightLyrics, renderOptions);
     }
