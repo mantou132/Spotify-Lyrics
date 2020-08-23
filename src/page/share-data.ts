@@ -102,23 +102,24 @@ export class SharedData {
     this.list = list;
     const remoteData = await getSong(this.query);
     const reviewed = options['use-unreviewed-lyrics'] === 'on' || remoteData?.reviewed;
-    if (remoteData?.user === options.cid && remoteData.lyric) {
+    const isSelf = remoteData?.user === options.cid;
+    if (isSelf && remoteData?.lyric) {
       this.lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
+      sendEvent(options.cid, events.useRemoteLyrics);
+    } else if (isSelf && remoteData?.neteaseID) {
+      this.id = remoteData.neteaseID;
+      this.aId = this.id;
+      await this.updateLyrics();
+    } else if (reviewed && remoteData?.lyric) {
+      this.lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
+      sendEvent(options.cid, events.useRemoteLyrics);
     } else {
-      this.id =
-        (remoteData?.user === options.cid || reviewed
-          ? remoteData?.neteaseID || id
-          : id || remoteData?.neteaseID) || 0;
+      this.id = (reviewed ? remoteData?.neteaseID || id : id || remoteData?.neteaseID) || 0;
       this.aId = this.id;
       await this.updateLyrics();
     }
     if (this.lyrics && this.id !== id) {
       sendEvent(options.cid, events.useRemoteMatch);
-    }
-    // User-made lyrics need to be reviewed
-    if (!this.lyrics && remoteData?.lyric && reviewed) {
-      this.lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
-      sendEvent(options.cid, events.useRemoteLyrics);
     }
     if (startTime) {
       const ev = (performance.now() - startTime).toFixed();
