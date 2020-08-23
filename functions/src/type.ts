@@ -6,6 +6,8 @@ export interface Lyric {
   neteaseID?: number;
   lyric?: string;
   reviewed?: boolean;
+  createdTime?: number;
+  updatedTime?: number;
 }
 
 export interface LyricsResponse<T> {
