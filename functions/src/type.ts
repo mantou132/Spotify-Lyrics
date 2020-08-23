@@ -12,3 +12,9 @@ export interface LyricsResponse<T> {
   data?: T;
   message: string;
 }
+
+export interface Config {
+  'spotify-lyrics'?: {
+    'manager-ids'?: string;
+  };
+}

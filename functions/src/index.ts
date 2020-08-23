@@ -1,13 +1,16 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
-import { Lyric, LyricsResponse } from './type';
+import { Lyric, LyricsResponse, Config } from './type';
 
 admin.initializeApp();
 const db = admin.firestore();
 
 const COLLECTION = 'lyrics-v3';
-const MANAGERS = ['1595656736449-0.6348481552032998', '1596150131865-0.8669090580915286'];
+// firebase functions:config:set spotify-lyrics.manager-ids=xxx,xxx
+const MANAGERS = ((functions.config() as Config)?.['spotify-lyrics']?.['manager-ids'] || '').split(
+  ',',
+);
 
 const corsHandler = (req: functions.https.Request, res: functions.Response) => {
   res.set('Access-Control-Allow-Origin', '*');
