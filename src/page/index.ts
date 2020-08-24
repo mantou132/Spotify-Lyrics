@@ -1,4 +1,4 @@
-import { Event, Options } from '../common/consts';
+import { Event } from '../common/consts';
 import { sendEvent, events } from '../common/ga';
 import { PopupStore } from '../popup/store';
 
@@ -12,7 +12,7 @@ import {
 } from './canvas-renderer';
 import { coverCanvas, coverHDCanvas, lyricCtx, audioPromise } from './element';
 import { sharedData } from './share-data';
-import { optionsPromise } from './options';
+import { optionsPromise, OptionsAndI18n } from './options';
 import { appendStyle } from './utils';
 import { localConfig } from './config';
 import { getFPS } from './fps';
@@ -20,10 +20,11 @@ import { getFPS } from './fps';
 import './pip';
 import './observer';
 
-let options: Options;
+let options: OptionsAndI18n;
 
 const tick = async () => {
   const audio = await audioPromise;
+  const i18nMap = options.i18nMap;
 
   const isOnlyCover = options['only-cover'] === 'on';
   const isHDCover = options['hd-cover'] === 'on';
@@ -50,13 +51,20 @@ const tick = async () => {
     drawBackground(lyricCtx, backgroundImage);
   } else {
     if (error) {
-      drawText(lyricCtx, `Error: ${error.message}`, { color: 'red', ...textOptions });
+      drawText(lyricCtx, `${i18nMap.pageTipError}: ${error.message}`, {
+        color: 'red',
+        ...textOptions,
+      });
     } else if (!lyrics && !highlightLyrics) {
-      drawText(lyricCtx, 'No lyrics', textOptions);
+      drawText(lyricCtx, i18nMap.pageTipNoLyrics, textOptions);
     } else if (lyrics?.length) {
       renderLyrics(lyricCtx, lyrics, audio.currentTime, renderOptions);
     } else if (lyrics?.length === 0 || highlightLyrics?.length === 0) {
-      drawText(lyricCtx, audio.currentSrc ? 'Loading...' : 'Waiting for music...', textOptions);
+      drawText(
+        lyricCtx,
+        audio.currentSrc ? i18nMap.pageTipLoading : i18nMap.pageTipWaiting,
+        textOptions,
+      );
     } else if (!lyrics && highlightLyrics?.length) {
       renderHighlight(lyricCtx, highlightLyrics, renderOptions);
     }

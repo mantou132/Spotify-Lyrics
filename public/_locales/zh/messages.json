@@ -105,5 +105,73 @@
 
   "menusRateMe": {
     "message": "评价该扩展"
+  },
+
+  "pageTipError": {
+    "message": "错误"
+  },
+
+  "pageTipNoLyrics": {
+    "message": "没有歌词"
+  },
+
+  "pageTipLoading": {
+    "message": "加载..."
+  },
+
+  "pageTipWaiting": {
+    "message": "等待播放..."
+  },
+
+  "pageEditorOpenValid": {
+    "message": "请首先打开歌词"
+  },
+
+  "pageEditorTitle": {
+    "message": "LRC 编辑器"
+  },
+
+  "pageEditorSearch": {
+    "message": "搜索歌词"
+  },
+
+  "pageEditorSeek": {
+    "message": "跳转"
+  },
+
+  "pageEditorAddLyrics1": {
+    "message": "粘贴或"
+  },
+
+  "pageEditorAddLyrics2": {
+    "message": "上传"
+  },
+
+  "pageEditorAddLyrics3": {
+    "message": "歌词"
+  },
+
+  "pageEditorMarkLine": {
+    "message": "标记行"
+  },
+
+  "pageEditorInsetLine": {
+    "message": "插入空行"
+  },
+
+  "pageEditorReset": {
+    "message": "重置"
+  },
+
+  "pageEditorDownload": {
+    "message": "下载"
+  },
+
+  "pageEditorSave": {
+    "message": "保存"
+  },
+
+  "pageEditorSaveValid": {
+    "message": "请为每一行标记时间戳"
   }
 }

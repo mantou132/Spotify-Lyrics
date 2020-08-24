@@ -137,5 +137,90 @@
   "menusRateMe": {
     "message": "Rate this extension",
     "description": "Rate me context menus item"
+  },
+
+  "pageTipError": {
+    "message": "Error",
+    "description": "Load lyrics error tip"
+  },
+
+  "pageTipNoLyrics": {
+    "message": "No lyrics",
+    "description": "No lyrics tip"
+  },
+
+  "pageTipLoading": {
+    "message": "Loading...",
+    "description": "Loading lyrics tip"
+  },
+
+  "pageTipWaiting": {
+    "message": "Waiting for music...",
+    "description": "Waiting for music tip"
+  },
+
+  "pageEditorOpenValid": {
+    "message": "Please open the lyrics first",
+    "description": "Open LRC editor fail tip"
+  },
+
+  "pageEditorTitle": {
+    "message": "LRC Editor",
+    "description": "LRC editor title"
+  },
+
+  "pageEditorSearch": {
+    "message": "Search lyrics",
+    "description": "Search lyrics tip"
+  },
+
+  "pageEditorSeek": {
+    "message": "Jump",
+    "description": "Track seek tip"
+  },
+
+  "pageEditorAddLyrics1": {
+    "message": "Paste or",
+    "description": "Paste or upload lyrics"
+  },
+
+  "pageEditorAddLyrics2": {
+    "message": "upload",
+    "description": "Paste or upload lyrics"
+  },
+
+  "pageEditorAddLyrics3": {
+    "message": "lyrics",
+    "description": "Paste or upload lyrics"
+  },
+
+  "pageEditorMarkLine": {
+    "message": "Mark Line",
+    "description": "Mark line"
+  },
+
+  "pageEditorInsetLine": {
+    "message": "Inset Line",
+    "description": "Inset line"
+  },
+
+  "pageEditorReset": {
+    "message": "Reset",
+    "description": "Reset remote and local lyrics"
+  },
+
+  "pageEditorDownload": {
+    "message": "Download",
+    "description": "Download lyrics"
+  },
+
+  "pageEditorSave": {
+    "message": "Save",
+    "description": "Save lyrics"
+  },
+
+  "pageEditorSaveValid": {
+    "message": "Please add a timestamp to each line of text",
+    "description": "Save lyrics valid tip"
   }
 }

@@ -3,7 +3,7 @@ import * as Sentry from '@sentry/browser';
 
 import { Message, Event, ContextItems, isProd } from './common/consts';
 import { getOptions } from './options/store';
-import { i18n } from './i18n';
+import { i18n, i18nMap } from './i18n';
 declare global {
   interface Window {
     Sentry?: typeof Sentry;
@@ -25,7 +25,10 @@ browser.browserAction.disable();
 browser.runtime.onMessage.addListener((msg: Message) => {
   if (msg?.type === Event.GET_OPTIONS) {
     // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/onMessage#Parameters
-    return Promise.resolve(getOptions());
+    return getOptions().then((options) => ({
+      ...options,
+      i18nMap,
+    }));
   }
   if (msg?.type === Event.POPUP_ACTIVE) {
     if (msg.data === true) {

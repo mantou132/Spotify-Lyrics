@@ -6,6 +6,7 @@ import { audioPromise } from '../element';
 import { sharedData } from '../share-data';
 import { parseLyrics, Lyric } from '../lyrics';
 import { setSong } from '../store';
+import { OptionsAndI18n } from '../options';
 
 import { Button } from './elements/button';
 
@@ -56,8 +57,11 @@ export class EditorApp extends GemElement<State> {
       : initLyrics(sharedData.text),
   };
 
-  constructor() {
+  options: OptionsAndI18n;
+
+  constructor(options: OptionsAndI18n) {
     super();
+    this.options = options;
     this.addEventListener('keydown', (e: KeyboardEvent) => {
       e.stopPropagation();
     });
@@ -142,8 +146,9 @@ export class EditorApp extends GemElement<State> {
 
   saveRemote = async () => {
     const { lyrics } = this.state;
+    const { i18nMap } = this.options;
     if (lyrics.some(({ startTime }) => startTime === null)) {
-      return alert('Please add a timestamp to each line of text');
+      return alert(i18nMap.pageEditorSaveValid);
     }
     await setSong({
       name: sharedData.name,
@@ -191,6 +196,8 @@ export class EditorApp extends GemElement<State> {
   };
 
   render() {
+    const { currentIndex, lyrics } = this.state;
+    const { i18nMap } = this.options;
     if (!document.pictureInPictureElement) {
       return html`
         <style>
@@ -203,10 +210,9 @@ export class EditorApp extends GemElement<State> {
             color: rgb(${theme.blackRGB});
           }
         </style>
-        Please open the lyrics first
+        ${i18nMap.pageEditorOpenValid}
       `;
     }
-    const { currentIndex, lyrics } = this.state;
     return html`
       <style>
         :host {
@@ -277,13 +283,14 @@ export class EditorApp extends GemElement<State> {
         }
       </style>
       <p class="title">
-        LRC Editor:
+        ${i18nMap.pageEditorTitle}:
         <a
           target="_blank"
-          title="Google search lyrics"
+          title=${i18nMap.pageEditorSearch}
           href="https://www.google.com/search?q=${sharedData.name} ${sharedData.artists} lyrics"
-          >${sharedData.name} - ${sharedData.artists}</a
         >
+          ${sharedData.name} - ${sharedData.artists}
+        </a>
       </p>
       <div class="body" tabindex="-1">
         <table>
@@ -293,6 +300,7 @@ export class EditorApp extends GemElement<State> {
                 <tr class="${currentIndex >= index ? 'marked' : ''}">
                   <td
                     @click=${() => this.jump(startTime, index)}
+                    title=${startTime === null ? '' : i18nMap.pageEditorSeek}
                     class="timestamp ${startTime === null ? 'placeholder' : ''}"
                   >
                     ${startTime === null ? '00:00.00' : formatLRCTime(startTime)}
@@ -312,7 +320,11 @@ export class EditorApp extends GemElement<State> {
         </table>
         ${lyrics.length === 0
           ? html`
-              <p class="tip">Paste or <label for="lyrics" class="button">upload</label> lyrics</p>
+              <p class="tip">
+                ${i18nMap.pageEditorAddLyrics1}
+                <label for="lyrics" class="button">${i18nMap.pageEditorAddLyrics2}</label>
+                ${i18nMap.pageEditorAddLyrics3}
+              </p>
             `
           : ''}
       </div>
@@ -325,11 +337,11 @@ export class EditorApp extends GemElement<State> {
         hidden
       />
       <div class="btns">
-        ${new Button({ clickHandle: this.mark, content: 'Mark Line' })}
-        ${new Button({ clickHandle: this.insertLine, content: 'Inset Line' })}
-        ${new Button({ clickHandle: this.resetRemote, content: 'Reset' })}
-        ${new Button({ clickHandle: this.download, content: 'Download' })}
-        ${new Button({ clickHandle: this.saveRemote, content: 'Save' })}
+        ${new Button({ clickHandle: this.mark, content: i18nMap.pageEditorMarkLine })}
+        ${new Button({ clickHandle: this.insertLine, content: i18nMap.pageEditorInsetLine })}
+        ${new Button({ clickHandle: this.resetRemote, content: i18nMap.pageEditorReset })}
+        ${new Button({ clickHandle: this.download, content: i18nMap.pageEditorDownload })}
+        ${new Button({ clickHandle: this.saveRemote, content: i18nMap.pageEditorSave })}
       </div>
     `;
   }

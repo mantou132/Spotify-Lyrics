@@ -122,5 +122,6 @@ v1.2.7, Friday, July 31, 2020
 
 Fork it, submit PR.
 
+- Add translation
 - If you can write code, you can fix [bugs](https://github.com/mantou132/Spotify-Lyrics/issues?q=is%3Aissue+is%3Aopen+label%3Abug) or improve [performance](https://github.com/mantou132/Spotify-Lyrics/issues?q=is%3Aissue+is%3Aopen+label%3Aperformance)
 - Optimize the matching rate of Chinese, Japanese and Korean lyrics.(edit [config.json](./src/page/config.json)). _Note: The extension already has automatic optimization, this list serves as a supplement_ . _[Unmatched lyrics report](https://datastudio.google.com/reporting/bfd79c68-f9f4-4af5-8e51-a12d3d6be450)_
