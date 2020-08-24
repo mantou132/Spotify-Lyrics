@@ -351,11 +351,13 @@ function capitalize(s: string) {
 
 export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) {
   if (!lyricStr) return null;
-  const text1 = `作?\\s*词|作?\\s*曲|编\\s*曲?|监\\s*制?`;
-  const text2 = '.*编写|.*和音|.*和声|.*提琴|.*录|.*工程|.*工作室|.*设计|.*剪辑';
-  const text3 = '制作|发行|出品|混音|缩混|后期|翻唱|题字|文案|海报|古筝|二胡|钢琴|吉他|贝斯|笛子';
-  const text4 = 'lrc|publish|vocal|guitar|program|produce|write';
-  const otherInfoRegexp = new RegExp(`^(${text1}|${text2}|${text3}|${text4}).*(:|：)`, 'i');
+  const otherInfoKeys = [
+    '作?\\s*词|作?\\s*曲|编\\s*曲?|监\\s*制?',
+    '.*编写|.*和音|.*和声｜.*合声|.*提琴|.*录|.*工程|.*工作室|.*设计|.*剪辑｜.*制作|.*发行|.*出品|.*后期|.*混音|.*缩混',
+    '翻唱|题字|文案|海报|古筝|二胡|钢琴|吉他|贝斯|笛子|鼓|弦乐',
+    'lrc|publish|vocal|guitar|program|produce|write',
+  ];
+  const otherInfoRegexp = new RegExp(`^(${otherInfoKeys.join('|')}).*(:|：)`, 'i');
 
   const lines = lyricStr.split('\n').map((line) => line.trim());
   const lyrics = lines
