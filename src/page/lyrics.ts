@@ -103,7 +103,7 @@ async function fetchChineseName(s: string) {
     const artists = result?.artists || [];
     artists.forEach((artist) => {
       const alias = [...artist.alias, ...(artist.transNames || [])]
-        .map((e) => sify(e).toLowerCase())
+        .map((e) => ignoreAccented(plainText(sify(e).toLowerCase())))
         .sort();
       // Chinese singer's English name as an alias
       alias.forEach((alia) => {
@@ -173,9 +173,9 @@ export async function matchingLyrics(
   const queryArtistsArr2 = queryArtistsArr1.map((e) => sify(e));
   const queryArtistsArr3 = queryArtistsArr2.map((e) => ignoreAccented(plainText(e)));
 
-  const singerAlias = await fetchTransName(queryArtistsArr2.join());
+  const singerAlias = await fetchTransName(queryArtistsArr3.join());
 
-  const queryArtistsArr4 = queryArtistsArr1
+  const queryArtistsArr4 = queryArtistsArr3
     .map((e) => singerAlias[e] || (SINGER as Record<string, string>)[e] || e)
     .map((e) => sify(e).toLowerCase());
 
