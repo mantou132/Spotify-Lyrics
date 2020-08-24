@@ -57,9 +57,9 @@ const tick = async () => {
       });
     } else if (!lyrics && !highlightLyrics) {
       drawText(lyricCtx, i18nMap.pageTipNoLyrics, textOptions);
-    } else if (lyrics?.length) {
+    } else if (audio.duration && lyrics?.length) {
       renderLyrics(lyricCtx, lyrics, audio.currentTime, renderOptions);
-    } else if (lyrics?.length === 0 || highlightLyrics?.length === 0) {
+    } else if (!audio.duration || lyrics?.length === 0 || highlightLyrics?.length === 0) {
       drawText(
         lyricCtx,
         audio.currentSrc ? i18nMap.pageTipLoading : i18nMap.pageTipWaiting,

@@ -1,6 +1,5 @@
 import { Message, Event } from '../common/consts';
 
-import { sharedData } from './share-data';
 import { captureException } from './utils';
 import { getLyricsBtn } from './btn';
 import { loggedPromise } from './observer';
@@ -87,11 +86,6 @@ audioPromise.then((audio) => {
     if (isMusic && !(await getLyricsBtn())) {
       captureException(new Error('Lyrics button not found'));
     }
-  });
-
-  // when next track
-  audio.addEventListener('emptied', () => {
-    sharedData.resetData();
   });
 
   // safari not support media session, pip contorl video
