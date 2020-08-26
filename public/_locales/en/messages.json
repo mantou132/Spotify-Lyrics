@@ -134,6 +134,11 @@
     "description": "Welcome menus item"
   },
 
+  "pageButtonTitle": {
+    "message": "Lyrics",
+    "description": "Lyrics button title"
+  },
+
   "pageTipError": {
     "message": "Error",
     "description": "Load lyrics error tip"

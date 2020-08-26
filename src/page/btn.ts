@@ -71,7 +71,7 @@ export const insetLyricsBtn = async () => {
     }
   }
 
-  lyricsBtn.title = 'Toggle lyrics';
+  lyricsBtn.title = options.i18nMap.pageButtonTitle;
   if (document.pictureInPictureElement === lyricVideo)
     lyricsBtn.classList.add(localConfig.LYRICS_ACTIVE_CLASSNAME);
   lyricVideo.addEventListener('enterpictureinpicture', () => {

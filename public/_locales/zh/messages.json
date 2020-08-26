@@ -103,6 +103,10 @@
     "message": "欢迎"
   },
 
+  "pageButtonTitle": {
+    "message": "歌词"
+  },
+
   "pageTipError": {
     "message": "错误"
   },
