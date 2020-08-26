@@ -48,11 +48,12 @@ window.addEventListener('beforeunload', () => {
   if (document.pictureInPictureElement) setPopupState(false);
 });
 
-export const audioPromise = new Promise<HTMLAudioElement>((res) => {
+export const audioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
   let audio: HTMLAudioElement | null = null;
 
   const createElement: typeof document.createElement = document.createElement.bind(document);
 
+  // Spotify: using `document.createElement`
   document.createElement = function <K extends keyof HTMLElementTagNameMap>(
     tagName: K,
     options: ElementCreationOptions,
@@ -60,24 +61,33 @@ export const audioPromise = new Promise<HTMLAudioElement>((res) => {
     const element = createElement(tagName, options);
     if (tagName === 'video' && !audio) {
       audio = element as HTMLAudioElement;
-      res(audio);
+      resolveAudio(audio);
     }
     return element;
   };
 
-  window.addEventListener('load', () => {
-    setTimeout(async () => {
-      if (!audio) {
-        const { AUDIO_SELECTOR } = await config;
-        const audioSelected = document.querySelector(AUDIO_SELECTOR);
-        if (audioSelected) {
-          return res(audioSelected as HTMLAudioElement);
-        }
-        await loggedPromise;
-        captureException(new Error('Audio not found'));
-      }
-    }, 5_000);
-  });
+  // Youtube Music: without using `document.createElement`
+  const queryAudio = async () => {
+    const { AUDIO_SELECTOR } = await config;
+    const element = document.querySelector(AUDIO_SELECTOR);
+    if (element) {
+      audio = element as HTMLAudioElement;
+      resolveAudio(audio);
+    } else {
+      setTimeout(queryAudio, 100);
+    }
+  };
+  queryAudio();
+
+  // Check if audio is found normally
+  // Spotify: login required
+  Promise.all([loggedPromise, new Promise((res) => window.addEventListener('load', res))]).then(
+    () => {
+      setTimeout(() => {
+        if (!audio) captureException(new Error('Audio not found'));
+      }, 5_000);
+    },
+  );
 });
 
 audioPromise.then((audio) => {
