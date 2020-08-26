@@ -20,11 +20,28 @@ export class Modal extends GemElement {
     super();
     this.content = content;
     this.addEventListener('close', this.close);
+    this.tabIndex = 0;
   }
 
   close = () => {
     (this.constructor as typeof Modal).close();
   };
+
+  keydownHandler = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      e.stopImmediatePropagation();
+      e.stopPropagation();
+      this.close();
+    }
+  };
+
+  mounted() {
+    this.focus();
+    window.addEventListener('keydown', this.keydownHandler, true);
+    return () => {
+      window.removeEventListener('keydown', this.keydownHandler, true);
+    };
+  }
 
   render() {
     return html`

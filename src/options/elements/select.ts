@@ -60,8 +60,8 @@ export class Select extends GemElement {
           outline: none;
         }
         select:focus-visible {
-          outline-offset: 1px;
-          outline: rgba(${theme.primaryRGB}, 0.2) auto 1px;
+          outline-offset: 2px;
+          outline: rgba(${theme.primaryRGB}, 0.2) auto 2px;
         }
         .mark {
           content: '';
