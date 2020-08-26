@@ -78,6 +78,10 @@ const ignoreAccented = (s: string) => {
   return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 };
 
+const simplifiedText = (s: string) => {
+  return ignoreAccented(plainText(sify(s).toLowerCase()));
+};
+
 const removeSongFeat = (s: string) => {
   return s.replace(/\(?(feat|with)\.?\s.*\)?$/i, '').trim();
 };
@@ -88,6 +92,16 @@ const getText = (s: string) => {
     .replace(/\s+/g, ' ')
     .trim();
 };
+
+const buildInSingerAliasPromise = new Promise<Record<string, string>>(async (resolve) => {
+  const { SINGER } = await config;
+  resolve(
+    Object.keys(SINGER).reduce((p, v: keyof typeof SINGER) => {
+      p[simplifiedText(v)] = SINGER[v];
+      return p;
+    }, {} as Record<string, string>),
+  );
+});
 
 async function fetchChineseName(s: string) {
   const { API_HOST } = await config;
@@ -103,9 +117,7 @@ async function fetchChineseName(s: string) {
     ).json();
     const artists = result?.artists || [];
     artists.forEach((artist) => {
-      const alias = [...artist.alias, ...(artist.transNames || [])]
-        .map((e) => ignoreAccented(plainText(sify(e).toLowerCase())))
-        .sort();
+      const alias = [...artist.alias, ...(artist.transNames || [])].map(simplifiedText).sort();
       // Chinese singer's English name as an alias
       alias.forEach((alia) => {
         if (s.includes(alia)) {
@@ -156,7 +168,6 @@ export async function matchingLyrics(
       await new Promise((res) => audio!.addEventListener('loadedmetadata', res, { once: true }));
     }
   }
-  const { SINGER } = await config;
   const { name = '', artists = '' } = query;
 
   const queryName = normalize(name);
@@ -174,10 +185,11 @@ export async function matchingLyrics(
   const queryArtistsArr2 = queryArtistsArr1.map((e) => sify(e));
   const queryArtistsArr3 = queryArtistsArr2.map((e) => ignoreAccented(plainText(e)));
 
-  const singerAlias = await fetchTransName(queryArtistsArr3.join());
+  const singerAlias = await fetchTransName(queryArtistsArr.map(simplifiedText).join());
+  const buildInSingerAlias = await buildInSingerAliasPromise;
 
   const queryArtistsArr4 = queryArtistsArr3
-    .map((e) => singerAlias[e] || (SINGER as Record<string, string>)[e] || e)
+    .map((e) => singerAlias[e] || buildInSingerAlias[e] || e)
     .map((e) => sify(e).toLowerCase());
 
   const searchString = onlySearchName ? queryName5 : `${queryArtistsArr4.join()} ${queryName5}`;
