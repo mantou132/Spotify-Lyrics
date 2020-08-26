@@ -134,11 +134,6 @@
     "description": "Welcome menus item"
   },
 
-  "menusRateMe": {
-    "message": "Rate this extension",
-    "description": "Rate me context menus item"
-  },
-
   "pageTipError": {
     "message": "Error",
     "description": "Load lyrics error tip"

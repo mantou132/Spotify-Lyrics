@@ -22,7 +22,6 @@ export enum Event {
 
 export const ContextItems = {
   FEEDBACK: 'feedback',
-  RATE_ME: 'rate-me',
   WELCOME: 'welcome',
 };
 
