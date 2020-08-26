@@ -88,9 +88,7 @@ export const localConfig: LocalConfig = (() => {
         /* webpage: download link */
         .Rootlist ~ div a[href*=download],
         /* webpage: logo */
-        [role='banner'],
-        /* ad, still exist? */
-        [role='main'] ~ div {
+        [role='banner'] {
           display: none;
         }
         .${LYRICS_CLASSNAME}::before {
