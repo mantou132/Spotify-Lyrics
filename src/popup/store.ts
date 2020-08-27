@@ -37,7 +37,7 @@ export function sendMessage(msg: Message) {
 }
 
 export function changeSong(id: number) {
-  updateStore(store, { id, aId: store.aId });
+  updateStore(store, { id });
 
   const msg: Message<PopupStore> = {
     type: Event.SELECT_SONG,

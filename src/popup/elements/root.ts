@@ -8,6 +8,13 @@ import { getOptions } from '../../options/store';
 import { theme } from '../../common/theme';
 import { i18n } from '../../i18n';
 
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'i') {
+    const id = Number(prompt('Enter NetEase Cloud Music ID:'));
+    if (id) changeSong(id);
+  }
+});
+
 @connectStore(store)
 @customElement('app-root')
 export class SongList extends GemElement {
