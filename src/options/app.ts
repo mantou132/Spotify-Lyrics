@@ -16,26 +16,41 @@ import './elements/switch';
 
 import { getOptions, updateOptions } from './store';
 
-type State = { options: Options | null };
+type State = { options: Options | null; localFonts: string[] };
 @customElement('options-app')
 export class OptionsApp extends GemElement<State> {
   @refobject formRef: RefObject<Form>;
 
   state: State = {
     options: null,
+    localFonts: [],
   };
 
   async mounted() {
     const options = await getOptions();
     sendEvent(options.cid, events.openOptionsPage);
     this.setState({ options });
+    this.loadLocalFonts();
   }
+
+  loadLocalFonts = async () => {
+    // https://github.com/WICG/local-font-access
+    if ('fonts' in navigator) {
+      const fonts: Set<string> = new Set();
+      const asyncIterable = navigator.fonts.query();
+      for await (const font of asyncIterable) {
+        fonts.add(font.family);
+      }
+      this.setState({ localFonts: [...fonts] });
+    }
+  };
 
   inputHandler = async () => {
     if (!this.formRef.element) return;
     const options = await updateOptions(Object.fromEntries(this.formRef.element.value));
     this.setState({ options });
   };
+
   render() {
     const { options } = this.state;
     if (!options) return null;
@@ -75,7 +90,11 @@ export class OptionsApp extends GemElement<State> {
           <ele-select
             name=${'font-family' as keyof Options}
             default-value=${options['font-family']}
-            .options=${LyricsFontFamily.map((e) => ({ label: e, value: e }))}
+            .options=${[...LyricsFontFamily, ...this.state.localFonts].map((e) => ({
+              label: e,
+              value: e,
+              style: `font-family: ${e}`,
+            }))}
           ></ele-select>
         </ele-form-item>
         <ele-form-item label=${i18n.optionsLyricsAlign()}>

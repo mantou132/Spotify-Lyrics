@@ -23,6 +23,20 @@ interface Document {
   exitPictureInPicture: () => Promise<void>;
 }
 
+interface FontMetadata {
+  family: string;
+  fullName: string;
+  postscriptName: string;
+}
+
+interface FontManager {
+  query: () => AsyncIterable<FontMetadata>;
+}
+
+interface Navigator {
+  fonts: FontManager;
+}
+
 declare module '*.jpg' {
   const src: string;
   export default src;

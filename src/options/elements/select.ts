@@ -14,6 +14,7 @@ import { theme } from '../../common/theme';
 export interface Option {
   label: string;
   value: string;
+  style?: string;
 }
 
 @customElement('ele-select')
@@ -81,7 +82,11 @@ export class Select extends GemElement {
         ${this.options.map(
           (option) =>
             html`
-              <option ?selected=${this.defaultValue === option.value} value=${option.value}>
+              <option
+                ?selected=${this.defaultValue === option.value}
+                value=${option.value}
+                style=${option.style || ''}
+              >
                 ${option.label}
               </option>
             `,
