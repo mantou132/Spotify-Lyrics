@@ -79,11 +79,11 @@ const ignoreAccented = (s: string) => {
 };
 
 const simplifiedText = (s: string) => {
-  return ignoreAccented(plainText(sify(s).toLowerCase()));
+  return ignoreAccented(plainText(sify(normalize(s)).toLowerCase()));
 };
 
 const removeSongFeat = (s: string) => {
-  return s.replace(/\(?(feat|with)\.?\s.*\)?$/i, '').trim();
+  return s.replace(/\(?(feat|with)\.?\s.*\)?$/i, '').trim() || s;
 };
 
 const getText = (s: string) => {
@@ -192,7 +192,7 @@ export async function matchingLyrics(
     .map((e) => singerAlias[e] || buildInSingerAlias[e] || e)
     .map((e) => sify(e).toLowerCase());
 
-  const searchString = onlySearchName ? queryName5 : `${queryArtistsArr4.join()} ${queryName5}`;
+  const searchString = onlySearchName ? name : `${queryArtistsArr4.join()} ${name}`;
   const songs = await fetchData(searchString);
   const list: Song[] = [];
   const listIdSet = new Set<number>();
@@ -236,6 +236,7 @@ export async function matchingLyrics(
                 currentScore += 8;
               } else {
                 songName = getText(
+                  // without `plainText`
                   removeSongFeat(ignoreAccented(sify(normalize(song.name).toLowerCase()))),
                 );
                 if (songName === queryName6) {
