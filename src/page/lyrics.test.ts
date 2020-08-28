@@ -16,9 +16,9 @@ describe('parse lyrics', () => {
     ]);
     expect(parseLyrics('[02:01]\n')).toEqual<Lyric>([{ startTime: 121, text: '' }]);
     expect(parseLyrics('[02:01]编')).toEqual<Lyric>([{ startTime: 121, text: '编' }]);
-    expect(parseLyrics('[02:01]编：')).toEqual<Lyric>([{ startTime: 121, text: '编：' }]);
+    expect(parseLyrics('[02:01]编：xx')).toEqual<Lyric>([{ startTime: 121, text: '编: xx' }]);
     expect(parseLyrics('[02:01]编：', { useTChinese: true })).toEqual<Lyric>([
-      { startTime: 121, text: '編：' },
+      { startTime: 121, text: '編:' },
     ]);
     expect(parseLyrics('[02:01]编：', { cleanLyrics: true })).toEqual<Lyric>([
       { startTime: null, text: '' },
