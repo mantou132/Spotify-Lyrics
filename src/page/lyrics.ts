@@ -386,8 +386,8 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
       let text = '';
       if (textIndex > -1) {
         text = matchResult.splice(textIndex, 1)[0];
-        text = capitalize(text.trim()).replace(/（/g, '(').replace(/）/g, ')');
-        text = sify(text);
+        text = capitalize(normalize(text, false));
+        text = sify(text).replace(/\.|,|\?|!$/u, '');
       }
       if (!matchResult.length && options.keepPlainText) {
         return [new Line(text)];
