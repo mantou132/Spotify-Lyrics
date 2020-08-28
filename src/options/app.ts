@@ -31,6 +31,11 @@ export class OptionsApp extends GemElement<State> {
     sendEvent(options.cid, events.openOptionsPage);
     this.setState({ options });
     this.loadLocalFonts();
+    window.addEventListener('keydown', this.copyIdHandler, true);
+  }
+
+  unmounted() {
+    window.removeEventListener('keydown', this.copyIdHandler, true);
   }
 
   loadLocalFonts = async () => {
@@ -49,6 +54,13 @@ export class OptionsApp extends GemElement<State> {
     if (!this.formRef.element) return;
     const options = await updateOptions(Object.fromEntries(this.formRef.element.value));
     this.setState({ options });
+  };
+
+  copyIdHandler = (e: KeyboardEvent) => {
+    const { options } = this.state;
+    if (e.key === 'c' && options) {
+      navigator.clipboard.writeText(options.cid);
+    }
   };
 
   render() {
