@@ -96,9 +96,6 @@ export class SharedData {
     const { list, id } = await matchingLyrics(this.query, {
       getAudioElement: () => audio,
     });
-    if (id === 0) {
-      sendEvent(options.cid, events.notMatch, { cd1: this.cd1 });
-    }
     this.list = list;
     const remoteData = await getSong(this.query);
     const reviewed = options['use-unreviewed-lyrics'] === 'on' || remoteData?.reviewed;
@@ -120,6 +117,9 @@ export class SharedData {
     }
     if (this.lyrics && this.id !== id) {
       sendEvent(options.cid, events.useRemoteMatch);
+    }
+    if (!this.lyrics && id === 0) {
+      sendEvent(options.cid, events.notMatch, { cd1: this.cd1 });
     }
     if (startTime) {
       const ev = (performance.now() - startTime).toFixed();
