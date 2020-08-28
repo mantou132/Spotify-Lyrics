@@ -125,3 +125,14 @@ Fork it, submit PR.
 - Add translation
 - If you can write code, you can fix [bugs](https://github.com/mantou132/Spotify-Lyrics/issues?q=is%3Aissue+is%3Aopen+label%3Abug) or improve [performance](https://github.com/mantou132/Spotify-Lyrics/issues?q=is%3Aissue+is%3Aopen+label%3Aperformance)
 - Optimize the matching rate of Chinese, Japanese and Korean lyrics.(edit [config.json](./src/page/config.json)). _Note: The extension already has automatic optimization, this list serves as a supplement_ . _[Unmatched lyrics report](https://datastudio.google.com/reporting/bfd79c68-f9f4-4af5-8e51-a12d3d6be450)_
+
+
+## Privacy Policy
+
+The extension will not collect any user’s personal information(personal information refers to information that identifies a specific individual, such as the individual’s name, address, email and phone number).
+
+- Google Firebase: the extension will save user-uploaded lyrics and manually matched lyrics to Google Firebase and share them among multiple users
+- Google Analytics: the extension uses Google Analytics to track use of the Browser Extension and trends. Google Analytics collects various data including the page URL, page title, Search Terms, IP Address, and Page Language. You can review Google's Privacy Policy [here](https://www.google.com/policies/privacy). You can review additional information about how Google Analytics uses your data [here](https://support.google.com/analytics/answer/6004245), Google provides various privacy controls to limit its collection of data, including the Google Analytics opt-out browser add-on. More information about opting out of Google Analytics can be found [here](https://support.google.com/analytics/answer/181881)
+- Sentry.io: the extension uses sentry to collect extended error information, including browser information, error stack and other data, You can view sentry's privacy policy [here](https://sentry.io/privacy/)
+
+If you have any comments or questions about this privacy policy, please contact me via Email.
