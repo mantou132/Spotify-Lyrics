@@ -42,6 +42,7 @@ interface SongResult {
   };
 }
 
+// Convert all into English punctuation marks for processing
 const normalize = (s: string, emptySymbol = true) => {
   const result = s
     .replace(/（/g, '(')
@@ -50,6 +51,7 @@ const normalize = (s: string, emptySymbol = true) => {
     .replace(/】/g, ']')
     .replace(/，/g, ', ')
     .replace(/。/g, '. ')
+    .replace(/；/g, '; ')
     .replace(/：/g, ': ')
     .replace(/？/g, '? ')
     .replace(/！/g, '! ')
@@ -386,7 +388,7 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
       if (textIndex > -1) {
         text = matchResult.splice(textIndex, 1)[0];
         text = capitalize(normalize(text, false));
-        text = sify(text).replace(/\.|,|\?|!$/u, '');
+        text = sify(text).replace(/\.|,|\?|!|;$/u, '');
       }
       if (!matchResult.length && options.keepPlainText) {
         return [new Line(text)];
