@@ -374,7 +374,7 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
   ];
   const otherInfoRegexp = new RegExp(`^(${otherInfoKeys.join('|')}).*(:|：)`, 'i');
 
-  const lines = lyricStr.split('\n').map((line) => line.trim());
+  const lines = lyricStr.split(/\r?\n/).map((line) => line.trim());
   const lyrics = lines
     .map((line) => {
       // ["[ar:Beyond]"]
