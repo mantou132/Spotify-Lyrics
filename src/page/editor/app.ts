@@ -51,8 +51,11 @@ export class EditorApp extends GemElement<State> {
   @emitter close: Emitter;
   @refobject tbody: RefObject<HTMLTableSectionElement>;
   @refobject lyricsInput: RefObject<HTMLInputElement>;
+  @refobject playbackRateInput: RefObject<HTMLInputElement>;
 
   originLyrics = sharedData.lyrics;
+  originLoop = false;
+  originPlaybackRate = 1;
 
   state: State = {
     currentIndex: -1,
@@ -71,27 +74,37 @@ export class EditorApp extends GemElement<State> {
     });
   }
 
-  mounted() {
+  pasteHandler = async (e: ClipboardEvent) => {
+    const lyrics = initLyrics(e.clipboardData?.getData('text') || '');
+    this.resetLocal({ lyrics });
+  };
+
+  async mounted() {
     if (!document.pictureInPictureElement) return;
     this.resetLocal();
 
-    let originLoop = false;
-    audioPromise.then((audio) => {
-      originLoop = audio.loop;
-      audio.loop = true;
-    });
+    const audio = await audioPromise;
+    this.originLoop = audio.loop;
+    audio.loop = true;
+    this.originPlaybackRate = audio.playbackRate;
 
-    const pasteHandler = async (e: ClipboardEvent) => {
-      const lyrics = initLyrics(e.clipboardData?.getData('text') || '');
-      this.resetLocal({ lyrics });
-    };
-    document.addEventListener('paste', pasteHandler);
-    return async () => {
-      (await audioPromise).loop = originLoop;
-      document.removeEventListener('paste', pasteHandler);
-      sharedData.lyrics = this.originLyrics;
-    };
+    document.addEventListener('paste', this.pasteHandler);
   }
+
+  async unmounted() {
+    const audio = await audioPromise;
+    audio.loop = this.originLoop;
+    audio.playbackRate = this.originPlaybackRate;
+    document.removeEventListener('paste', this.pasteHandler);
+    sharedData.lyrics = this.originLyrics;
+  }
+
+  changePlaybackRate = async () => {
+    const { element } = this.playbackRateInput;
+    if (!element) return;
+    const audio = await audioPromise;
+    audio.playbackRate = Number(element.value);
+  };
 
   lyricsChange = () => {
     const file = this.lyricsInput.element?.files?.[0];
@@ -311,6 +324,15 @@ export class EditorApp extends GemElement<State> {
         >
           ${sharedData.name} - ${sharedData.artists}
         </a>
+      </p>
+      <p>
+        ${i18nMap.pageEditorPlaybackRate}:
+        <select ref=${this.playbackRateInput.ref} @change=${this.changePlaybackRate}>
+          ${[0.5, 0.75, 1, 1.25, 1.5].map(
+            (v) =>
+              html`<option value=${v} ?selected=${this.originPlaybackRate === v}>${v}</option>`,
+          )}
+        </select>
       </p>
       <div class="body" tabindex="-1">
         <table>

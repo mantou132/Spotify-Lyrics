@@ -135,6 +135,10 @@
     "message": "搜索歌词"
   },
 
+  "pageEditorPlaybackRate": {
+    "message": "播放速率"
+  },
+
   "pageEditorSeek": {
     "message": "跳转"
   },
