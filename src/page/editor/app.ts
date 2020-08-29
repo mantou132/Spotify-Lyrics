@@ -10,9 +10,13 @@ import { OptionsAndI18n } from '../options';
 
 import { Button } from './elements/button';
 
+function removeEmptyLine(text: string) {
+  return text.replace(/(\r?\n)\s*\1+/g, '$1');
+}
+
 function initLyrics(text: string) {
   return (
-    parseLyrics(text.replace(/^\s*$(?:\r\n?|\n)/gm, ''), {
+    parseLyrics(removeEmptyLine(text), {
       cleanLyrics: true,
       keepPlainText: true,
     }) || []
