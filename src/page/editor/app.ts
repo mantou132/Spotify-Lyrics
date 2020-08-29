@@ -126,6 +126,13 @@ export class EditorApp extends GemElement<State> {
     sharedData.lyrics = lyrics;
   };
 
+  removeLine = (index: number) => {
+    const { lyrics } = this.state;
+    lyrics.splice(index, 1);
+    this.setState({ lyrics });
+    sharedData.lyrics = lyrics;
+  };
+
   resetLocal = async (state?: Partial<State>) => {
     const audio = await audioPromise;
     audio.currentTime = 0;
@@ -265,11 +272,20 @@ export class EditorApp extends GemElement<State> {
           opacity: 1;
         }
         .timestamp {
-          font-family: sans-serif;
+          font-feature-settings: 'tnum';
           user-select: none;
           width: 1px;
           padding-right: 1em;
           white-space: nowrap;
+        }
+        .remove {
+          cursor: pointer;
+          width: 1px;
+          padding-left: 1em;
+          opacity: 0.5;
+        }
+        .remove:hover {
+          opacity: 1;
         }
         .placeholder {
           opacity: 0.5;
@@ -313,6 +329,7 @@ export class EditorApp extends GemElement<State> {
                   >
                     ${text}
                   </td>
+                  <td class="remove" @click=${() => this.removeLine(index)}>✕</td>
                 </tr>
               `,
             )}
