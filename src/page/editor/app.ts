@@ -77,6 +77,7 @@ export class EditorApp extends GemElement<State> {
   pasteHandler = async (e: ClipboardEvent) => {
     const lyrics = initLyrics(e.clipboardData?.getData('text') || '');
     this.resetLocal({ lyrics });
+    sharedData.lyrics = lyrics;
   };
 
   async mounted() {
