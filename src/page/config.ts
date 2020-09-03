@@ -91,6 +91,10 @@ export const localConfig: LocalConfig = (() => {
         [role='banner'] {
           display: none;
         }
+        /* cover default spotify */
+        [data-testid='CoverSlotExpanded__container'] {
+          display: none;
+        }
         .${LYRICS_CLASSNAME}::before {
           content: '\\f345';
           font-size: 16px;
