@@ -377,7 +377,7 @@ export class EditorApp extends GemElement<State> {
         id="lyrics"
         @change=${this.lyricsChange}
         type="file"
-        accept="text/plain"
+        accept="text/plain, .lrc"
         hidden
       />
       <div class="btns">
