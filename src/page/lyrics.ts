@@ -84,7 +84,12 @@ const simplifiedText = (s: string) => {
 };
 
 const removeSongFeat = (s: string) => {
-  return s.replace(/\(?(feat|with)\.?\s.*\)?$/i, '').trim() || s;
+  return (
+    s
+      .replace(/-\s+(feat|with).*/i, '')
+      .replace(/(\(|\[)(feat|with)\.?\s+.*(\)|\])$/i, '')
+      .trim() || s
+  );
 };
 
 const getText = (s: string) => {
@@ -193,7 +198,9 @@ export async function matchingLyrics(
     .map((e) => singerAlias[e] || buildInSingerAlias[e] || e)
     .map((e) => sify(e).toLowerCase());
 
-  const searchString = onlySearchName ? name : `${queryArtistsArr4.join()} ${name}`;
+  const searchString = onlySearchName
+    ? removeSongFeat(name)
+    : `${queryArtistsArr4.join()} ${removeSongFeat(name)}`;
   const songs = await fetchData(searchString);
   const list: Song[] = [];
   const listIdSet = new Set<number>();
