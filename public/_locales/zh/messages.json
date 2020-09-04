@@ -146,6 +146,10 @@
   "pageEditorOffsetDetail": {
     "message": "偏移 0.1s"
   },
+  
+  "pageEditorClearAll": {
+    "message": "清空"
+  },
 
   "pageEditorSeek": {
     "message": "跳转"

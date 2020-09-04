@@ -152,6 +152,11 @@ export class EditorApp extends GemElement<State> {
     sharedData.lyrics = lyrics;
   };
 
+  clearAll = () => {
+    this.setState({ lyrics: [] });
+    sharedData.lyrics = [];
+  };
+
   offsetAllLine = (step: number) => {
     const { lyrics } = this.state;
     this.setState({
@@ -271,6 +276,10 @@ export class EditorApp extends GemElement<State> {
           height: 70vh;
           overflow: auto;
           margin-bottom: 1em;
+          scrollbar-width: none;
+        }
+        .body::-webkit-scrollbar {
+          width: 0px;
         }
         .body:focus {
           outline: rgba(${theme.blackRGB}, 0.075) auto 1px;
@@ -279,6 +288,11 @@ export class EditorApp extends GemElement<State> {
           margin: 2em;
           text-align: center;
           opacity: 0.5;
+        }
+        .tools {
+          display: flex;
+          gap: 1em;
+          margin: 0.5em 0;
         }
         .button {
           display: inline-flex;
@@ -347,33 +361,41 @@ export class EditorApp extends GemElement<State> {
         <a
           target="_blank"
           title=${i18nMap.pageEditorSearch}
-          href="https://www.google.com/search?q=${sharedData.name} ${sharedData.artists} lyrics"
+          href="https://www.google.com/search?q=${sharedData.name} ${sharedData.artists} lrc lyrics"
         >
           ${sharedData.name} - ${sharedData.artists}
         </a>
       </p>
-      <p>
-        ${i18nMap.pageEditorPlaybackRate}:
-        <select ref=${this.playbackRateInput.ref} @change=${this.changePlaybackRate}>
-          ${[0.5, 0.75, 1, 1.25, 1.5].map(
-            (v) =>
-              html`<option value=${v} ?selected=${this.originPlaybackRate === v}>${v}</option>`,
-          )}
-        </select>
-        ${i18nMap.pageEditorOffset}:
-        <span
-          title=${i18nMap.pageEditorOffsetDetail}
-          class="button"
-          @click=${() => this.offsetAllLine(0.1)}
-          >+</span
-        >
-        <span
-          title=${i18nMap.pageEditorOffsetDetail}
-          class="button"
-          @click=${() => this.offsetAllLine(-0.1)}
-          >-</span
-        >
-      </p>
+      <div class="tools">
+        <div>
+          ${i18nMap.pageEditorPlaybackRate}:
+          <select ref=${this.playbackRateInput.ref} @change=${this.changePlaybackRate}>
+            ${[0.5, 0.75, 1, 1.25, 1.5].map(
+              (v) =>
+                html`<option value=${v} ?selected=${this.originPlaybackRate === v}>${v}</option>`,
+            )}
+          </select>
+        </div>
+        <div>
+          ${i18nMap.pageEditorOffset}:
+          <span
+            title=${i18nMap.pageEditorOffsetDetail}
+            class="button"
+            @click=${() => this.offsetAllLine(0.1)}
+            >+</span
+          >
+          <span
+            title=${i18nMap.pageEditorOffsetDetail}
+            class="button"
+            @click=${() => this.offsetAllLine(-0.1)}
+            >-</span
+          >
+        </div>
+        <div style="flex-grow: 1;"></div>
+        <div>
+          <span class="text-button" @click=${this.clearAll}>${i18nMap.pageEditorClearAll}</span>
+        </div>
+      </div>
       <div class="body" tabindex="-1">
         <table>
           <tbody ref=${this.tbody.ref}>

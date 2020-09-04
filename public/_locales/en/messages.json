@@ -188,6 +188,12 @@
     "message": "Offset 0.1s",
     "description": "Lyrics offset button title"
   },
+  
+  "pageEditorClearAll": {
+    "message": "Clear all",
+    "description": "Cleaer all lyrics"
+  },
+
 
   "pageEditorSeek": {
     "message": "Jump",
