@@ -138,6 +138,14 @@
   "pageEditorPlaybackRate": {
     "message": "播放速率"
   },
+  
+  "pageEditorOffset": {
+    "message": "偏移"
+  },
+  
+  "pageEditorOffsetDetail": {
+    "message": "偏移 0.1s"
+  },
 
   "pageEditorSeek": {
     "message": "跳转"

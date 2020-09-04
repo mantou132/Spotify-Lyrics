@@ -114,6 +114,7 @@ export class EditorApp extends GemElement<State> {
     reader.addEventListener('load', async (event) => {
       const lyrics = initLyrics(event.target!.result as string);
       this.resetLocal({ lyrics });
+      sharedData.lyrics = lyrics;
     });
     reader.readAsText(file);
   };
@@ -148,6 +149,17 @@ export class EditorApp extends GemElement<State> {
     const { lyrics } = this.state;
     lyrics.splice(index, 1);
     this.setState({ lyrics });
+    sharedData.lyrics = lyrics;
+  };
+
+  offsetAllLine = (step: number) => {
+    const { lyrics } = this.state;
+    this.setState({
+      lyrics: lyrics.map(({ text, startTime }) => ({
+        text,
+        startTime: startTime !== null ? startTime + step : startTime,
+      })),
+    });
     sharedData.lyrics = lyrics;
   };
 
@@ -268,8 +280,22 @@ export class EditorApp extends GemElement<State> {
           text-align: center;
           opacity: 0.5;
         }
-        .button:hover {
+        .button {
+          display: inline-flex;
+          place-content: center;
+          border: 1px solid;
+          line-height: 1;
+          width: 1em;
+          opacity: 0.75;
+        }
+        .button:hover,
+        .text-button:hover {
           cursor: pointer;
+        }
+        .button:hover {
+          opacity: 1;
+        }
+        .text-button:hover {
           border-bottom: 1px solid;
         }
         table {
@@ -334,6 +360,19 @@ export class EditorApp extends GemElement<State> {
               html`<option value=${v} ?selected=${this.originPlaybackRate === v}>${v}</option>`,
           )}
         </select>
+        ${i18nMap.pageEditorOffset}:
+        <span
+          title=${i18nMap.pageEditorOffsetDetail}
+          class="button"
+          @click=${() => this.offsetAllLine(0.1)}
+          >+</span
+        >
+        <span
+          title=${i18nMap.pageEditorOffsetDetail}
+          class="button"
+          @click=${() => this.offsetAllLine(-0.1)}
+          >-</span
+        >
       </p>
       <div class="body" tabindex="-1">
         <table>
@@ -366,7 +405,7 @@ export class EditorApp extends GemElement<State> {
           ? html`
               <p class="tip">
                 ${i18nMap.pageEditorAddLyrics1}
-                <label for="lyrics" class="button">${i18nMap.pageEditorAddLyrics2}</label>
+                <label for="lyrics" class="text-button">${i18nMap.pageEditorAddLyrics2}</label>
                 ${i18nMap.pageEditorAddLyrics3}
               </p>
             `

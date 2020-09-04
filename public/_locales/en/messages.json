@@ -178,6 +178,16 @@
     "message": "Playback rate",
     "description": "Audio playback rate"
   },
+  
+  "pageEditorOffset": {
+    "message": "Offset",
+    "description": "Lyrics offset lable"
+  },
+  
+  "pageEditorOffsetDetail": {
+    "message": "Offset 0.1s",
+    "description": "Lyrics offset button title"
+  },
 
   "pageEditorSeek": {
     "message": "Jump",
