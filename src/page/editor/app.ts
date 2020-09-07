@@ -189,7 +189,7 @@ export class EditorApp extends GemElement<State> {
   saveRemote = async () => {
     const { lyrics } = this.state;
     const { i18nMap } = this.options;
-    if (lyrics.some(({ startTime }) => startTime === null)) {
+    if (lyrics.some(({ startTime, text }) => text && startTime === null)) {
       return alert(i18nMap.pageEditorSaveValid);
     }
     await setSong({
