@@ -84,7 +84,8 @@ render(
         <summary><h3>No lyrics button</h3></summary>
         <ul>
           <li>Try to refresh the WebApp</li>
-          <li>Make sure you are logged in</li>
+          <li>Ensure you are logged in</li>
+          <li>Ensure that the extension can read and change site data, <a href="https://support.google.com/chrome_webstore/answer/2664769" target="_blank">detail</a></li>
         </ul>
       </details>
       <details>
