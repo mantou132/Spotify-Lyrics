@@ -319,6 +319,9 @@ export class EditorApp extends GemElement<State> {
         tr {
           opacity: 0.6;
         }
+        tr:hover {
+          background: rgba(${theme.blackRGB}, 0.075);
+        }
         td {
           padding: 0;
           vertical-align: baseline;
