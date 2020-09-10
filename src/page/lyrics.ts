@@ -56,6 +56,7 @@ const normalize = (s: string, emptySymbol = true) => {
     .replace(/？/g, '? ')
     .replace(/！/g, '! ')
     .replace(/、/g, ', ')
+    .replace(/〜/g, '~')
     .replace(/・/g, '•')
     .replace(/·/g, '•')
     .replace(/‘|’/g, "'")
@@ -68,7 +69,7 @@ const normalize = (s: string, emptySymbol = true) => {
 
 const plainText = (s: string) => {
   return s
-    .replace(/[\(\)\[\]\-.,?!:'"]/g, ' ')
+    .replace(/[\(\)\[\]\-.,?!:'"~]/g, ' ')
     .replace(/((\p{sc=Han}|\p{sc=Katakana}|\p{sc=Hiragana}|\p{sc=Hang})+)/gu, ' $1 ')
     .replace(/\s+/g, ' ')
     .trim();
