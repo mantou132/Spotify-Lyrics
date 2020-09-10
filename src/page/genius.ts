@@ -26,10 +26,10 @@ interface GeniusResponse<T> {
 const API_HOST = 'https://api.genius.com';
 const TOKEN = 'jjffIV35KV6yy1XYK1lDAdOjVmQX7Pf4MApr2-1Kmw4Sh6gJilaFEDsmv3VkBiWA';
 
-export async function fetchSongList(q: string): Promise<Song[]> {
+export async function fetchSongList(q: string, fetchOptions?: RequestInit): Promise<Song[]> {
   const searchQuery = new URLSearchParams({ q, access_token: TOKEN });
   const { response }: GeniusResponse<SearchResponse> = await (
-    await fetch(`${API_HOST}/search?${searchQuery}`)
+    await fetch(`${API_HOST}/search?${searchQuery}`, fetchOptions)
   ).json();
   if (!response?.hits) return [];
   return response.hits
@@ -50,11 +50,12 @@ export async function fetchSongList(q: string): Promise<Song[]> {
 }
 
 const domParser = new DOMParser();
-export async function fetchGeniusLyrics(songId: number) {
+export async function fetchGeniusLyrics(songId: number, fetchOptions?: RequestInit) {
   const res = await fetch(
     `https://cors-anywhere.herokuapp.com/https://genius.com/songs/${songId}`,
     {
       headers: { 'x-requested-with': location.origin },
+      ...fetchOptions,
     },
   );
   if (!res.ok) return { text: '', highlights: null };

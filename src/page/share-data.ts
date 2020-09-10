@@ -21,6 +21,7 @@ export class SharedData {
   error: Error | null = null;
   text = '';
   highlightLyrics: string[] | null = [];
+  abortController = new AbortController();
 
   get cd1() {
     return `${this.name} - ${this.artists}`;
@@ -37,6 +38,8 @@ export class SharedData {
   resetLyrics() {
     this.lyrics = [];
     this.error = null;
+    this.abortController.abort();
+    this.abortController = new AbortController();
   }
 
   resetData() {
@@ -49,12 +52,12 @@ export class SharedData {
   }
 
   // can only modify `lyrics`
-  async updateLyrics() {
+  async updateLyrics(fetchOptions: RequestInit) {
     if (this.id === 0) {
       this.lyrics = null;
     } else {
       const options = await optionsPromise;
-      const lyricsStr = await fetchLyric(this.id);
+      const lyricsStr = await fetchLyric(this.id, fetchOptions);
       if (lyricsStr === '') {
         sendEvent(options.cid, events.noLyrics, { cd1: this.cd1, cd2: this.cd2 });
         this.lyrics = null;
@@ -67,17 +70,18 @@ export class SharedData {
     }
   }
 
-  async fetchHighlight() {
+  async fetchHighlight(fetchOptions: RequestInit) {
     const fetchTransName = async () => ({});
     const { id } = await matchingLyrics(this.query, {
       onlySearchName: false,
       fetchData: fetchSongList,
       fetchTransName,
+      fetchOptions,
     });
     if (id === 0) {
       this.highlightLyrics = null;
     } else {
-      const { text, highlights } = await fetchGeniusLyrics(id);
+      const { text, highlights } = await fetchGeniusLyrics(id, fetchOptions);
       this.lyrics = correctionLyrics(this.lyrics, text);
       this.text = text;
       this.highlightLyrics = highlights;
@@ -85,7 +89,7 @@ export class SharedData {
   }
 
   // can only modify `lyrics`/`id`/`aId`/`list`
-  async matching() {
+  async matching(fetchOptions: RequestInit) {
     const audio = await audioPromise;
     const startTime = audio.currentSrc ? performance.now() : null;
     const options = await optionsPromise;
@@ -95,9 +99,10 @@ export class SharedData {
     };
     const { list, id } = await matchingLyrics(this.query, {
       getAudioElement: () => audio,
+      fetchOptions,
     });
     this.list = list;
-    const remoteData = await getSong(this.query);
+    const remoteData = await getSong(this.query, fetchOptions);
     const reviewed = options['use-unreviewed-lyrics'] === 'on' || remoteData?.reviewed;
     const isSelf = remoteData?.user === options.cid;
     if (isSelf && remoteData?.lyric) {
@@ -106,14 +111,14 @@ export class SharedData {
     } else if (isSelf && remoteData?.neteaseID) {
       this.id = remoteData.neteaseID;
       this.aId = this.id;
-      await this.updateLyrics();
+      await this.updateLyrics(fetchOptions);
     } else if (reviewed && remoteData?.lyric) {
       this.lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
       sendEvent(options.cid, events.useRemoteLyrics);
     } else {
       this.id = (reviewed ? remoteData?.neteaseID || id : id || remoteData?.neteaseID) || 0;
       this.aId = this.id;
-      await this.updateLyrics();
+      await this.updateLyrics(fetchOptions);
     }
     if (this.lyrics && this.id !== id) {
       sendEvent(options.cid, events.useRemoteMatch);
@@ -125,7 +130,7 @@ export class SharedData {
       const ev = (performance.now() - startTime).toFixed();
       sendEvent(options.cid, { ev, ...events.loadLyrics }, { cd1: this.cd1 });
     }
-    this.fetchHighlight();
+    this.fetchHighlight(fetchOptions);
   }
 
   async confirmedMId() {
@@ -147,16 +152,19 @@ export class SharedData {
     this.id = id;
     this.resetLyrics();
     try {
+      const fetchOptions = { signal: this.abortController.signal };
       if (id === 0) {
         // reset
         await setSong({ name, artists, id });
-        await this.matching();
+        await this.matching(fetchOptions);
         this.sendToContentScript();
       } else {
-        await this.updateLyrics();
+        await this.updateLyrics(fetchOptions);
       }
     } catch (e) {
-      this.error = e;
+      if (e.name !== 'AbortError') {
+        this.error = e;
+      }
     }
   }
 
@@ -177,10 +185,12 @@ export class SharedData {
       this.name = name;
       this.artists = artists;
       this.resetData();
-      await this.matching();
+      await this.matching({ signal: this.abortController.signal });
     } catch (e) {
-      this.error = e;
-      captureException(e);
+      if (e.name !== 'AbortError') {
+        this.error = e;
+        captureException(e);
+      }
     }
     this.sendToContentScript();
   }

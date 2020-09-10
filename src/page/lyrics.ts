@@ -110,7 +110,7 @@ const buildInSingerAliasPromise = new Promise<Record<string, string>>(async (res
   );
 });
 
-async function fetchChineseName(s: string) {
+async function fetchChineseName(s: string, fetchOptions?: RequestInit) {
   const { API_HOST } = await config;
   const singerAlias: Record<string, string> = {};
   const searchQuery = new URLSearchParams({
@@ -120,7 +120,7 @@ async function fetchChineseName(s: string) {
   });
   try {
     const { result }: SearchArtistsResult = await (
-      await fetch(`${API_HOST}/search?${searchQuery}`)
+      await fetch(`${API_HOST}/search?${searchQuery}`, fetchOptions)
     ).json();
     const artists = result?.artists || [];
     artists.forEach((artist) => {
@@ -133,12 +133,14 @@ async function fetchChineseName(s: string) {
       });
     });
   } catch (e) {
-    captureException(e);
+    if (e.name !== 'AbortError') {
+      captureException(e);
+    }
   }
   return singerAlias;
 }
 
-async function fetchSongList(s: string): Promise<Song[]> {
+async function fetchSongList(s: string, fetchOptions?: RequestInit): Promise<Song[]> {
   const { API_HOST } = await config;
   const searchQuery = new URLSearchParams({
     keywords: s,
@@ -146,7 +148,7 @@ async function fetchSongList(s: string): Promise<Song[]> {
     limit: '100',
   });
   const { result }: SearchSongsResult = await (
-    await fetch(`${API_HOST}/search?${searchQuery}`)
+    await fetch(`${API_HOST}/search?${searchQuery}`, fetchOptions)
   ).json();
   return result?.songs || [];
 }
@@ -154,8 +156,9 @@ async function fetchSongList(s: string): Promise<Song[]> {
 interface MatchingLyricsOptions {
   onlySearchName?: boolean;
   getAudioElement?: () => HTMLAudioElement | Promise<HTMLAudioElement>;
-  fetchData?: (s: string) => Promise<Song[]>;
-  fetchTransName?: (s: string) => Promise<Record<string, string>>;
+  fetchData?: (s: string, fetchOptions?: RequestInit) => Promise<Song[]>;
+  fetchTransName?: (s: string, fetchOptions?: RequestInit) => Promise<Record<string, string>>;
+  fetchOptions?: RequestInit;
 }
 export async function matchingLyrics(
   query: Query,
@@ -166,6 +169,7 @@ export async function matchingLyrics(
     onlySearchName = false,
     fetchData = fetchSongList,
     fetchTransName = fetchChineseName,
+    fetchOptions,
   } = options;
 
   let audio: HTMLAudioElement | null = null;
@@ -192,7 +196,10 @@ export async function matchingLyrics(
   const queryArtistsArr2 = queryArtistsArr1.map((e) => sify(e));
   const queryArtistsArr3 = queryArtistsArr2.map((e) => ignoreAccented(plainText(e)));
 
-  const singerAlias = await fetchTransName(queryArtistsArr.map(simplifiedText).join());
+  const singerAlias = await fetchTransName(
+    queryArtistsArr.map(simplifiedText).join(),
+    fetchOptions,
+  );
   const buildInSingerAlias = await buildInSingerAliasPromise;
 
   const queryArtistsArr4 = queryArtistsArr3
@@ -202,7 +209,7 @@ export async function matchingLyrics(
   const searchString = onlySearchName
     ? removeSongFeat(name)
     : `${queryArtistsArr4.join()} ${removeSongFeat(name)}`;
-  const songs = await fetchData(searchString);
+  const songs = await fetchData(searchString, fetchOptions);
   const list: Song[] = [];
   const listIdSet = new Set<number>();
 
@@ -330,6 +337,7 @@ export async function matchingLyrics(
       onlySearchName: true,
       fetchData,
       fetchTransName: async () => singerAlias,
+      fetchOptions,
     });
     listForMissingName.forEach((song) => {
       if (!listIdSet.has(song.id)) {
@@ -343,10 +351,10 @@ export async function matchingLyrics(
   return { id, list, score };
 }
 
-export async function fetchLyric(songId: number) {
+export async function fetchLyric(songId: number, fetchOptions?: RequestInit) {
   const { API_HOST } = await config;
   const { lrc }: SongResult = await (
-    await fetch(`${API_HOST}/lyric?${new URLSearchParams({ id: String(songId) })}`)
+    await fetch(`${API_HOST}/lyric?${new URLSearchParams({ id: String(songId) })}`, fetchOptions)
   ).json();
   return lrc?.lyric || '';
 }
