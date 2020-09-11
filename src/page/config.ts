@@ -12,7 +12,9 @@ const REMOTE_URL =
 // Identify platform
 // Identify the platform, the platform should be the same as in config.json
 export const currentPlatform: Platform = (() => {
-  if (location.host.includes('youtube')) return 'YOUTUBE';
+  const { host } = location;
+  if (host.includes('youtube')) return 'YOUTUBE';
+  if (host.includes('deezer')) return 'DEEZER';
   return 'SPOTIFY';
 })();
 
@@ -44,7 +46,7 @@ interface LocalConfig {
 }
 
 export const localConfig: LocalConfig = (() => {
-  const LYRICS_CLASSNAME = 'spoticon-lyrics-16';
+  const LYRICS_CLASSNAME = 'extension-lyrics-button';
   const LYRICS_ACTIVE_CLASSNAME = 'active';
 
   if (currentPlatform === 'YOUTUBE') {
@@ -73,6 +75,44 @@ export const localConfig: LocalConfig = (() => {
         }
         .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} iron-icon {
           background: var(--ytmusic-text-primary);
+        }
+      `,
+      NO_PIP_STYLE: '',
+      LYRICS_CLASSNAME,
+      LYRICS_ACTIVE_CLASSNAME,
+    };
+  } else if (currentPlatform === 'DEEZER') {
+    const iconUrl = getSVGDataUrl(svg`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12">
+        <path d="M5.663 4.25l2.138 2.138-4.702 3.847-1.283-1.282L5.663 4.25zM1.389 9.735l.855.855-.855.427-.427-.427.427-.855zM6.09 3.396a2.565 2.565 0 1 1 2.566 2.565L6.09 3.396z">
+        </path>
+      </svg>
+    `);
+    return {
+      SERVICE_WORKER: '',
+      STATIC_STYLE: css`
+        main.has-ads-bottom .page-content,
+        main.has-ads-bottom-with-audio .page-content {
+          padding-bottom: 0;
+        }
+        .page-sidebar .sidebar-header,
+        .has-ads-bottom .ads.ads-bottom,
+        .has-ads-bottom-with-audio .ads.ads-bottom {
+          display: none;
+        }
+        .${LYRICS_CLASSNAME} {
+          order: 100;
+        }
+        .${LYRICS_CLASSNAME} button svg path {
+          display: none;
+        }
+        .${LYRICS_CLASSNAME} button svg {
+          background: var(--text-primary);
+          -webkit-mask: url(${iconUrl}) center / 100% no-repeat;
+          mask: url(${iconUrl}) center / 100% no-repeat;
+        }
+        .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} button svg {
+          background: var(--color-accent);
         }
       `,
       NO_PIP_STYLE: '',

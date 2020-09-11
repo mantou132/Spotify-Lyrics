@@ -27,6 +27,7 @@
     {
       "matches": [
         "*://open.spotify.com/*",
+        "*://www.deezer.com/*",
         "*://music.youtube.com/*"
       ],
       "js": [
@@ -37,6 +38,7 @@
     {
       "matches": [
         "*://open.spotify.com/*",
+        "*://www.deezer.com/*",
         "*://music.youtube.com/*"
       ],
       "js": [

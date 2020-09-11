@@ -3,11 +3,14 @@ import { Event, Message } from '../common/consts';
 
 import config, { localConfig } from './config';
 import { lyricVideo, audioPromise } from './element';
-import { appendStyle, css, captureException } from './utils';
+import { appendStyle, css, captureException, documentQueryHasSelector } from './utils';
 import { sharedData } from './share-data';
 import { optionsPromise } from './options';
 import { openEditor } from './editor';
 
+// Hide the original content that conflicts with the lyrics button
+// In spotify is the pip button
+// In deezer is the native lyrics button, and many lyrics buttons
 config.then(({ PIP_BTN_SELECTOR }) => {
   appendStyle(css`
     ${PIP_BTN_SELECTOR} {
@@ -54,7 +57,7 @@ export const insetLyricsBtn = async () => {
   const { BTN_WRAPPER_SELECTOR, BTN_LIKE_SELECTOR } = await config;
 
   const btnWrapper = document.querySelector(BTN_WRAPPER_SELECTOR) as HTMLDivElement;
-  const likeBtn = document.querySelector(BTN_LIKE_SELECTOR) as HTMLButtonElement;
+  const likeBtn = documentQueryHasSelector(BTN_LIKE_SELECTOR) as HTMLButtonElement;
   if (!btnWrapper || !likeBtn) return;
 
   if (btnWrapper.getElementsByClassName(localConfig.LYRICS_CLASSNAME).length) return;

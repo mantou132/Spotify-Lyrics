@@ -4,7 +4,7 @@ import { coverCtx, coverHDCtx } from './element';
 import { insetLyricsBtn } from './btn';
 import { sharedData } from './share-data';
 import { generateCover } from './cover';
-import { captureException } from './utils';
+import { captureException, documentQueryHasSelector } from './utils';
 
 // May load multiple times in a short time
 // Need to remember the last cover image
@@ -57,7 +57,7 @@ config.then(
     let infoElement: Element | null = null;
 
     const update = () => {
-      const likeBtn = document.querySelector(BTN_LIKE_SELECTOR);
+      const likeBtn = documentQueryHasSelector(BTN_LIKE_SELECTOR);
       const likeBtnRect = likeBtn?.getBoundingClientRect();
       if (!likeBtnRect?.width || !likeBtnRect.height) {
         // advertisement

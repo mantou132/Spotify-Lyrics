@@ -11,6 +11,21 @@ export function getSVGDataUrl(s: string) {
   return `data:image/svg+xml,${encodeURIComponent(s)}`;
 }
 
+/**
+ * Simulation https://developer.mozilla.org/en-US/docs/Web/CSS/:has
+ * @example
+ * ```ts
+ * documentQueryHasSelector('div:has(.lyrics)');
+ * ```
+ */
+export function documentQueryHasSelector(s: string) {
+  if (!s.includes(':has')) return document.querySelector(s);
+  const parentSelector = s.replace(/:has\(.*\)/, '');
+  const childSelector = s.replace(/:has\((.*)\)/, ' $1');
+  const child = document.querySelector(childSelector);
+  return child?.closest(parentSelector);
+}
+
 export const headReady = new Promise((res) => {
   if (document.head) res();
   document.addEventListener('readystatechange', () => {

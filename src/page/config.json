@@ -24,6 +24,19 @@
     "PIP_BTN_SELECTOR": "NONE",
     "AUDIO_SELECTOR": "video.html5-main-video"
   },
+  "DEEZER": {
+    "LOGGED_MARK_SELECTOR": ".topbar-action .topbar-profile",
+    "LYRICS_CONTAINER_SELECTOR": "#page_sidebar",
+    "PAGE_PIP_STYLE": "position: relative; width: 100%; height: auto;",
+    "ALBUM_COVER_SELECTOR": "#page_player .player-options .thumbnail img",
+    "TRACK_INFO_SELECTOR": "#page_player .player-track .track-title",
+    "TRACK_NAME_SELECTOR": "#page_player .player-track .track-title .marquee-content a:first-child",
+    "TRACK_ARTIST_SELECTOR": "#page_player .player-track .track-title .marquee-content a:last-child",
+    "BTN_WRAPPER_SELECTOR": "#page_player .player-track .track-actions ul",
+    "BTN_LIKE_SELECTOR": "#page_player .player-track .track-actions ul li:not([class*=lyrics i]):has(button[aria-label*=favourite i])",
+    "PIP_BTN_SELECTOR": ".svg-icon-group-btn[aria-label*=lyrics i], .datagrid-row.song .datagrid-cell-action[aria-label*=playlist i] ~ div ~ div.datagrid-cell-action",
+    "AUDIO_SELECTOR": "NONE"
+  },
   "SINGER": {
     "elva hsiao": "萧亚轩",
     "prudence liew": "刘美君",

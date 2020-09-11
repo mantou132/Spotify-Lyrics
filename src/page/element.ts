@@ -59,7 +59,9 @@ export const audioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
     options: ElementCreationOptions,
   ) {
     const element = createElement(tagName, options);
-    if (tagName === 'video' && !audio) {
+    // Spotify: <video>
+    // Deezer: <audio>
+    if ((tagName === 'video' || tagName === 'audio') && !audio) {
       audio = element as HTMLAudioElement;
       resolveAudio(audio);
     }

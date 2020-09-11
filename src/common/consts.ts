@@ -45,4 +45,4 @@ export interface Options {
   'strict-mode'?: Value;
 }
 
-export type Platform = 'SPOTIFY' | 'YOUTUBE';
+export type Platform = 'SPOTIFY' | 'YOUTUBE' | 'DEEZER';
