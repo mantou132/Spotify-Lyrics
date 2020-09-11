@@ -13,7 +13,7 @@ If you have any questions, please submit an [issue](https://github.com/mantou132
 
 ![windows-pwa-spotify](./screenshot/windows-pwa-spotify.jpg)
 
-The extension also supports Youtube Music, but does not support videos well.
+The extension also supports Deezer and Youtube Music, but songs with videos in Youtube Music cannot be perfectly supported(because the duration of the video is different from the duration of the officially released audio track).
 
 ![macos-pwa-youtube](./screenshot/macos-pwa-youtube.jpg)
 
@@ -53,7 +53,7 @@ npm run build:zip
 
 ## Match Success Rate
 
-v1.2.7, Friday, July 31, 2020
+Spotify, v1.2.7, Friday, July 31, 2020
 
 | Playlist Name             | Success rate | Success | No Match | No Lyrics |
 | ------------------------- | ------------ | ------- | -------- | --------- |
