@@ -6,54 +6,65 @@ import { sharedData } from './share-data';
 import { generateCover } from './cover';
 import { captureException, documentQueryHasSelector } from './utils';
 
-// May load multiple times in a short time
-// Need to remember the last cover image
-let largeImage: HTMLImageElement;
-function coverLoadHandler(this: HTMLImageElement) {
-  const drawSmallCover = (ctx: CanvasRenderingContext2D) => {
-    if (!('filter' in ctx)) {
-      return generateCover([coverCtx]);
-    }
-    const { width, height } = ctx.canvas;
-    ctx.save();
-    ctx.imageSmoothingEnabled = false;
-    const blur = 10;
-    ctx.filter = `blur(${blur}px)`;
-    ctx.drawImage(this, -blur * 2, -blur * 2, width + 4 * blur, height + 4 * blur);
-    ctx.restore();
-  };
-  drawSmallCover(coverCtx);
-
-  const { width, height } = coverHDCtx.canvas;
-  // https://github.com/mantou132/Spotify-Lyrics/issues/26#issuecomment-638019333
-  const reg = /00004851(?=\w{24}$)/;
-  if (this.naturalWidth >= 480) {
-    coverHDCtx.drawImage(this, 0, 0, width, height);
-  } else if (reg.test(this.src)) {
-    const largeUrl = this.src.replace(reg, '0000b273');
-    largeImage = new Image();
-    largeImage.crossOrigin = 'anonymous';
-    largeImage.addEventListener('load', function () {
-      if (this !== largeImage) return;
-      coverHDCtx.drawImage(largeImage, 0, 0, width, height);
-    });
-    largeImage.addEventListener('error', () => drawSmallCover(coverHDCtx));
-    largeImage.src = largeUrl;
-  } else {
-    drawSmallCover(coverHDCtx);
-  }
-}
-function coverErrorHandler(this: HTMLImageElement) {
-  generateCover([coverCtx, coverHDCtx]);
-}
-
 let loginResolve: (value?: unknown) => void;
 export const loggedPromise = new Promise((res) => (loginResolve = res));
 
 const weakMap = new WeakMap<Element, MutationObserver>();
 
 config.then(
-  ({ ALBUM_COVER_SELECTOR, TRACK_INFO_SELECTOR, LOGGED_MARK_SELECTOR, BTN_LIKE_SELECTOR }) => {
+  ({
+    ALBUM_COVER_SELECTOR,
+    ALBUM_COVER_LARGE_REGEXP_REPLACE,
+    TRACK_INFO_SELECTOR,
+    LOGGED_MARK_SELECTOR,
+    BTN_LIKE_SELECTOR,
+  }) => {
+    function getLargeCoverUrl(src: string) {
+      const [regText, replaceText] = ALBUM_COVER_LARGE_REGEXP_REPLACE;
+      const reg = new RegExp(regText);
+      return reg.test(src) ? src.replace(reg, replaceText) : null;
+    }
+
+    // May load multiple times in a short time
+    // Need to remember the last cover image
+    let largeImage: HTMLImageElement;
+    function coverLoadHandler(this: HTMLImageElement) {
+      const drawSmallCover = (ctx: CanvasRenderingContext2D) => {
+        if (!('filter' in ctx)) {
+          return generateCover([coverCtx]);
+        }
+        const { width, height } = ctx.canvas;
+        ctx.save();
+        ctx.imageSmoothingEnabled = false;
+        const blur = 10;
+        ctx.filter = `blur(${blur}px)`;
+        ctx.drawImage(this, -blur * 2, -blur * 2, width + 4 * blur, height + 4 * blur);
+        ctx.restore();
+      };
+      drawSmallCover(coverCtx);
+
+      const { width, height } = coverHDCtx.canvas;
+      // https://github.com/mantou132/Spotify-Lyrics/issues/26#issuecomment-638019333
+      const largeUrl = getLargeCoverUrl(this.src);
+      if (this.naturalWidth >= 480) {
+        coverHDCtx.drawImage(this, 0, 0, width, height);
+      } else if (largeUrl) {
+        largeImage = new Image();
+        largeImage.crossOrigin = 'anonymous';
+        largeImage.addEventListener('load', function () {
+          if (this !== largeImage) return;
+          coverHDCtx.drawImage(largeImage, 0, 0, width, height);
+        });
+        largeImage.addEventListener('error', () => drawSmallCover(coverHDCtx));
+        largeImage.src = largeUrl;
+      } else {
+        drawSmallCover(coverHDCtx);
+      }
+    }
+    function coverErrorHandler(this: HTMLImageElement) {
+      generateCover([coverCtx, coverHDCtx]);
+    }
+
     let infoElement: Element | null = null;
 
     const update = () => {
