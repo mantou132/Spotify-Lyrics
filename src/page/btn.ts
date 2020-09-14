@@ -22,7 +22,9 @@ config.then(({ PIP_BTN_SELECTOR }) => {
 export async function getLyricsBtn() {
   const { BTN_WRAPPER_SELECTOR } = await config;
   const btnWrapper = document.querySelector(BTN_WRAPPER_SELECTOR);
-  return btnWrapper?.getElementsByClassName(localConfig.LYRICS_CLASSNAME)[0] as HTMLButtonElement;
+  return btnWrapper?.getElementsByClassName(
+    localConfig.LYRICS_CLASSNAME,
+  )[0] as HTMLButtonElement | null;
 }
 
 window.addEventListener(

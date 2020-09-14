@@ -58,8 +58,8 @@ export const localConfig: LocalConfig = (() => {
     return {
       SERVICE_WORKER: '',
       STATIC_STYLE: css`
-        yt-bubble-hint-renderer.ytmusic-popup-container {
-          display: none;
+        yt-bubble-hint-renderer {
+          display: none !important;
         }
         ytmusic-player {
           --ytmusic-mini-player-height: 0px !important;
