@@ -131,13 +131,13 @@ export const localConfig: LocalConfig = (() => {
         [role='banner'] {
           display: none;
         }
-        .${LYRICS_CLASSNAME}::before {
+        .${LYRICS_CLASSNAME} button div::before {
           content: '\\f345';
           font-size: 16px;
           transform: rotate(90deg);
           color: #b3b3b3;
         }
-        .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME}::before {
+        .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} button div::before {
           color: #1db954;
         }
       `,
