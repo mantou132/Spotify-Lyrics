@@ -67,6 +67,10 @@ export const events = {
     ec: 'Click',
     ea: 'KeypressToggleLyrics',
   },
+  openEditor: {
+    ec: 'Window',
+    ea: 'OpenEditor',
+  },
   openOptionsPage: {
     ec: 'Window',
     ea: 'OpenOptionsPage',

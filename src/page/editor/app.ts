@@ -2,11 +2,12 @@ import { html, GemElement } from '@mantou/gem/lib/element';
 import { customElement, emitter, Emitter, refobject, RefObject } from '@mantou/gem/lib/decorators';
 
 import { theme } from '../../common/theme';
+import { events, sendEvent } from '../../common/ga';
 import { audioPromise } from '../element';
 import { sharedData } from '../share-data';
 import { parseLyrics, Lyric } from '../lyrics';
 import { setSong } from '../store';
-import { OptionsAndI18n } from '../options';
+import { OptionsAndI18n, optionsPromise } from '../options';
 
 import { Button } from './elements/button';
 
@@ -83,6 +84,9 @@ export class EditorApp extends GemElement<State> {
   async mounted() {
     if (!document.pictureInPictureElement) return;
     this.resetLocal();
+
+    const options = await optionsPromise;
+    sendEvent(options.cid, events.openEditor);
 
     const audio = await audioPromise;
     this.originLoop = audio.loop;
