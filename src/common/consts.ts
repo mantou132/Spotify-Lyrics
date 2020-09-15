@@ -1,5 +1,8 @@
 import type { Value } from '../options/elements/switch';
 
+// Read package.json `version` field
+export const VERSION = process.env.VERSION || 'UNKNOWN';
+
 export const isProd = process.env.NODE_ENV === 'production';
 export const isWebApp = location.protocol.startsWith('http');
 

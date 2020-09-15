@@ -44,6 +44,7 @@ module.exports = {
     new CopyWebpackPlugin({ patterns: [{ from: './public', to: './' }] }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      'process.env.VERSION': JSON.stringify(process.env.npm_package_version),
     }),
   ],
   devtool: isProd ? false : 'source-map',

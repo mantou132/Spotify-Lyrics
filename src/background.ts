@@ -1,7 +1,7 @@
 import { browser } from 'webextension-polyfill-ts';
 import * as Sentry from '@sentry/browser';
 
-import { Message, Event, ContextItems, isProd } from './common/consts';
+import { Message, Event, ContextItems, isProd, VERSION } from './common/consts';
 import { getOptions } from './options/store';
 import { i18n, i18nMap } from './i18n';
 declare global {
@@ -16,7 +16,7 @@ declare global {
 window.Sentry = Sentry;
 Sentry.init({
   dsn: 'https://124df8398d8b466fbcf09ec64bcfe144@o55145.ingest.sentry.io/5353517',
-  release: browser.runtime.getManifest().version,
+  release: VERSION,
   environment: isProd ? 'prod' : 'dev',
 });
 

@@ -2,7 +2,7 @@
 // https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
 // Support extension origin and spotify origin, And share ga cid
 
-import { isProd, isWebApp } from './consts';
+import { isProd, isWebApp, VERSION } from './consts';
 
 const postReq = (params: Record<string, string>) => {
   fetch('https://www.google-analytics.com/collect', {
@@ -13,8 +13,8 @@ const postReq = (params: Record<string, string>) => {
 };
 
 const gaRequiredPayload = {
-  v: '1',
-  tid: isProd ? 'UA-163443161-1' : 'UA-88601817-2',
+  v: '1', // protocol version
+  tid: isProd ? 'UA-163443161-1' : 'UA-88601817-2', // measurement id
 };
 
 interface EventRequiredParams {
@@ -91,20 +91,21 @@ export function sendEvent(
   customOptions: Record<string, string> = {},
 ) {
   postReq({
-    cid,
-    t: 'event',
-    ul: navigator.language.toLowerCase(),
-    sr: `${screen.width}x${screen.height}`,
+    cid, // client id
+    t: 'event', // hit type
+    cn: VERSION, // campaign name
+    ul: navigator.language.toLowerCase(), // user language
+    sr: `${screen.width}x${screen.height}`, // screen resolution
     ...gaRequiredPayload,
     ...payload,
     ...customOptions,
     ...(isWebApp
       ? {
-          vp: `${innerWidth}x${innerHeight}`,
+          vp: `${innerWidth}x${innerHeight}`, // viewport size
           cs: matchMedia('(display-mode: standalone), (display-mode: minimal-ui)').matches
             ? 'pwa'
-            : 'webpage',
-          cm: location.host,
+            : 'webpage', // campaign source
+          cm: location.host, // campaign medium
         }
       : {}),
   });
