@@ -2,7 +2,7 @@
 
 # Spotify Lyrics
 
-Install Extension: [Chrome](https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod) | [Firefox](https://addons.mozilla.org/en-US/firefox/addon/spotify-lyrics/) | [Safari](https://github.com/mantou132/Spotify-Lyrics/releases)
+Install Extension: [Chrome](https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod) | [Edge](https://microsoftedge.microsoft.com/addons/detail/spotify-lyrics/aiehldpoaeaidnljjimhbojpblkbembm) | [Firefox](https://addons.mozilla.org/en-US/firefox/addon/spotify-lyrics/) | [Safari](https://github.com/mantou132/Spotify-Lyrics/releases)
 
 The extension adds a button to the bottom left corner of Spotify Web Player,
 Click to switch the display status of the lyrics,
@@ -28,6 +28,7 @@ The extension also supports Deezer and Youtube Music, but songs with videos in Y
 ## Compatibility
 
 - Firefox [78+](https://bugzilla.mozilla.org/show_bug.cgi?id=1361876) (Not support [PiP](https://bugzilla.mozilla.org/show_bug.cgi?id=1463402))
+- Edge [79+](https://blogs.windows.com/msedgedev/2020/01/15/upgrading-new-microsoft-edge-79-chromium/)
 - Chrome [70+](https://caniuse.com/#feat=picture-in-picture)
 - Safari [14+](https://developer.apple.com/documentation/safariservices/safari_web_extensions)
 
