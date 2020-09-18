@@ -94,6 +94,7 @@ render(
               >detail</a
             >
           </li>
+          <li>Update this extension to the latest version</li>
         </ul>
       </details>
       <details>
