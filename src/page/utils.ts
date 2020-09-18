@@ -41,7 +41,7 @@ export async function appendStyle(s: string) {
   document.head.append(style);
 }
 
-export function captureException(err: Error, extra: any = { herf: location.href }) {
+export function captureException(err: Error, extra?: any) {
   if (!isProd) console.error(err, extra);
   const msg: Message = {
     type: Event.CAPTURE_EXCEPTION,
@@ -49,7 +49,7 @@ export function captureException(err: Error, extra: any = { herf: location.href 
       name: err.name,
       message: err.message,
       stack: err.stack,
-      extra,
+      extra: { herf: location.href, ...extra },
     },
   };
   window.postMessage(msg, '*');

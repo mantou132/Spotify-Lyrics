@@ -53,6 +53,9 @@ export const audioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
 
   const createElement: typeof document.createElement = document.createElement.bind(document);
 
+  const elementCountOverrideBefore = document.querySelectorAll('*').length;
+  const hrefOverrideBefore = location.href;
+
   // Spotify: using `document.createElement`
   document.createElement = function <K extends keyof HTMLElementTagNameMap>(
     tagName: K,
@@ -62,6 +65,7 @@ export const audioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
     // Spotify: <video>
     // Deezer: <audio>
     if ((tagName === 'video' || tagName === 'audio') && !audio) {
+      performance.measure('capture_audio_element');
       audio = element as HTMLAudioElement;
       resolveAudio(audio);
     }
@@ -86,7 +90,14 @@ export const audioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
   Promise.all([loggedPromise, new Promise((res) => window.addEventListener('load', res))]).then(
     () => {
       setTimeout(() => {
-        if (!audio) captureException(new Error('Audio not found'));
+        if (!audio) {
+          captureException(new Error('Audio not found'), {
+            // Provide some information that can tell if the extension is working properly
+            hrefOverrideBefore,
+            elementCountOverrideBefore,
+            elementCount: document.querySelectorAll('*').length,
+          });
+        }
       }, 5_000);
     },
   );
