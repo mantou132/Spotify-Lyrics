@@ -155,7 +155,7 @@
   },
 
   "pageTipWaiting": {
-    "message": "Waiting for music...",
+    "message": "Waiting to play...",
     "description": "Waiting for music tip"
   },
 

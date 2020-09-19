@@ -151,9 +151,8 @@ render(
       <details>
         <summary><h3>Support other music web player?</h3></summary>
         <p>
-          In addition to Spotify, YouTube Music is now supported. If you want to display lyrics in
-          other web music players, please comment
-          <a href="https://github.com/mantou132/Spotify-Lyrics/issues/35">here</a>.
+          In addition to Spotify, YouTube Music, Deezer is now supported.
+          <a href="https://github.com/mantou132/Spotify-Lyrics/issues/35">detail</a>.
         </p>
       </details>
     </section>
