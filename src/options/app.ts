@@ -85,6 +85,8 @@ export class OptionsApp extends GemElement<State> {
           font-style: italic;
           opacity: 0.5;
           margin: 1em 0;
+          padding: 0;
+          list-style: none;
         }
       </style>
       <ele-form @input=${this.inputHandler} ref=${this.formRef.ref}>
@@ -126,7 +128,7 @@ export class OptionsApp extends GemElement<State> {
             default-value=${options['clean-lyrics']}
           ></ele-switch>
         </ele-form-item>
-        <ele-form-item label=${i18n.optionsTraditionalChineseLyrics()}>
+        <ele-form-item label="${i18n.optionsTraditionalChineseLyrics()} *">
           <ele-switch
             name=${'traditional-chinese-lyrics' as keyof Options}
             default-value=${options['traditional-chinese-lyrics']}
@@ -134,7 +136,7 @@ export class OptionsApp extends GemElement<State> {
         </ele-form-item>
         <ele-form-item
           ?hidden=${!document.pictureInPictureEnabled}
-          label="${i18n.optionsLyricsPosition()}"
+          label="${i18n.optionsLyricsPosition()} **"
         >
           <ele-select
             name=${'show-on' as keyof Options}
@@ -173,7 +175,7 @@ export class OptionsApp extends GemElement<State> {
           ></ele-switch>
         </ele-form-item>
         <ele-form-item
-          label=${i18n.optionsUseUnreviewedLyrics()}
+          label="${i18n.optionsUseUnreviewedLyrics()} *"
           description=${i18n.optionsUseUnreviewedLyricsDetail()}
         >
           <ele-switch
@@ -182,7 +184,10 @@ export class OptionsApp extends GemElement<State> {
           ></ele-switch>
         </ele-form-item>
       </ele-form>
-      <p class="tip">${i18n.optionsSaveTip()}</p>
+      <ul class="tip">
+        <li>* ${i18n.optionsSaveTip1()}</li>
+        <li>** ${i18n.optionsSaveTip2()}</li>
+      </ul>
     `;
   }
 }

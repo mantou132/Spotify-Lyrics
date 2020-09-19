@@ -44,8 +44,13 @@
     "description": "Lyric matching description3"
   },
 
-  "optionsSaveTip": {
-    "message": "With \"*\" mark with options need to reload to take effect",
+  "optionsSaveTip1": {
+    "message": "Switch song to take effect",
+    "description": "Some tips for saving options"
+  },
+
+  "optionsSaveTip2": {
+    "message": "Refresh to take effect",
     "description": "Some tips for saving options"
   },
 
@@ -110,7 +115,7 @@
   },
 
   "optionsLyricsPosition": {
-    "message": "Where the lyrics show *",
+    "message": "Where the lyrics show",
     "description": "Lyrics position option"
   },
 
