@@ -117,6 +117,7 @@ export class OptionsApp extends GemElement<State> {
           ></ele-select>
         </ele-form-item>
         <ele-form-item
+          hidden
           label=${i18n.optionsShowCleanLyrics()}
           description=${i18n.optionsShowCleanLyricsDetail()}
         >
