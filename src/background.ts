@@ -19,6 +19,7 @@ Sentry.init({
   release: VERSION,
   environment: isProd ? 'prod' : 'dev',
 });
+getOptions().then(({ cid }) => Sentry.setUser({ id: cid }));
 
 browser.browserAction.disable();
 
