@@ -77,6 +77,12 @@ export const insetLyricsBtn = async () => {
   }
 
   lyricsBtn.title = options.i18nMap.pageButtonTitle;
+  lyricsBtn.setAttribute('aria-label', lyricsBtn.title);
+  lyricsBtn.querySelectorAll('*').forEach((e) => {
+    e.removeAttribute('title');
+    e.removeAttribute('aria-label');
+  });
+
   if (document.pictureInPictureElement === lyricVideo)
     lyricsBtn.classList.add(localConfig.LYRICS_ACTIVE_CLASSNAME);
   lyricVideo.addEventListener('enterpictureinpicture', () => {
