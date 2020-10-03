@@ -36,7 +36,7 @@
     "TRACK_NAME_SELECTOR": "#page_player .player-track .track-title .marquee-content a:first-child",
     "TRACK_ARTIST_SELECTOR": "#page_player .player-track .track-title .marquee-content a:last-child",
     "BTN_WRAPPER_SELECTOR": "#page_player .player-track .track-actions ul",
-    "BTN_LIKE_SELECTOR": "#page_player .player-track .track-actions ul li:not([class*=lyrics i]):has(button[aria-label*=favourite i])",
+    "BTN_LIKE_SELECTOR": "#page_player .player-track .track-actions ul li:not([class*=lyrics i]):has(svg[class*=love i])",
     "PIP_BTN_SELECTOR": ".svg-icon-group-btn[aria-label*=lyrics i], .datagrid-row.song .datagrid-cell-action[aria-label*=playlist i] ~ div ~ div.datagrid-cell-action",
     "AUDIO_SELECTOR": "NONE"
   },

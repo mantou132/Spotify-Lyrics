@@ -11,6 +11,7 @@ import { openEditor } from './editor';
 // Hide the original content that conflicts with the lyrics button
 // In spotify is the pip button
 // In deezer is the native lyrics button, and many lyrics buttons
+// Note that the css selector needs to support multiple languages
 config.then(({ PIP_BTN_SELECTOR }) => {
   appendStyle(css`
     ${PIP_BTN_SELECTOR} {
