@@ -1,6 +1,7 @@
 const path = require('path');
 
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
@@ -40,6 +41,13 @@ module.exports = {
     path: path.resolve(__dirname, 'extension'),
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      chunks: ['options'],
+      filename: 'options.html',
+      title: 'Spotify Lyrics Options',
+    }),
+    new HtmlWebpackPlugin({ chunks: ['popup'], filename: 'popup.html' }),
+    new HtmlWebpackPlugin({ chunks: ['welcome'], filename: 'welcome.html', title: 'Welcome' }),
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
     new CopyWebpackPlugin({ patterns: [{ from: './public', to: './' }] }),
     new webpack.DefinePlugin({
