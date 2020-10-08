@@ -238,7 +238,9 @@ export class EditorApp extends GemElement<State> {
   };
 
   modifyLine = (e: InputEvent, index: number) => {
-    this.state.lyrics[index].text = (e.target as HTMLTableCellElement).innerText;
+    const { lyrics } = this.state;
+    lyrics[index].text = (e.target as HTMLTableCellElement).innerText;
+    sharedData.lyrics = lyrics;
   };
 
   render() {
@@ -416,14 +418,9 @@ export class EditorApp extends GemElement<State> {
                   >
                     ${startTime === null ? '00:00.00' : formatLRCTime(startTime)}
                   </td>
-                  <td
-                    contenteditable
-                    @dragover=${this.dragOver}
-                    @paste=${this.pasteText}
-                    @input=${(e: InputEvent) => this.modifyLine(e, index)}
-                  >
-                    ${text}
-                  </td>
+                  ${// The following contenteditable element wrapping will cause the TextNode to be modified during editing
+                  // eslint-disable-next-line prettier/prettier
+                    html`<td contenteditable @dragover=${this.dragOver} @paste=${this.pasteText} @input=${(e: InputEvent) => this.modifyLine(e, index)}>${text}</td>`}
                   <td class="remove" @click=${() => this.removeLine(index)}>✕</td>
                 </tr>
               `,
