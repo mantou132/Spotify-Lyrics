@@ -21,7 +21,17 @@ Sentry.init({
 });
 getOptions().then(({ cid }) => Sentry.setUser({ id: cid }));
 
-browser.browserAction.disable();
+function disableBrowserAction() {
+  browser.browserAction.disable();
+  browser.browserAction.setTitle({ title: i18n.actionDisableTitle() });
+}
+
+function enableBrowserAction() {
+  browser.browserAction.enable();
+  browser.browserAction.setTitle({ title: i18n.actionEnableTitle() });
+}
+
+disableBrowserAction();
 
 browser.runtime.onMessage.addListener((msg: Message) => {
   if (msg?.type === Event.GET_OPTIONS) {
@@ -33,9 +43,9 @@ browser.runtime.onMessage.addListener((msg: Message) => {
   }
   if (msg?.type === Event.POPUP_ACTIVE) {
     if (msg.data === true) {
-      browser.browserAction.enable();
+      enableBrowserAction();
     } else {
-      browser.browserAction.disable();
+      disableBrowserAction();
     }
   }
   if (msg?.type === Event.CAPTURE_EXCEPTION) {

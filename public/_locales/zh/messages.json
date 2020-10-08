@@ -7,6 +7,15 @@
     "message": "在画中画窗口中显示即时同步的歌词"
   },
 
+  "actionDisableTitle": {
+    "message": "开启歌词后查看其他歌词"
+  },
+
+  "actionEnableTitle": {
+    "message": "尝试其他歌词"
+  },
+
+
   "popupMissMatch": {
     "message": "目前没有可用的歌曲"
   },

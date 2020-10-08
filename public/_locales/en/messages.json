@@ -1,12 +1,22 @@
 {
   "extensionName": {
     "message": "Spotify Lyrics",
-    "description": "Name of the extension."
+    "description": "Name of the extension"
   },
 
   "extensionDescription": {
     "message": "Instant synchronised lyrics display in picture-in-picture window",
-    "description": "Description of the extension."
+    "description": "Description of the extension"
+  },
+
+  "actionDisableTitle": {
+    "message": "View other lyrics after opening lyrics",
+    "description": "Browser action disable title"
+  },
+
+  "actionEnableTitle": {
+    "message": "Try other lyrics",
+    "description": "Browser action enable title"
   },
 
   "popupMissMatch": {
