@@ -14,9 +14,12 @@ export class SongItem extends GemElement {
     if (!this.song) return null;
     const { id, name, artists, album, duration } = this.song;
     const durationText = duration
-      ? `${Math.floor(duration / 1000 / 60)}:${((duration / 1000) % 60).toFixed().padStart(2, '0')}`
+      ? `${Math.floor(duration / 1000 / 60)}:${(Math.floor(duration / 1000) % 60)
+          .toString()
+          .padStart(2, '0')}`
       : '';
     const checked = id === store.id;
+    const artist = artists.map(({ name }) => name).join(',');
     return html`
       <style>
         :host {
@@ -48,10 +51,11 @@ export class SongItem extends GemElement {
         }
       </style>
       <div class="track-info">
-        <div class="track-name">${name}</div>
+        <div title=${name} class="track-name">${name}</div>
         <div class="artist-name">
-          <span>${durationText}</span>
-          • <span>${artists.map(({ name }) => name).join(',')}</span> • <span>${album.name}</span>
+          <span title="id: ${id}">${durationText}</span>
+          • <span title=${artist}>${artist}</span> •
+          <span title=${album.name}>${album.name}</span>
         </div>
       </div>
       ${checked ? html`<div class="status">✓</div>` : null}

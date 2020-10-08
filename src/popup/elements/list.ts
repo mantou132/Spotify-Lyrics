@@ -27,11 +27,7 @@ export class SongList extends GemElement {
       ${store.list.map(
         (song) =>
           html`
-            <app-track-item
-              @click=${() => this.select(song.id)}
-              .song=${song}
-              title="id: ${song.id}"
-            ></app-track-item>
+            <app-track-item @click=${() => this.select(song.id)} .song=${song}></app-track-item>
           `,
       )}
     `;
