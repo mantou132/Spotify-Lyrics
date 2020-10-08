@@ -195,7 +195,7 @@
   },
   
   "pageEditorOffset": {
-    "message": "Offset",
+    "message": "Global offset",
     "description": "Lyrics offset lable"
   },
   

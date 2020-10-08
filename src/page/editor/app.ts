@@ -161,14 +161,19 @@ export class EditorApp extends GemElement<State> {
     sharedData.lyrics = [];
   };
 
-  offsetAllLine = (step: number) => {
+  offsetLine = (step: number, index?: number) => {
     const { lyrics } = this.state;
-    this.setState({
-      lyrics: lyrics.map(({ text, startTime }) => ({
-        text,
-        startTime: startTime !== null ? startTime + step : startTime,
-      })),
-    });
+    if (typeof index === 'number') {
+      lyrics[index].startTime = (lyrics[index].startTime || 0) + step;
+      this.setState({ lyrics });
+    } else {
+      this.setState({
+        lyrics: lyrics.map(({ text, startTime }) => ({
+          text,
+          startTime: (startTime || 0) + step,
+        })),
+      });
+    }
     sharedData.lyrics = lyrics;
   };
 
@@ -329,6 +334,7 @@ export class EditorApp extends GemElement<State> {
           background: rgba(${theme.blackRGB}, 0.075);
         }
         td {
+          width: 1px;
           padding: 0;
           vertical-align: baseline;
         }
@@ -338,16 +344,20 @@ export class EditorApp extends GemElement<State> {
         .marked {
           opacity: 1;
         }
-        .timestamp {
+        .timestamp,
+        .timechange {
           font-feature-settings: 'tnum';
           user-select: none;
-          width: 1px;
-          padding-right: 1em;
           white-space: nowrap;
+        }
+        .timechange {
+          padding: 0 0.5em;
+        }
+        .lyrics-line {
+          width: 100%;
         }
         .remove {
           cursor: pointer;
-          width: 1px;
           padding-left: 1em;
           opacity: 0.5;
         }
@@ -390,13 +400,13 @@ export class EditorApp extends GemElement<State> {
           <span
             title=${i18nMap.pageEditorOffsetDetail}
             class="button"
-            @click=${() => this.offsetAllLine(0.1)}
+            @click=${() => this.offsetLine(0.1)}
             >+</span
           >
           <span
             title=${i18nMap.pageEditorOffsetDetail}
             class="button"
-            @click=${() => this.offsetAllLine(-0.1)}
+            @click=${() => this.offsetLine(-0.1)}
             >-</span
           >
         </div>
@@ -418,9 +428,23 @@ export class EditorApp extends GemElement<State> {
                   >
                     ${startTime === null ? '00:00.00' : formatLRCTime(startTime)}
                   </td>
+                  <td class="timechange">
+                    <span
+                      title=${i18nMap.pageEditorOffsetDetail}
+                      class="button"
+                      @click=${() => this.offsetLine(0.1, index)}
+                      >+</span
+                    >
+                    <span
+                      title=${i18nMap.pageEditorOffsetDetail}
+                      class="button"
+                      @click=${() => this.offsetLine(-0.1, index)}
+                      >-</span
+                    >
+                  </td>
                   ${// The following contenteditable element wrapping will cause the TextNode to be modified during editing
                   // eslint-disable-next-line prettier/prettier
-                    html`<td contenteditable @dragover=${this.dragOver} @paste=${this.pasteText} @input=${(e: InputEvent) => this.modifyLine(e, index)}>${text}</td>`}
+                    html`<td class="lyrics-line" contenteditable @dragover=${this.dragOver} @paste=${this.pasteText} @input=${(e: InputEvent) => this.modifyLine(e, index)}>${text}</td>`}
                   <td class="remove" @click=${() => this.removeLine(index)}>✕</td>
                 </tr>
               `,
