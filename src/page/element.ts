@@ -1,6 +1,6 @@
 import { Message, Event } from '../common/consts';
 
-import { captureException } from './utils';
+import { captureException, documentQueryHasSelector } from './utils';
 import { getLyricsBtn } from './btn';
 import { loggedPromise } from './observer';
 import config from './config';
@@ -89,6 +89,7 @@ export const audioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
   // Spotify: login required
   Promise.all([loggedPromise, new Promise((res) => window.addEventListener('load', res))]).then(
     () => {
+      const loadedTime = performance.now();
       setTimeout(() => {
         if (!audio) {
           captureException(new Error('Audio not found'), {
@@ -96,6 +97,7 @@ export const audioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
             hrefOverrideBefore,
             elementCountOverrideBefore,
             elementCount: document.querySelectorAll('*').length,
+            loadedTime,
           });
         }
       }, 5_000);
@@ -104,10 +106,18 @@ export const audioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
 });
 
 audioPromise.then((audio) => {
+  let reported = false;
   audio.addEventListener('playing', async () => {
     const isMusic = audio.duration && audio.duration > 2.6 * 60 && audio.duration < 4 * 60;
-    if (isMusic && !(await getLyricsBtn())) {
-      captureException(new Error('Lyrics button not found'));
+    if (!reported && isMusic && !(await getLyricsBtn())) {
+      reported = true;
+      const { BTN_WRAPPER_SELECTOR, BTN_LIKE_SELECTOR, TRACK_NAME_SELECTOR } = await config;
+      captureException(new Error('Lyrics button not found'), {
+        duration: audio.duration,
+        TRACK_NAME: document.querySelector(TRACK_NAME_SELECTOR)?.textContent,
+        BTN_WRAPPER: !!document.querySelector(BTN_WRAPPER_SELECTOR),
+        BTN_LIKE: !!documentQueryHasSelector(BTN_LIKE_SELECTOR),
+      });
     }
   });
 

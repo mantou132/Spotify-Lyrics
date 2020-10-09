@@ -3,7 +3,8 @@ import { browser } from 'webextension-polyfill-ts';
 import { Message, Event } from './common/consts';
 
 window.addEventListener('message', ({ data }) => {
-  if (data?.type === Event.SEND_SONGS) {
+  const { type } = data || {};
+  if (type === Event.SEND_SONGS) {
     browser.runtime.sendMessage(data).catch(() => {
       //
     });
@@ -15,7 +16,8 @@ browser.runtime.onMessage.addListener((msg: Message) => {
 });
 
 window.addEventListener('message', ({ data }) => {
-  if (data?.type === Event.GET_OPTIONS) {
+  const { type } = data || {};
+  if (type === Event.GET_OPTIONS) {
     browser.runtime
       .sendMessage(data)
       .then((options) => {
@@ -25,7 +27,7 @@ window.addEventListener('message', ({ data }) => {
         //
       });
   }
-  if (data?.type === Event.POPUP_ACTIVE || data?.type === Event.CAPTURE_EXCEPTION) {
+  if (type === Event.POPUP_ACTIVE || type === Event.CAPTURE_EXCEPTION) {
     browser.runtime.sendMessage(data);
   }
 });

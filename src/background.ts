@@ -34,26 +34,28 @@ function enableBrowserAction() {
 disableBrowserAction();
 
 browser.runtime.onMessage.addListener((msg: Message) => {
-  if (msg?.type === Event.GET_OPTIONS) {
+  const { type, data } = msg || {};
+  if (type === Event.GET_OPTIONS) {
     // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/onMessage#Parameters
     return getOptions().then((options) => ({
       ...options,
       i18nMap,
     }));
   }
-  if (msg?.type === Event.POPUP_ACTIVE) {
-    if (msg.data === true) {
+  if (type === Event.POPUP_ACTIVE) {
+    if (data === true) {
       enableBrowserAction();
     } else {
       disableBrowserAction();
     }
   }
-  if (msg?.type === Event.CAPTURE_EXCEPTION) {
-    const err = new Error(msg.data?.message);
-    err.name = msg.data?.name;
-    err.stack = msg.data?.stack;
+  // breadcrumb and exception are cumulative
+  if (type === Event.CAPTURE_EXCEPTION) {
+    const err = new Error(data.message);
+    err.name = data.name;
+    err.stack = data.stack;
     window.Sentry?.captureException(err, {
-      extra: msg.data?.extra,
+      extra: data.extra,
     });
   }
 });
