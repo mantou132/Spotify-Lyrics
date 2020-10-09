@@ -1,8 +1,14 @@
-[![Build Status](https://travis-ci.org/mantou132/Spotify-Lyrics.svg?branch=master)](https://travis-ci.org/mantou132/Spotify-Lyrics)
+[![Build Status](https://img.shields.io/travis/mantou132/Spotify-Lyrics?logo=travis-ci&logoColor=fff)](https://travis-ci.org/mantou132/Spotify-Lyrics)
+[![Users](https://img.shields.io/chrome-web-store/users/mkjfooclbdgjdclepjeepbmmjaclipod?logo=google-chrome&logoColor=fff)](https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod)
+[![Discord](https://img.shields.io/discord/763927057549099028?logo=discord&logoColor=fff)](https://discord.com/invite/fQbzzdJ)
+
 
 # Spotify Lyrics
 
-Install Extension: [Chrome](https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod) | [Edge](https://microsoftedge.microsoft.com/addons/detail/spotify-lyrics/aiehldpoaeaidnljjimhbojpblkbembm) | [Firefox](https://addons.mozilla.org/en-US/firefox/addon/spotify-lyrics/) | [Safari](https://github.com/mantou132/Spotify-Lyrics/releases)
+Install Extension:
+[Chrome](https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod) |
+[Edge](https://microsoftedge.microsoft.com/addons/detail/spotify-lyrics/aiehldpoaeaidnljjimhbojpblkbembm) | [Firefox](https://addons.mozilla.org/en-US/firefox/addon/spotify-lyrics/) |
+Safari(Soon)
 
 The extension adds a button to the bottom left corner of Spotify Web Player,
 Click to switch the display status of the lyrics,
