@@ -95,6 +95,11 @@ render(
             >
           </li>
           <li>Update this extension to the latest version</li>
+          <li>
+            Ask for help in
+            <a href="https://discord.com/invite/fQbzzdJ" target="_blank">Discord</a> or
+            <a href="https://github.com/mantou132/Spotify-Lyrics/issues" target="_blank">Github</a>
+          </li>
         </ul>
       </details>
       <details>
