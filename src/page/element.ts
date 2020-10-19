@@ -9,6 +9,9 @@ export const lyricVideo = document.createElement('video');
 lyricVideo.muted = true;
 lyricVideo.width = 640;
 lyricVideo.height = 640;
+// https://github.com/mantou132/Spotify-Lyrics/issues/57
+lyricVideo.setAttribute('style', 'display: block; position: absolute; left: 100%;');
+document.body.append(lyricVideo);
 
 export const lyricCanvas = document.createElement('canvas');
 lyricCanvas.width = lyricVideo.width;

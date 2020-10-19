@@ -115,7 +115,7 @@ export const insetLyricsBtn = async () => {
     try {
       if (document.pictureInPictureElement) {
         await document.exitPictureInPicture();
-        sharedData.resetData();
+        if (!document.pictureInPictureElement) sharedData.resetData();
       } else {
         await lyricVideo.requestPictureInPicture();
         sharedData.updateTrack(true);
