@@ -27,9 +27,9 @@ The extension also supports Deezer and Youtube Music, but songs with videos in Y
 
 1. [Listen](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver) for track info element.
 2. Search for songs and download lyrics using [`NeteaseCloudMusicApi`](https://github.com/Binaryify/NeteaseCloudMusicApi).
-3. Rendering lyrics to `<canvas>` using [SVG](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/foreignObject).
+3. Rendering lyrics to [`<canvas>`](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D).
 4. [Capture](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/captureStream) video stream from `<canvas>` and merge cover image.
-5. Update lyrics scroll position with a [loop](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout).
+5. Update lyrics scroll position with a [loop](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
 
 ## Compatibility
 
@@ -56,6 +56,12 @@ Build:
 
 ```bash
 npm run build:zip
+
+# firebase depoly and config update
+# npm i -g firebase-tools
+firebase depoly
+firebase functions:config:get
+firebase functions:config:set spotify-lyrics.manager-ids=xxx
 ```
 
 ## Match Success Rate
