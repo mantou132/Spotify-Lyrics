@@ -12,57 +12,85 @@ import { audioPromise } from './element';
 import config from './config';
 
 export class SharedData {
-  name = '';
-  artists = '';
-  id = 0;
-  aId = 0;
-  list: Song[] = [];
-  lyrics: Lyric = [];
-  error: Error | null = null;
-  text = '';
-  highlightLyrics: string[] | null = [];
-  abortController = new AbortController();
+  private _name = '';
+  private _artists = '';
+  private _id = 0;
+  private _aId = 0;
+  private _list: Song[] = [];
+  private _lyrics: Lyric = [];
+  private _error: Error | null = null;
+  private _text = '';
+  private _highlightLyrics: string[] | null = [];
+  private _abortController = new AbortController();
 
   get cd1() {
-    return `${this.name} - ${this.artists}`;
+    return `${this._name} - ${this._artists}`;
   }
 
   get cd2() {
-    return `${this.id}`;
+    return `${this._id}`;
   }
 
   get query() {
-    return { name: this.name, artists: this.artists };
+    return { name: this._name, artists: this._artists };
+  }
+
+  get text() {
+    return this._text;
+  }
+
+  get highlightLyrics() {
+    return this._highlightLyrics;
+  }
+
+  get error() {
+    return this._error;
+  }
+
+  get lyrics() {
+    return this._lyrics;
+  }
+
+  get name() {
+    return this._name;
+  }
+
+  get artists() {
+    return this._artists;
+  }
+
+  setLyrics(lyrics: Lyric) {
+    this._lyrics = lyrics && [...lyrics];
   }
 
   resetLyrics() {
-    this.lyrics = [];
-    this.error = null;
-    this.abortController.abort();
-    this.abortController = new AbortController();
+    this._lyrics = [];
+    this._error = null;
+    this._abortController.abort();
+    this._abortController = new AbortController();
   }
 
   resetData() {
     this.resetLyrics();
-    this.id = 0;
-    this.aId = 0;
-    this.list = [];
-    this.text = '';
-    this.highlightLyrics = [];
+    this._id = 0;
+    this._aId = 0;
+    this._list = [];
+    this._text = '';
+    this._highlightLyrics = [];
   }
 
   // can only modify `lyrics`
   async updateLyrics(fetchOptions: RequestInit) {
-    if (this.id === 0) {
-      this.lyrics = null;
+    if (this._id === 0) {
+      this._lyrics = null;
     } else {
       const options = await optionsPromise;
-      const lyricsStr = await fetchLyric(this.id, fetchOptions);
+      const lyricsStr = await fetchLyric(this._id, fetchOptions);
       if (lyricsStr === '') {
         sendEvent(options.cid, events.noLyrics, { cd1: this.cd1, cd2: this.cd2 });
-        this.lyrics = null;
+        this._lyrics = null;
       } else {
-        this.lyrics = parseLyrics(lyricsStr, {
+        this._lyrics = parseLyrics(lyricsStr, {
           cleanLyrics: options['clean-lyrics'] === 'on',
           useTChinese: options['traditional-chinese-lyrics'] === 'on',
         });
@@ -79,12 +107,12 @@ export class SharedData {
       fetchOptions,
     });
     if (id === 0) {
-      this.highlightLyrics = null;
+      this._highlightLyrics = null;
     } else {
       const { text, highlights } = await fetchGeniusLyrics(id, fetchOptions);
-      this.lyrics = correctionLyrics(this.lyrics, text);
-      this.text = text;
-      this.highlightLyrics = highlights;
+      this._lyrics = correctionLyrics(this._lyrics, text);
+      this._text = text;
+      this._highlightLyrics = highlights;
     }
   }
 
@@ -101,29 +129,29 @@ export class SharedData {
       getAudioElement: () => audio,
       fetchOptions,
     });
-    this.list = list;
+    this._list = list;
     const remoteData = await getSong(this.query, fetchOptions);
     const reviewed = options['use-unreviewed-lyrics'] === 'on' || remoteData?.reviewed;
     const isSelf = remoteData?.user === options.cid;
     if (isSelf && remoteData?.lyric) {
-      this.lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
+      this._lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
       sendEvent(options.cid, events.useRemoteLyrics);
     } else if (isSelf && remoteData?.neteaseID) {
-      this.id = remoteData.neteaseID;
-      this.aId = this.id;
+      this._id = remoteData.neteaseID;
+      this._aId = this._id;
       await this.updateLyrics(fetchOptions);
     } else if (reviewed && remoteData?.lyric) {
-      this.lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
+      this._lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
       sendEvent(options.cid, events.useRemoteLyrics);
     } else {
-      this.id = (reviewed ? remoteData?.neteaseID || id : id || remoteData?.neteaseID) || 0;
-      this.aId = this.id;
+      this._id = (reviewed ? remoteData?.neteaseID || id : id || remoteData?.neteaseID) || 0;
+      this._aId = this._id;
       await this.updateLyrics(fetchOptions);
     }
-    if (this.lyrics && this.id !== id) {
+    if (this._lyrics && this._id !== id) {
       sendEvent(options.cid, events.useRemoteMatch);
     }
-    if (!this.lyrics && id === 0) {
+    if (!this._lyrics && id === 0) {
       sendEvent(options.cid, events.notMatch, { cd1: this.cd1 });
     }
     if (startTime) {
@@ -134,25 +162,25 @@ export class SharedData {
   }
 
   async confirmedMId() {
-    const { name, artists, id } = this;
+    const { _name, _artists, _id } = this;
     try {
-      if (this.lyrics) {
-        await setSong({ name, artists, id });
+      if (this._lyrics) {
+        await setSong({ name: _name, artists: _artists, id: _id });
       }
-      this.aId = id;
+      this._aId = _id;
       this.sendToContentScript();
     } catch (e) {
-      this.error = e;
+      this._error = e;
     }
   }
 
   async chooseLyricsTrack({ id, name, artists }: PopupStore) {
-    if (id === this.id) return;
-    if (name !== this.name || artists !== this.artists) return;
-    this.id = id;
+    if (id === this._id) return;
+    if (name !== this._name || artists !== this._artists) return;
+    this._id = id;
     this.resetLyrics();
     try {
-      const fetchOptions = { signal: this.abortController.signal };
+      const fetchOptions = { signal: this._abortController.signal };
       if (id === 0) {
         // reset
         await setSong({ name, artists, id });
@@ -163,7 +191,7 @@ export class SharedData {
       }
     } catch (e) {
       if (e.name !== 'AbortError') {
-        this.error = e;
+        this._error = e;
       }
     }
   }
@@ -182,13 +210,13 @@ export class SharedData {
         }
         return;
       }
-      this.name = name;
-      this.artists = artists;
+      this._name = name;
+      this._artists = artists;
       this.resetData();
-      await this.matching({ signal: this.abortController.signal });
+      await this.matching({ signal: this._abortController.signal });
     } catch (e) {
       if (e.name !== 'AbortError') {
-        this.error = e;
+        this._error = e;
         captureException(e);
       }
     }
@@ -196,15 +224,15 @@ export class SharedData {
   }
 
   sendToContentScript() {
-    const { name, artists, id, aId, list } = this;
+    const { _name, _artists, _id, _aId, _list } = this;
     const msg: Message<PopupStore> = {
       type: Event.SEND_SONGS,
       data: {
-        name,
-        artists,
-        id,
-        aId,
-        list,
+        name: _name,
+        artists: _artists,
+        id: _id,
+        aId: _aId,
+        list: _list,
       },
     };
     window.postMessage(msg, '*');

@@ -78,7 +78,7 @@ export class EditorApp extends GemElement<State> {
   pasteHandler = async (e: ClipboardEvent) => {
     const lyrics = initLyrics(e.clipboardData?.getData('text') || '');
     this.resetLocal({ lyrics });
-    sharedData.lyrics = lyrics;
+    sharedData.setLyrics(lyrics);
   };
 
   async mounted() {
@@ -101,7 +101,7 @@ export class EditorApp extends GemElement<State> {
     audio.loop = this.originLoop;
     audio.playbackRate = this.originPlaybackRate;
     document.removeEventListener('paste', this.pasteHandler);
-    sharedData.lyrics = this.originLyrics;
+    sharedData.setLyrics(this.originLyrics);
   }
 
   changePlaybackRate = async () => {
@@ -118,7 +118,7 @@ export class EditorApp extends GemElement<State> {
     reader.addEventListener('load', async (event) => {
       const lyrics = initLyrics(event.target!.result as string);
       this.resetLocal({ lyrics });
-      sharedData.lyrics = lyrics;
+      sharedData.setLyrics(lyrics);
     });
     reader.readAsText(file);
   };
@@ -137,7 +137,7 @@ export class EditorApp extends GemElement<State> {
     this.scrollInto();
     lyrics[currentIndex + 1].startTime = audio.currentTime;
     this.setState({ lyrics, currentIndex: currentIndex + 1 });
-    sharedData.lyrics = lyrics;
+    sharedData.setLyrics(lyrics);
   };
 
   insertLine = async () => {
@@ -146,35 +146,33 @@ export class EditorApp extends GemElement<State> {
     this.scrollInto();
     lyrics.splice(currentIndex + 1, 0, { startTime: audio.currentTime, text: '' });
     this.setState({ lyrics, currentIndex: currentIndex + 1 });
-    sharedData.lyrics = lyrics;
+    sharedData.setLyrics(lyrics);
   };
 
   removeLine = (index: number) => {
     const { lyrics } = this.state;
     lyrics.splice(index, 1);
     this.setState({ lyrics });
-    sharedData.lyrics = lyrics;
+    sharedData.setLyrics(lyrics);
   };
 
   clearAll = () => {
     this.setState({ lyrics: [] });
-    sharedData.lyrics = [];
+    sharedData.setLyrics([]);
   };
 
   offsetLine = (step: number, index?: number) => {
-    const { lyrics } = this.state;
+    let { lyrics } = this.state;
     if (typeof index === 'number') {
       lyrics[index].startTime = (lyrics[index].startTime || 0) + step;
-      this.setState({ lyrics });
     } else {
-      this.setState({
-        lyrics: lyrics.map(({ text, startTime }) => ({
-          text,
-          startTime: (startTime || 0) + step,
-        })),
-      });
+      lyrics = lyrics.map(({ text, startTime }) => ({
+        text,
+        startTime: (startTime || 0) + step,
+      }));
     }
-    sharedData.lyrics = lyrics;
+    this.setState({ lyrics });
+    sharedData.setLyrics(lyrics);
   };
 
   resetLocal = async (state?: Partial<State>) => {
@@ -192,7 +190,7 @@ export class EditorApp extends GemElement<State> {
     });
     const lyrics = initLyrics(sharedData.text);
     this.resetLocal({ lyrics });
-    sharedData.lyrics = lyrics;
+    sharedData.setLyrics(lyrics);
   };
 
   saveRemote = async () => {
@@ -245,7 +243,7 @@ export class EditorApp extends GemElement<State> {
   modifyLine = (e: InputEvent, index: number) => {
     const { lyrics } = this.state;
     lyrics[index].text = (e.target as HTMLTableCellElement).innerText;
-    sharedData.lyrics = lyrics;
+    sharedData.setLyrics(lyrics);
   };
 
   render() {
