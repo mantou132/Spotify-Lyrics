@@ -74,37 +74,21 @@ browser.contextMenus.create({
   contexts: ['browser_action'],
 });
 
-async function getRateMeLink() {
-  const linkMap: Record<string, string> = {
-    firefox: 'https://addons.mozilla.org/en-US/firefox/addon/spotify-lyrics/',
-    chrome:
-      'https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod',
-    safari: '',
-  };
-  // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/getBrowserInfo
-  if (browser.runtime.getBrowserInfo) {
-    const { name } = await browser.runtime.getBrowserInfo();
-    return linkMap[name.toLowerCase()] || '';
-  }
-  // contain Edge, Yandex, Opera...
-  if (/chrome\/\d/i.test(navigator.userAgent)) {
-    return linkMap.chrome;
-  }
-  if (/version\/.*safari\/.*/i.test(navigator.userAgent)) {
-    return linkMap.safari;
-  }
-  return '';
+const storeLinkMap: Record<string, string> = {
+  '{d5bcc68d-856a-41e2-8021-d4c51f3b8e4a}':
+    'https://addons.mozilla.org/en-US/firefox/addon/spotify-lyrics/',
+  mkjfooclbdgjdclepjeepbmmjaclipod:
+    'https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod',
+  aiehldpoaeaidnljjimhbojpblkbembm:
+    'https://microsoftedge.microsoft.com/addons/detail/spotify-lyrics/aiehldpoaeaidnljjimhbojpblkbembm',
+};
+if (storeLinkMap[browser.runtime.id]) {
+  browser.contextMenus.create({
+    id: ContextItems.RATE_ME,
+    title: i18n.menusRateMe(),
+    contexts: ['browser_action'],
+  });
 }
-
-getRateMeLink().then((link) => {
-  if (link) {
-    browser.contextMenus.create({
-      id: ContextItems.RATE_ME,
-      title: i18n.menusRateMe(),
-      contexts: ['browser_action'],
-    });
-  }
-});
 
 const openPage = async (url: string) => {
   const { windowId } = await browser.tabs.create({ url });
@@ -120,7 +104,7 @@ browser.contextMenus.onClicked.addListener(async function (info) {
       openPage('https://github.com/mantou132/Spotify-Lyrics/issues');
       break;
     case ContextItems.RATE_ME:
-      openPage(await getRateMeLink());
+      openPage(storeLinkMap[browser.runtime.id]);
       break;
   }
 });
