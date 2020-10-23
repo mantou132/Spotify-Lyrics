@@ -74,6 +74,38 @@ browser.contextMenus.create({
   contexts: ['browser_action'],
 });
 
+async function getRateMeLink() {
+  const linkMap: Record<string, string> = {
+    firefox: 'https://addons.mozilla.org/en-US/firefox/addon/spotify-lyrics/',
+    chrome:
+      'https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod',
+    safari: '',
+  };
+  // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/getBrowserInfo
+  if (browser.runtime.getBrowserInfo) {
+    const { name } = await browser.runtime.getBrowserInfo();
+    return linkMap[name.toLowerCase()] || '';
+  }
+  // contain Edge, Yandex, Opera...
+  if (/chrome\/\d/i.test(navigator.userAgent)) {
+    return linkMap.chrome;
+  }
+  if (/version\/.*safari\/.*/i.test(navigator.userAgent)) {
+    return linkMap.safari;
+  }
+  return '';
+}
+
+getRateMeLink().then((link) => {
+  if (link) {
+    browser.contextMenus.create({
+      id: ContextItems.RATE_ME,
+      title: i18n.menusRateMe(),
+      contexts: ['browser_action'],
+    });
+  }
+});
+
 const openPage = async (url: string) => {
   const { windowId } = await browser.tabs.create({ url });
   if (windowId) browser.windows.update(windowId, { focused: true });
@@ -86,6 +118,9 @@ browser.contextMenus.onClicked.addListener(async function (info) {
       break;
     case ContextItems.FEEDBACK:
       openPage('https://github.com/mantou132/Spotify-Lyrics/issues');
+      break;
+    case ContextItems.RATE_ME:
+      openPage(await getRateMeLink());
       break;
   }
 });

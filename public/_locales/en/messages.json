@@ -149,6 +149,11 @@
     "description": "Welcome menus item"
   },
 
+  "menusRateMe": {
+    "message": "Rate this extension",
+    "description": "Rate me context menus item"
+  },
+
   "pageButtonTitle": {
     "message": "Lyrics",
     "description": "Lyrics button title"

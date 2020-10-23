@@ -15,7 +15,6 @@
     "message": "尝试其他歌词"
   },
 
-
   "popupMissMatch": {
     "message": "目前没有可用的歌曲"
   },
@@ -24,11 +23,11 @@
     "message": "保存这个改动？"
   },
 
-  "popupConfirmSave" : {
+  "popupConfirmSave": {
     "message": "保存"
   },
 
-  "popupConfirmCancel" : {
+  "popupConfirmCancel": {
     "message": "取消"
   },
 
@@ -116,6 +115,10 @@
     "message": "欢迎"
   },
 
+  "menusRateMe": {
+    "message": "评价该扩展"
+  },
+
   "pageButtonTitle": {
     "message": "歌词"
   },
@@ -151,15 +154,15 @@
   "pageEditorPlaybackRate": {
     "message": "播放速率"
   },
-  
+
   "pageEditorOffset": {
     "message": "全局偏移"
   },
-  
+
   "pageEditorOffsetDetail": {
     "message": "偏移 0.1s"
   },
-  
+
   "pageEditorClearAll": {
     "message": "清空"
   },
