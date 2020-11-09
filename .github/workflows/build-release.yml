@@ -33,8 +33,10 @@ jobs:
         export VERSION=$(node -e "console.log(require('./package.json').version)")
         export ZIP_NAME=spotify_lyrics-${VERSION}.zip
         export ZIP_PATH=build/${ZIP_NAME}
-        echo "::set-env name=ZIP_NAME::${ZIP_NAME}"
-        echo "::set-env name=ZIP_PATH::${ZIP_PATH}"
+        echo "ZIP_NAME=${ZIP_NAME}" >> $GITHUB_ENV
+        echo "ZIP_PATH=${ZIP_PATH}" >> $GITHUB_ENV
+        echo ${ZIP_NAME}
+        echo ${ZIP_PATH}
 
     # https://github.com/trmcnvn/firefox-addon
     - uses: trmcnvn/firefox-addon@v1

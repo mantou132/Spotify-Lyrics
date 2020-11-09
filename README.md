@@ -1,4 +1,3 @@
-[![Build Status](https://img.shields.io/travis/mantou132/Spotify-Lyrics?logo=travis-ci&logoColor=fff)](https://travis-ci.org/mantou132/Spotify-Lyrics)
 [![Users](https://img.shields.io/chrome-web-store/users/mkjfooclbdgjdclepjeepbmmjaclipod?logo=google-chrome&logoColor=fff)](https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod)
 [![Discord](https://img.shields.io/discord/763927057549099028?logo=discord&logoColor=fff)](https://discord.com/invite/fQbzzdJ)
 
