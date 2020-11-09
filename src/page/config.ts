@@ -131,13 +131,18 @@ export const localConfig: LocalConfig = (() => {
         [role='banner'] {
           display: none;
         }
-        .${LYRICS_CLASSNAME} button div::before {
+        .${LYRICS_CLASSNAME} button > * {
+          display: none;
+        }
+        .${LYRICS_CLASSNAME} button::before {
+          font-family: glue1-spoticon;
+          display: inline-block;
           content: '\\f345';
           font-size: 16px;
           transform: rotate(90deg);
           color: #b3b3b3;
         }
-        .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} button div::before {
+        .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} button::before {
           color: #1db954;
         }
       `,
