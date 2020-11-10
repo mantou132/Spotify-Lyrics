@@ -17,8 +17,10 @@ const gaRequiredPayload = {
   tid: isProd ? 'UA-163443161-1' : 'UA-88601817-2', // measurement id
 };
 
+type EventCategory = 'Load' | 'Click' | 'Window';
+
 interface EventRequiredParams {
-  ec: string; // event category
+  ec: EventCategory;
   ea: string; // event action
 }
 
@@ -29,7 +31,7 @@ interface EventOptionalParams {
 type EventFullParams = EventRequiredParams & EventOptionalParams;
 type EventParams = EventRequiredParams | EventFullParams;
 
-export const events = {
+export const events: Record<string, EventRequiredParams & { el?: string }> = {
   loadLyrics: {
     ec: 'Load',
     ea: 'LoadLyrics',
@@ -78,14 +80,6 @@ export const events = {
   openPopupPage: {
     ec: 'Window',
     ea: 'OpenPopupPage',
-  },
-  startUp: {
-    ec: 'UserAgent',
-    ea: 'StartUp',
-  },
-  installAsPWA: {
-    ec: 'UserAgent',
-    ea: 'Install',
   },
 };
 

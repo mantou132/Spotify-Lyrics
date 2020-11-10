@@ -1,5 +1,4 @@
 import { Event } from '../common/consts';
-import { sendEvent, events } from '../common/ga';
 import { PopupStore } from '../popup/store';
 
 import {
@@ -20,9 +19,7 @@ import { getFPS } from './fps';
 import './pip';
 import './observer';
 
-let options: OptionsAndI18n;
-
-const tick = async () => {
+const tick = async (options: OptionsAndI18n) => {
   const audio = await audioPromise;
   const i18nMap = options.i18nMap;
 
@@ -71,23 +68,13 @@ const tick = async () => {
   }
 
   if (!isOnlyCover && isSmoothScroll && isOpen && (lyrics?.length || highlightLyrics?.length)) {
-    requestAnimationFrame(tick);
+    requestAnimationFrame(() => tick(options));
   } else {
-    setTimeout(tick, 80);
+    setTimeout(() => tick(options), 80);
   }
 };
 
-optionsPromise.then((opts) => {
-  options = opts;
-  tick();
-
-  sendEvent(opts.cid, events.startUp);
-
-  // https://github.com/w3c/manifest/pull/836
-  window.addEventListener('appinstalled', () => {
-    sendEvent(opts.cid, events.installAsPWA);
-  });
-});
+optionsPromise.then(tick);
 
 window.addEventListener('message', async ({ data }: MessageEvent) => {
   if (!document.pictureInPictureElement) return;
