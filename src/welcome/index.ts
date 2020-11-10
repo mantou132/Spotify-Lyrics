@@ -94,7 +94,15 @@ render(
               >detail</a
             >
           </li>
-          <li>Update this extension to the latest version</li>
+          <li>
+            Update this extension to the latest version. If the version cannot be updated due to the
+            slow review of Edge Addons, you can install it from the
+            <a
+              href="https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod"
+              target="_blank"
+              >Chrome Webstore</a
+            >
+          </li>
           <li>
             Ask for help in
             <a href="https://discord.com/invite/fQbzzdJ" target="_blank">Discord</a> or

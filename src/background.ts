@@ -78,7 +78,7 @@ const storeLinkMap: Record<string, string> = {
   '{d5bcc68d-856a-41e2-8021-d4c51f3b8e4a}':
     'https://addons.mozilla.org/en-US/firefox/addon/spotify-lyrics/',
   mkjfooclbdgjdclepjeepbmmjaclipod:
-    'https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod',
+    'https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod/reviews',
   aiehldpoaeaidnljjimhbojpblkbembm:
     'https://microsoftedge.microsoft.com/addons/detail/spotify-lyrics/aiehldpoaeaidnljjimhbojpblkbembm',
 };

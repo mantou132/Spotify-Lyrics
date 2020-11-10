@@ -1,3 +1,4 @@
+[![Version](https://img.shields.io/chrome-web-store/v/mkjfooclbdgjdclepjeepbmmjaclipod?logo=google-chrome&logoColor=fff)](https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod)
 [![Users](https://img.shields.io/chrome-web-store/users/mkjfooclbdgjdclepjeepbmmjaclipod?logo=google-chrome&logoColor=fff)](https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod)
 [![Discord](https://img.shields.io/discord/763927057549099028?logo=discord&logoColor=fff)](https://discord.com/invite/fQbzzdJ)
 
