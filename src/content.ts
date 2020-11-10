@@ -35,8 +35,12 @@ window.addEventListener('message', ({ data }) => {
 declare let __webpackReplaceWithChunk__: (chunk: string) => string;
 
 const script = document.createElement('script');
-// Firefox CSP Issue: https://bugzilla.mozilla.org/show_bug.cgi?id=1267027
-script.textContent = __webpackReplaceWithChunk__('page');
+if (browser.runtime.getURL('').startsWith('moz')) {
+  // Firefox CSP Issue: https://bugzilla.mozilla.org/show_bug.cgi?id=1267027
+  script.src = browser.runtime.getURL('page.js');
+} else {
+  script.textContent = __webpackReplaceWithChunk__('page');
+}
 // "run_at": "document_start"
 // The head element may not exist
 document.documentElement.append(script);
