@@ -3,6 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { ReplaceWithChunkPlugin } = require('replace-with-chunk-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -53,6 +54,10 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
       'process.env.VERSION': JSON.stringify(process.env.npm_package_version),
+    }),
+    new ReplaceWithChunkPlugin({
+      chunks: ['content'],
+      replaces: [[/document\.head/g, 'document.documentElement']],
     }),
   ],
   devtool: isProd ? false : 'source-map',
