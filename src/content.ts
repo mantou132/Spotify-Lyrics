@@ -40,3 +40,4 @@ script.textContent = __webpackReplaceWithChunk__('page');
 // "run_at": "document_start"
 // The head element may not exist
 document.documentElement.append(script);
+script.remove();
