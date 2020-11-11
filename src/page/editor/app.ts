@@ -378,7 +378,9 @@ export class EditorApp extends GemElement<State> {
         <a
           target="_blank"
           title=${i18nMap.pageEditorSearch}
-          href="https://www.google.com/search?q=${sharedData.name} ${sharedData.artists} lrc lyrics"
+          href="https://www.google.com/search?q=${encodeURIComponent(
+            `${sharedData.name} ${sharedData.artists} lrc lyrics`,
+          )}"
         >
           ${sharedData.name} - ${sharedData.artists}
         </a>
