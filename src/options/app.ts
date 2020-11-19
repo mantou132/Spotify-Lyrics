@@ -102,9 +102,12 @@ export class OptionsApp extends GemElement<State> {
         </ele-form-item>
         <ele-form-item label=${i18n.optionsFontFamily()}>
           <ele-select
+            @click=${this.loadLocalFonts}
             name=${'font-family' as keyof Options}
             default-value=${options['font-family']}
-            .options=${[...LyricsFontFamily, ...this.state.localFonts].map((e) => ({
+            .options=${[
+              ...new Set([...LyricsFontFamily, ...this.state.localFonts, options['font-family']]),
+            ].map((e) => ({
               label: e,
               value: e,
               style: `font-family: ${e}`,
