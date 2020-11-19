@@ -57,9 +57,6 @@ module.exports = {
     }),
     new ReplaceWithChunkPlugin({
       chunks: ['content'],
-      // fix gem createTheme
-      // https://github.com/mantou132/gem/issues/33
-      replaces: [[/document\.head/g, 'document.documentElement']],
     }),
   ],
   devtool: isProd ? false : 'source-map',

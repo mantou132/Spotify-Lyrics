@@ -42,10 +42,10 @@ function serializedLyrics(lyric: Exclude<Lyric, null>) {
     .join('');
 }
 
-interface State {
+type State = {
   currentIndex: number;
   lyrics: Exclude<Lyric, null>;
-}
+};
 
 @customElement('sl-ext-editor-app')
 export class EditorApp extends GemElement<State> {
