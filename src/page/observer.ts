@@ -1,4 +1,4 @@
-import config from './config';
+import config, { currentPlatform } from './config';
 
 import { coverCtx, coverHDCtx } from './element';
 import { insetLyricsBtn } from './btn';
@@ -83,6 +83,10 @@ config.then(
         // https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
         // YouTube video has no cors
         cover.crossOrigin = 'anonymous';
+        if (currentPlatform === 'TIDAL') {
+          cover.src = cover.src + '?cors';
+          cover.srcset = '';
+        }
         cover.addEventListener('load', coverLoadHandler);
         cover.addEventListener('error', coverErrorHandler);
       } else {

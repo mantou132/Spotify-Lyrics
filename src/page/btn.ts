@@ -7,6 +7,7 @@ import { appendStyle, css, captureException, documentQueryHasSelector } from './
 import { sharedData } from './share-data';
 import { optionsPromise } from './options';
 import { openEditor } from './editor';
+import { nativeExitPictureInPicture } from './pip';
 
 // Hide the original content that conflicts with the lyrics button
 // In spotify is the pip button
@@ -114,7 +115,7 @@ export const insetLyricsBtn = async () => {
     sendEvent(options.cid, events.clickToggleLyrics);
     try {
       if (document.pictureInPictureElement) {
-        await document.exitPictureInPicture();
+        await nativeExitPictureInPicture();
         sharedData.resetData();
       } else {
         await lyricVideo.requestPictureInPicture();

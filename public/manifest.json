@@ -28,7 +28,8 @@
       "matches": [
         "*://open.spotify.com/*",
         "*://www.deezer.com/*",
-        "*://music.youtube.com/*"
+        "*://music.youtube.com/*",
+        "*://listen.tidal.com/*"
       ],
       "js": [
         "content.js"
@@ -39,7 +40,8 @@
       "matches": [
         "*://open.spotify.com/*",
         "*://www.deezer.com/*",
-        "*://music.youtube.com/*"
+        "*://music.youtube.com/*",
+        "*://listen.tidal.com/*"
       ],
       "js": [
         "options.js"

@@ -18,7 +18,7 @@ If you have any questions, please submit an [issue](https://github.com/mantou132
 
 ![windows-pwa-spotify](./screenshot/windows-pwa-spotify.jpg)
 
-The extension also supports Deezer and Youtube Music, but songs with videos in Youtube Music cannot be perfectly supported(because the duration of the video is different from the duration of the officially released audio track).
+The extension also supports Youtube Music, Deezer and Tidal, but songs with videos in Youtube Music cannot be perfectly supported(because the duration of the video is different from the duration of the officially released audio track).
 
 ![macos-pwa-youtube](./screenshot/macos-pwa-youtube.jpg)
 

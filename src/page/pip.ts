@@ -4,6 +4,7 @@ import config, { localConfig } from './config';
 
 import { appendStyle } from './utils';
 import { optionsPromise } from './options';
+import { lyricVideo } from './element';
 
 let polyfilled = false;
 const polyfill = () => {
@@ -53,9 +54,18 @@ if (!document.pictureInPictureEnabled) {
   polyfill();
 }
 
+export const nativeExitPictureInPicture = document.exitPictureInPicture.bind(document);
+
 optionsPromise.then((options) => {
   // Rewrite PIP WebAPI
   if (options['show-on'] === 'page') {
     polyfill();
   }
+
+  // Only allow extensions to exit lyrics pip
+  document.exitPictureInPicture = async function () {
+    if (document.pictureInPictureElement !== lyricVideo) {
+      nativeExitPictureInPicture();
+    }
+  };
 });
