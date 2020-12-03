@@ -139,7 +139,7 @@ export const localConfig: LocalConfig = (() => {
           mask: url(${iconUrl}) center / 75% no-repeat;
         }
         .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} svg {
-          background: white;
+          background: #0ff;
         }
       `,
       NO_PIP_STYLE: '',
