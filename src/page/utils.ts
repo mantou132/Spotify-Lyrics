@@ -33,12 +33,17 @@ export const headReady = new Promise((res) => {
   });
 });
 
+const styledMap = new Map<string, HTMLStyleElement>();
 export async function appendStyle(s: string) {
-  if (s === '') return;
+  const oldStyle = styledMap.get(s);
+  if (oldStyle) return oldStyle;
+
   await headReady;
   const style = document.createElement('style');
   style.textContent = s;
   document.head.append(style);
+  styledMap.set(s, style);
+  return style;
 }
 
 export function captureException(err: Error, extra?: any) {

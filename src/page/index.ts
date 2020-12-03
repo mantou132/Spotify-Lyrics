@@ -9,14 +9,13 @@ import {
   RenderLyricsOptions,
   RenderTextOptions,
 } from './canvas-renderer';
-import { coverCanvas, coverHDCanvas, lyricCtx, audioPromise } from './element';
+import { coverCanvas, coverHDCanvas, lyricCtx, audioPromise, lyricVideoIsOpen } from './element';
 import { sharedData } from './share-data';
 import { optionsPromise, OptionsAndI18n } from './options';
 import { appendStyle } from './utils';
 import { localConfig } from './config';
 import { getFPS } from './fps';
 
-import './pip';
 import './observer';
 
 const tick = async (options: OptionsAndI18n) => {
@@ -26,7 +25,6 @@ const tick = async (options: OptionsAndI18n) => {
   const isOnlyCover = options['only-cover'] === 'on';
   const isHDCover = options['hd-cover'] === 'on';
   const isSmoothScroll = getFPS() >= 30;
-  const isOpen = !!document.pictureInPictureElement;
   const { error, lyrics, highlightLyrics } = sharedData;
 
   const backgroundImage = isOnlyCover || isHDCover ? coverHDCanvas : coverCanvas;
@@ -67,7 +65,12 @@ const tick = async (options: OptionsAndI18n) => {
     }
   }
 
-  if (!isOnlyCover && isSmoothScroll && isOpen && (lyrics?.length || highlightLyrics?.length)) {
+  if (
+    !isOnlyCover &&
+    isSmoothScroll &&
+    lyricVideoIsOpen &&
+    (lyrics?.length || highlightLyrics?.length)
+  ) {
     requestAnimationFrame(() => tick(options));
   } else {
     setTimeout(() => tick(options), 80);
@@ -77,7 +80,7 @@ const tick = async (options: OptionsAndI18n) => {
 optionsPromise.then(tick);
 
 window.addEventListener('message', async ({ data }: MessageEvent) => {
-  if (!document.pictureInPictureElement) return;
+  if (!lyricVideoIsOpen) return;
   if (!data?.type) return;
 
   switch (data.type) {

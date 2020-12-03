@@ -8,7 +8,7 @@ import { fetchSongList, fetchGeniusLyrics } from './genius';
 import { setSong, getSong } from './store';
 import { optionsPromise } from './options';
 import { captureException } from './utils';
-import { audioPromise } from './element';
+import { audioPromise, lyricVideoIsOpen } from './element';
 import config from './config';
 
 export class SharedData {
@@ -197,7 +197,7 @@ export class SharedData {
   }
 
   async updateTrack(isTrust = false) {
-    if (!document.pictureInPictureElement) return;
+    if (!lyricVideoIsOpen) return;
 
     const { TRACK_NAME_SELECTOR, TRACK_ARTIST_SELECTOR } = await config;
     const name = document.querySelector(TRACK_NAME_SELECTOR)?.textContent;

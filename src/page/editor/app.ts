@@ -3,7 +3,7 @@ import { customElement, emitter, Emitter, refobject, RefObject } from '@mantou/g
 
 import { theme } from '../../common/theme';
 import { events, sendEvent } from '../../common/ga';
-import { audioPromise } from '../element';
+import { audioPromise, lyricVideoIsOpen } from '../element';
 import { sharedData } from '../share-data';
 import { parseLyrics, Lyric } from '../lyrics';
 import { setSong } from '../store';
@@ -82,7 +82,7 @@ export class EditorApp extends GemElement<State> {
   };
 
   async mounted() {
-    if (!document.pictureInPictureElement) return;
+    if (!lyricVideoIsOpen) return;
     this.resetLocal();
 
     const options = await optionsPromise;
@@ -249,7 +249,7 @@ export class EditorApp extends GemElement<State> {
   render() {
     const { currentIndex, lyrics } = this.state;
     const { i18nMap } = this.options;
-    if (!document.pictureInPictureElement) {
+    if (!lyricVideoIsOpen) {
       return html`
         <style>
           :host {

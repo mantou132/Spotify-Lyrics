@@ -2,12 +2,12 @@ import { sendEvent, events } from '../common/ga';
 import { Event, Message } from '../common/consts';
 
 import config, { localConfig } from './config';
-import { lyricVideo, audioPromise } from './element';
+import { lyricVideo, audioPromise, lyricVideoIsOpen } from './element';
 import { appendStyle, css, captureException, documentQueryHasSelector } from './utils';
 import { sharedData } from './share-data';
 import { optionsPromise } from './options';
 import { openEditor } from './editor';
-import { nativeExitPictureInPicture } from './pip';
+import { openLyrics, closeLyrics } from './pip';
 
 // Hide the original content that conflicts with the lyrics button
 // In spotify is the pip button
@@ -47,6 +47,7 @@ window.addEventListener(
       // Execute in current microtask
       e.stopImmediatePropagation();
       e.stopPropagation();
+      e.preventDefault();
       sendEvent(options.cid, events.keypressToggleLyrics);
       lyricsBtn.click();
     }
@@ -70,14 +71,6 @@ export const insetLyricsBtn = async () => {
   const lyricsBtn = likeBtn.cloneNode(true) as HTMLButtonElement;
   lyricsBtn.classList.add(localConfig.LYRICS_CLASSNAME);
 
-  if (document.pictureInPictureElement) {
-    if (document.pictureInPictureElement !== lyricVideo) {
-      lyricVideo.requestPictureInPicture().catch(() => document.exitPictureInPicture());
-    } else {
-      lyricsBtn.classList.add(localConfig.LYRICS_ACTIVE_CLASSNAME);
-    }
-  }
-
   lyricsBtn.title = options.i18nMap.pageButtonTitle;
   lyricsBtn.setAttribute('aria-label', lyricsBtn.title);
   lyricsBtn.querySelectorAll('*').forEach((e) => {
@@ -85,8 +78,6 @@ export const insetLyricsBtn = async () => {
     e.removeAttribute('aria-label');
   });
 
-  if (document.pictureInPictureElement === lyricVideo)
-    lyricsBtn.classList.add(localConfig.LYRICS_ACTIVE_CLASSNAME);
   lyricVideo.addEventListener('enterpictureinpicture', () => {
     lyricsBtn.classList.add(localConfig.LYRICS_ACTIVE_CLASSNAME);
   });
@@ -114,11 +105,11 @@ export const insetLyricsBtn = async () => {
     lyricsBtn.blur();
     sendEvent(options.cid, events.clickToggleLyrics);
     try {
-      if (document.pictureInPictureElement) {
-        await nativeExitPictureInPicture();
+      if (lyricVideoIsOpen) {
+        await closeLyrics();
         sharedData.resetData();
       } else {
-        await lyricVideo.requestPictureInPicture();
+        await openLyrics();
         sharedData.updateTrack(true);
       }
     } catch (e) {

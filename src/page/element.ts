@@ -10,6 +10,8 @@ lyricVideo.muted = true;
 lyricVideo.width = 640;
 lyricVideo.height = 640;
 
+export let lyricVideoIsOpen = false;
+
 export const lyricCanvas = document.createElement('canvas');
 lyricCanvas.width = lyricVideo.width;
 lyricCanvas.height = lyricVideo.height;
@@ -39,13 +41,15 @@ const setPopupState = (active: boolean) => {
 
 lyricVideo.addEventListener('enterpictureinpicture', () => {
   setPopupState(true);
+  lyricVideoIsOpen = true;
 });
 lyricVideo.addEventListener('leavepictureinpicture', () => {
   setPopupState(false);
+  lyricVideoIsOpen = false;
 });
 // When the lyrics are displayed on the page
 window.addEventListener('beforeunload', () => {
-  if (document.pictureInPictureElement) setPopupState(false);
+  if (lyricVideoIsOpen) setPopupState(false);
 });
 
 export const audioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {

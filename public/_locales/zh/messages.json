@@ -40,11 +40,11 @@
   },
 
   "optionsSaveTip1": {
-    "message": "重新加载生效"
+    "message": "切换歌曲生效"
   },
 
   "optionsSaveTip2": {
-    "message": "切换歌曲生效"
+    "message": "重新打开歌词生效"
   },
 
   "optionsFontSize": {
