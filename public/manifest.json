@@ -29,6 +29,7 @@
         "*://open.spotify.com/*",
         "*://www.deezer.com/*",
         "*://music.youtube.com/*",
+        "*://music.apple.com/*",
         "*://listen.tidal.com/*"
       ],
       "js": [
@@ -41,6 +42,7 @@
         "*://open.spotify.com/*",
         "*://www.deezer.com/*",
         "*://music.youtube.com/*",
+        "*://music.apple.com/*",
         "*://listen.tidal.com/*"
       ],
       "js": [

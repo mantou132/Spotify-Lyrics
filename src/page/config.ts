@@ -16,6 +16,7 @@ export const currentPlatform: Platform = (() => {
   if (host.includes('youtube')) return 'YOUTUBE';
   if (host.includes('deezer')) return 'DEEZER';
   if (host.includes('tidal')) return 'TIDAL';
+  if (host.includes('apple')) return 'APPLE';
   return 'SPOTIFY';
 })();
 
@@ -44,11 +45,19 @@ interface LocalConfig {
   LYRICS_CLASSNAME: string;
   // CSS class Name of the lyrics button is actived
   LYRICS_ACTIVE_CLASSNAME: string;
+  USE_AUDIO_SELECTOR?: boolean;
 }
 
 export const localConfig: LocalConfig = (() => {
   const LYRICS_CLASSNAME = 'extension-lyrics-button';
   const LYRICS_ACTIVE_CLASSNAME = 'active';
+
+  const microphoneIconUrl = getSVGDataUrl(svg`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12">
+      <path d="M5.663 4.25l2.138 2.138-4.702 3.847-1.283-1.282L5.663 4.25zM1.389 9.735l.855.855-.855.427-.427-.427.427-.855zM6.09 3.396a2.565 2.565 0 1 1 2.566 2.565L6.09 3.396z">
+      </path>
+    </svg>
+  `);
 
   if (currentPlatform === 'YOUTUBE') {
     const iconUrl = getSVGDataUrl(svg`
@@ -83,12 +92,6 @@ export const localConfig: LocalConfig = (() => {
       LYRICS_ACTIVE_CLASSNAME,
     };
   } else if (currentPlatform === 'DEEZER') {
-    const iconUrl = getSVGDataUrl(svg`
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12">
-        <path d="M5.663 4.25l2.138 2.138-4.702 3.847-1.283-1.282L5.663 4.25zM1.389 9.735l.855.855-.855.427-.427-.427.427-.855zM6.09 3.396a2.565 2.565 0 1 1 2.566 2.565L6.09 3.396z">
-        </path>
-      </svg>
-    `);
     return {
       SERVICE_WORKER: '',
       STATIC_STYLE: css`
@@ -109,8 +112,8 @@ export const localConfig: LocalConfig = (() => {
         }
         .${LYRICS_CLASSNAME} button svg {
           background: var(--text-primary);
-          -webkit-mask: url(${iconUrl}) center / 100% no-repeat;
-          mask: url(${iconUrl}) center / 100% no-repeat;
+          -webkit-mask: url(${microphoneIconUrl}) center / 100% no-repeat;
+          mask: url(${microphoneIconUrl}) center / 100% no-repeat;
         }
         .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} button svg {
           background: var(--color-accent);
@@ -120,13 +123,35 @@ export const localConfig: LocalConfig = (() => {
       LYRICS_CLASSNAME,
       LYRICS_ACTIVE_CLASSNAME,
     };
+  } else if (currentPlatform === 'APPLE') {
+    return {
+      SERVICE_WORKER: '',
+      STATIC_STYLE: css`
+        nav .web-navigation__native-upsell,
+        .web-navigation .upsell-banner {
+          display: none;
+        }
+        .${LYRICS_CLASSNAME} svg path {
+          display: none;
+        }
+        .${LYRICS_CLASSNAME} {
+          background: transparent !important;
+        }
+        .${LYRICS_CLASSNAME} svg {
+          background: var(--labelSecondary);
+          -webkit-mask: url(${microphoneIconUrl}) center / 65% no-repeat;
+          mask: url(${microphoneIconUrl}) center / 65% no-repeat;
+        }
+        .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} svg {
+          background: var(--primaryColor);
+        }
+      `,
+      NO_PIP_STYLE: '',
+      LYRICS_CLASSNAME,
+      LYRICS_ACTIVE_CLASSNAME,
+      USE_AUDIO_SELECTOR: true,
+    };
   } else if (currentPlatform === 'TIDAL') {
-    const iconUrl = getSVGDataUrl(svg`
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12">
-        <path d="M5.663 4.25l2.138 2.138-4.702 3.847-1.283-1.282L5.663 4.25zM1.389 9.735l.855.855-.855.427-.427-.427.427-.855zM6.09 3.396a2.565 2.565 0 1 1 2.566 2.565L6.09 3.396z">
-        </path>
-      </svg>
-    `);
     return {
       SERVICE_WORKER: '',
       STATIC_STYLE: css`
@@ -135,8 +160,8 @@ export const localConfig: LocalConfig = (() => {
         }
         .${LYRICS_CLASSNAME} svg {
           background: currentColor;
-          -webkit-mask: url(${iconUrl}) center / 75% no-repeat;
-          mask: url(${iconUrl}) center / 75% no-repeat;
+          -webkit-mask: url(${microphoneIconUrl}) center / 75% no-repeat;
+          mask: url(${microphoneIconUrl}) center / 75% no-repeat;
         }
         .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} svg {
           background: #0ff;

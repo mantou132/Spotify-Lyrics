@@ -164,7 +164,7 @@ render(
       <details>
         <summary><h3>Support other music web player?</h3></summary>
         <p>
-          In addition to Spotify, YouTube Music, Deezer, Tidal is now supported.
+          In addition to Spotify, YouTube Music, Apple Music, Deezer, Tidal is now supported.
           <a href="https://github.com/mantou132/Spotify-Lyrics/issues/35">detail</a>.
         </p>
       </details>

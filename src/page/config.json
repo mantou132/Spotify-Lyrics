@@ -26,6 +26,20 @@
     "PIP_BTN_SELECTOR": "NONE",
     "AUDIO_SELECTOR": "video.html5-main-video"
   },
+  "APPLE": {
+    "LOGGED_MARK_SELECTOR": ".web-navigation__auth-button--sign-out",
+    "LYRICS_CONTAINER_SELECTOR": "#web-navigation-container",
+    "PAGE_PIP_STYLE": "position: sticky; top: 100vh; width: 100%; height: auto;",
+    "ALBUM_COVER_SELECTOR": ".web-chrome-playback-lcd img",
+    "ALBUM_COVER_LARGE_REGEXP_REPLACE": ["(\\d.*)x\\1(?=bb\\.(jpg|webp)$)", "640x640"],
+    "TRACK_INFO_SELECTOR": ".web-chrome-playback-lcd .web-chrome-playback-lcd__now-playing-container",
+    "TRACK_NAME_SELECTOR": "#playback-name [role='presentation']",
+    "TRACK_ARTIST_SELECTOR": "#playback-sub-copy .web-chrome-playback-lcd__sub-copy-scroll-link",
+    "BTN_WRAPPER_SELECTOR": ".web-chrome-playback-controls__platter-toggle-buttons",
+    "BTN_LIKE_SELECTOR": ".web-chrome-playback-controls__platter-toggle-buttons .web-chrome-playback-controls__up-next-btn",
+    "PIP_BTN_SELECTOR": "NONE",
+    "AUDIO_SELECTOR": "#apple-music-player"
+  },
   "DEEZER": {
     "LOGGED_MARK_SELECTOR": ".topbar-action .topbar-profile",
     "LYRICS_CONTAINER_SELECTOR": "#page_sidebar",

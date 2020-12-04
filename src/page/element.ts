@@ -3,7 +3,7 @@ import { Message, Event } from '../common/consts';
 import { captureException, documentQueryHasSelector } from './utils';
 import { getLyricsBtn } from './btn';
 import { loggedPromise } from './observer';
-import config from './config';
+import config, { localConfig } from './config';
 
 export const lyricVideo = document.createElement('video');
 lyricVideo.muted = true;
@@ -60,23 +60,26 @@ export const audioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
   const elementCountOverrideBefore = document.querySelectorAll('*').length;
   const hrefOverrideBefore = location.href;
 
-  // Spotify: using `document.createElement`
-  document.createElement = function <K extends keyof HTMLElementTagNameMap>(
-    tagName: K,
-    options: ElementCreationOptions,
-  ) {
-    const element = createElement(tagName, options);
-    // Spotify: <video>
-    // Deezer: <audio>
-    if ((tagName === 'video' || tagName === 'audio') && !audio) {
-      performance.measure('capture_audio_element');
-      audio = element as HTMLAudioElement;
-      resolveAudio(audio);
-    }
-    return element;
-  };
+  if (!localConfig.USE_AUDIO_SELECTOR) {
+    // Spotify: using `document.createElement`
+    document.createElement = function <K extends keyof HTMLElementTagNameMap>(
+      tagName: K,
+      options: ElementCreationOptions,
+    ) {
+      const element = createElement(tagName, options);
+      // Spotify: <video>
+      // Deezer: <audio>
+      if ((tagName === 'video' || tagName === 'audio') && !audio) {
+        performance.measure('capture_audio_element');
+        audio = element as HTMLAudioElement;
+        resolveAudio(audio);
+      }
+      return element;
+    };
+  }
 
   // Youtube Music: without using `document.createElement`
+  // Apple Music
   const queryAudio = async () => {
     const { AUDIO_SELECTOR } = await config;
     const element = document.querySelector(AUDIO_SELECTOR);
