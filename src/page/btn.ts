@@ -71,6 +71,7 @@ export const insetLyricsBtn = async () => {
   const lyricsBtn = likeBtn.cloneNode(true) as HTMLButtonElement;
   lyricsBtn.classList.add(localConfig.LYRICS_CLASSNAME);
 
+  lyricsBtn.disabled = false;
   lyricsBtn.title = options.i18nMap.pageButtonTitle;
   lyricsBtn.setAttribute('aria-label', lyricsBtn.title);
   lyricsBtn.querySelectorAll('*').forEach((e) => {
@@ -78,6 +79,9 @@ export const insetLyricsBtn = async () => {
     e.removeAttribute('aria-label');
   });
 
+  if (lyricVideoIsOpen) {
+    lyricsBtn.classList.add(localConfig.LYRICS_ACTIVE_CLASSNAME);
+  }
   lyricVideo.addEventListener('enterpictureinpicture', () => {
     lyricsBtn.classList.add(localConfig.LYRICS_ACTIVE_CLASSNAME);
   });

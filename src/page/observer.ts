@@ -64,10 +64,26 @@ config.then(
     function coverErrorHandler(this: HTMLImageElement) {
       generateCover([coverCtx, coverHDCtx]);
     }
-
-    let infoElement: Element | null = null;
+    function coverUpdated(this: HTMLImageElement) {
+      // https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
+      // YouTube video cover has no cors
+      // TIDAL some cover has no cors
+      const anonymous = new Image();
+      anonymous.crossOrigin = 'anonymous';
+      anonymous.addEventListener('load', coverLoadHandler);
+      anonymous.addEventListener('error', coverErrorHandler);
+      anonymous.src = this.currentSrc || this.src;
+    }
 
     const update = () => {
+      // Assuming that cover is loaded after the song information is updated
+      const cover = document.querySelector(ALBUM_COVER_SELECTOR) as HTMLImageElement | null;
+      if (cover) {
+        cover.addEventListener('load', coverUpdated);
+      } else {
+        captureException(new Error('Cover not found'));
+      }
+
       const likeBtn = documentQueryHasSelector(BTN_LIKE_SELECTOR);
       const likeBtnRect = likeBtn?.getBoundingClientRect();
       if (!likeBtnRect?.width || !likeBtnRect.height) {
@@ -76,19 +92,9 @@ config.then(
       }
 
       sharedData.updateTrack();
-
-      // Assuming that cover is loaded after the song information is updated
-      const cover = document.querySelector(ALBUM_COVER_SELECTOR) as HTMLImageElement | null;
-      if (cover) {
-        // https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image
-        // YouTube video has no cors
-        cover.crossOrigin = 'anonymous';
-        cover.addEventListener('load', coverLoadHandler);
-        cover.addEventListener('error', coverErrorHandler);
-      } else {
-        captureException(new Error('Cover not found'));
-      }
     };
+
+    let infoElement: Element | null = null;
 
     const checkElement = () => {
       if (document.querySelector(LOGGED_MARK_SELECTOR)) loginResolve();

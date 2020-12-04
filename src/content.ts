@@ -1,6 +1,6 @@
 import { browser } from 'webextension-polyfill-ts';
 
-import { Message, Event } from './common/consts';
+import { Message, Event, isProd } from './common/consts';
 
 window.addEventListener('message', ({ data }) => {
   const { type } = data || {};
@@ -35,7 +35,7 @@ window.addEventListener('message', ({ data }) => {
 declare let __webpackReplaceWithChunk__: (chunk: string) => string;
 
 const script = document.createElement('script');
-if (browser.runtime.getURL('').startsWith('moz')) {
+if (!isProd || browser.runtime.getURL('').startsWith('moz')) {
   // Firefox CSP Issue: https://bugzilla.mozilla.org/show_bug.cgi?id=1267027
   script.src = browser.runtime.getURL('page.js');
 } else {
