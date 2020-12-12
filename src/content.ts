@@ -2,15 +2,6 @@ import { browser } from 'webextension-polyfill-ts';
 
 import { Message, Event, isProd } from './common/consts';
 
-window.addEventListener('message', ({ data }) => {
-  const { type } = data || {};
-  if (type === Event.SEND_SONGS) {
-    browser.runtime.sendMessage(data).catch(() => {
-      //
-    });
-  }
-});
-
 browser.runtime.onMessage.addListener((msg: Message) => {
   window.postMessage(msg, '*');
 });
@@ -27,8 +18,14 @@ window.addEventListener('message', ({ data }) => {
         //
       });
   }
-  if (type === Event.POPUP_ACTIVE || type === Event.CAPTURE_EXCEPTION) {
-    browser.runtime.sendMessage(data);
+  if (
+    type === Event.POPUP_ACTIVE ||
+    type === Event.CAPTURE_EXCEPTION ||
+    type === Event.SEND_SONGS
+  ) {
+    browser.runtime.sendMessage(data).catch(() => {
+      //
+    });
   }
 });
 
