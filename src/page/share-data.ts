@@ -73,6 +73,8 @@ export class SharedData {
   resetData() {
     this.resetLyrics();
     this._id = 0;
+    this._name = '';
+    this._artists = '';
     this._aId = 0;
     this._list = [];
     this._text = '';
@@ -204,15 +206,18 @@ export class SharedData {
     const artists = document.querySelector(TRACK_ARTIST_SELECTOR)?.textContent;
 
     try {
+      if (this._name === name && this._artists === artists) {
+        return;
+      }
       if (!name || !artists) {
         if (isTrust) {
           throw new Error(`Track info not found`);
         }
         return;
       }
+      this.resetData();
       this._name = name;
       this._artists = artists;
-      this.resetData();
       await this.matching({ signal: this._abortController.signal });
     } catch (e) {
       if (e.name !== 'AbortError') {
