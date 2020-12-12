@@ -105,9 +105,9 @@ export const insetLyricsBtn = async () => {
       openEditor();
     }
   });
-  lyricsBtn.addEventListener('click', async () => {
+  lyricsBtn.addEventListener('click', async (evt) => {
     lyricsBtn.blur();
-    sendEvent(options.cid, events.clickToggleLyrics);
+    if (evt.isTrusted) sendEvent(options.cid, events.clickToggleLyrics);
     try {
       if (lyricVideoIsOpen) {
         await closeLyrics();
