@@ -129,7 +129,9 @@ export const localConfig: LocalConfig = (() => {
       SERVICE_WORKER: '',
       STATIC_STYLE: css`
         nav .web-navigation__native-upsell,
-        .web-navigation .upsell-banner {
+        .web-navigation .upsell-banner,
+        .web-chrome-playback-lcd__platter--preview,
+        footer.dt-footer {
           display: none;
         }
         .${LYRICS_CLASSNAME} svg path {
