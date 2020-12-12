@@ -28,7 +28,7 @@ async function bgFetch(uri: string, options: RequestInit = {}) {
         if (data.ok) {
           res(data.data);
         } else {
-          rej(data.data);
+          rej(new Error(data.data));
         }
         window.removeEventListener('message', getRes);
       }
@@ -47,8 +47,8 @@ export async function request(uri: string, options: RequestInit = {}) {
         ...options,
       });
 
-      if (res.status === 0) throw 'Request fail';
-      if (res.status >= 400) throw res.statusText;
+      if (res.status === 0) throw new Error('Request fail');
+      if (res.status >= 400) throw new Error(res.statusText);
       const res2 = res.clone();
       try {
         return await res.json();
@@ -66,6 +66,8 @@ export async function request(uri: string, options: RequestInit = {}) {
       await new Promise((res) => setTimeout(res));
       if (cspError) {
         return bgFetch(uri, options);
+      } else {
+        throw err as Error;
       }
     }
   }
