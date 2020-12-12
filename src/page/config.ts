@@ -4,6 +4,7 @@
 import { isProd, Platform } from '../common/consts';
 
 import config from './config.json';
+import { request } from './request';
 import { css, svg, getSVGDataUrl } from './utils';
 
 const REMOTE_URL =
@@ -24,7 +25,7 @@ async function getConfig() {
   let result = config;
   if (isProd) {
     try {
-      result = (await (await fetch(REMOTE_URL)).json()) as typeof config;
+      result = await request(REMOTE_URL);
     } catch {}
   }
   return currentPlatform === 'SPOTIFY' ? result : Object.assign(result, result[currentPlatform]);

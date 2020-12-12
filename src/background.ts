@@ -4,6 +4,7 @@ import * as Sentry from '@sentry/browser';
 import { Message, Event, ContextItems, isProd, VERSION } from './common/consts';
 import { getOptions } from './options/store';
 import { i18n, i18nMap } from './i18n';
+import type { Req, Res } from './page/request';
 declare global {
   interface Window {
     Sentry?: typeof Sentry;
@@ -33,7 +34,7 @@ function enableBrowserAction() {
 
 disableBrowserAction();
 
-browser.runtime.onMessage.addListener((msg: Message) => {
+browser.runtime.onMessage.addListener(async (msg: Message, sender) => {
   const { type, data } = msg || {};
   if (type === Event.GET_OPTIONS) {
     // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/onMessage#Parameters
@@ -57,6 +58,34 @@ browser.runtime.onMessage.addListener((msg: Message) => {
     window.Sentry?.captureException(err, {
       extra: data.extra,
     });
+  }
+
+  if (type === Event.SEND_REQUEST) {
+    const { reqId, uri, options } = data as Req;
+    const tabId = sender.tab?.id;
+    if (!tabId) return;
+
+    const sendRes = (data: Omit<Res, 'reqId'>) => {
+      browser.tabs.sendMessage(tabId, {
+        type: Event.SEND_RESPONSE,
+        data: { reqId, ...data },
+      } as Message<Res>);
+    };
+    try {
+      const res = await fetch(uri, options);
+      if (res.status === 0) throw 'Request fail';
+      if (res.status >= 400) throw res.statusText;
+      const res2 = res.clone();
+      let result: any;
+      try {
+        result = await res.json();
+      } catch {
+        result = await res2.text();
+      }
+      sendRes({ ok: true, data: result });
+    } catch (err) {
+      sendRes({ ok: false, data: String(err) });
+    }
   }
 });
 

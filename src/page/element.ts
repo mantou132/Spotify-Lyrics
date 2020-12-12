@@ -3,7 +3,7 @@ import { Message, Event } from '../common/consts';
 import { captureException, documentQueryHasSelector } from './utils';
 import { getLyricsBtn } from './btn';
 import { loggedPromise } from './observer';
-import config, { localConfig } from './config';
+import config, { currentPlatform, localConfig } from './config';
 
 export const lyricVideo = document.createElement('video');
 lyricVideo.muted = true;
@@ -92,24 +92,27 @@ export const audioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
   };
   queryAudio();
 
-  // Check if audio is found normally
-  // Spotify: login required
-  Promise.all([loggedPromise, new Promise((res) => window.addEventListener('load', res))]).then(
-    () => {
-      const loadedTime = performance.now();
-      setTimeout(() => {
-        if (!audio) {
-          captureException(new Error('Audio not found'), {
-            // Provide some information that can tell if the extension is working properly
-            hrefOverrideBefore,
-            elementCountOverrideBefore,
-            elementCount: document.querySelectorAll('*').length,
-            loadedTime,
-          });
-        }
-      }, 5_000);
-    },
-  );
+  // Apple music does not insert audio elements by default
+  if (currentPlatform !== 'APPLE') {
+    // Check if audio is found normally
+    // Spotify: login required
+    Promise.all([loggedPromise, new Promise((res) => window.addEventListener('load', res))]).then(
+      () => {
+        const loadedTime = performance.now();
+        setTimeout(() => {
+          if (!audio) {
+            captureException(new Error('Audio not found'), {
+              // Provide some information that can tell if the extension is working properly
+              hrefOverrideBefore,
+              elementCountOverrideBefore,
+              elementCount: document.querySelectorAll('*').length,
+              loadedTime,
+            });
+          }
+        }, 5_000);
+      },
+    );
+  }
 });
 
 audioPromise.then((audio) => {

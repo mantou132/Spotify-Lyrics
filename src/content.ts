@@ -19,6 +19,7 @@ window.addEventListener('message', ({ data }) => {
       });
   }
   if (
+    type === Event.SEND_REQUEST ||
     type === Event.POPUP_ACTIVE ||
     type === Event.CAPTURE_EXCEPTION ||
     type === Event.SEND_SONGS

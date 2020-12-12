@@ -1,6 +1,9 @@
 import { sify, tify } from 'chinese-conv';
 
+import { isProd } from '../common/consts';
+
 import config from './config';
+import { request } from './request';
 import { captureException } from './utils';
 
 export interface Query {
@@ -119,9 +122,10 @@ async function fetchChineseName(s: string, fetchOptions?: RequestInit) {
     limit: '100',
   });
   try {
-    const { result }: SearchArtistsResult = await (
-      await fetch(`${API_HOST}/search?${searchQuery}`, fetchOptions)
-    ).json();
+    const { result }: SearchArtistsResult = await request(
+      `${API_HOST}/search?${searchQuery}`,
+      fetchOptions,
+    );
     const artists = result?.artists || [];
     artists.forEach((artist) => {
       const alias = [...artist.alias, ...(artist.transNames || [])].map(simplifiedText).sort();
@@ -147,9 +151,10 @@ async function fetchSongList(s: string, fetchOptions?: RequestInit): Promise<Son
     type: '1',
     limit: '100',
   });
-  const { result }: SearchSongsResult = await (
-    await fetch(`${API_HOST}/search?${searchQuery}`, fetchOptions)
-  ).json();
+  const { result }: SearchSongsResult = await request(
+    `${API_HOST}/search?${searchQuery}`,
+    fetchOptions,
+  );
   return result?.songs || [];
 }
 
@@ -219,7 +224,12 @@ export async function matchingLyrics(
     const DURATION_WEIGHT = 10;
     let currentScore = 0;
 
-    if (!audio || !song.duration || Math.abs(audio.duration - song.duration / 1000) < 2) {
+    if (
+      !isProd ||
+      !audio ||
+      !song.duration ||
+      Math.abs(audio.duration - song.duration / 1000) < 2
+    ) {
       currentScore += DURATION_WEIGHT;
     }
 
@@ -353,9 +363,10 @@ export async function matchingLyrics(
 
 export async function fetchLyric(songId: number, fetchOptions?: RequestInit) {
   const { API_HOST } = await config;
-  const { lrc }: SongResult = await (
-    await fetch(`${API_HOST}/lyric?${new URLSearchParams({ id: String(songId) })}`, fetchOptions)
-  ).json();
+  const { lrc }: SongResult = await request(
+    `${API_HOST}/lyric?${new URLSearchParams({ id: String(songId) })}`,
+    fetchOptions,
+  );
   return lrc?.lyric || '';
 }
 

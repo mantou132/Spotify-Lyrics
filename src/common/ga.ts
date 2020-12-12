@@ -2,14 +2,25 @@
 // https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
 // Support extension origin and spotify origin, And share ga cid
 
-import { isProd, isWebApp, VERSION } from './consts';
+import type { Req } from '../page/request';
+
+import { isProd, isWebApp, VERSION, Event } from './consts';
 
 const postReq = (params: Record<string, string>) => {
-  fetch('https://www.google-analytics.com/collect', {
+  const uri = 'https://www.google-analytics.com/collect';
+  const options: RequestInit = {
     method: 'post',
-    body: new URLSearchParams(params),
-    mode: 'cors',
-  });
+    body: new URLSearchParams(params).toString(),
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded',
+    },
+  };
+  if (isWebApp) {
+    const data: Req = { reqId: -1, uri, options };
+    window.postMessage({ type: Event.SEND_REQUEST, data }, '*');
+  } else {
+    fetch(uri, options);
+  }
 };
 
 const gaRequiredPayload = {

@@ -21,6 +21,8 @@ export enum Event {
   OPEN_OPTIONS = 'open-options',
   POPUP_ACTIVE = 'popup-active',
   CAPTURE_EXCEPTION = 'capture-exception',
+  SEND_REQUEST = 'send-request',
+  SEND_RESPONSE = 'send-response',
 }
 
 export const ContextItems = {
