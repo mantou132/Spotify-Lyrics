@@ -1,6 +1,6 @@
 import config from './config';
 
-import { coverCtx, coverHDCtx } from './element';
+import { coverCtx, coverHDCtx, lyricVideoIsOpen } from './element';
 import { insetLyricsBtn } from './btn';
 import { sharedData } from './share-data';
 import { generateCover } from './cover';
@@ -80,7 +80,7 @@ config.then(
       const cover = document.querySelector(ALBUM_COVER_SELECTOR) as HTMLImageElement | null;
       if (cover) {
         cover.addEventListener('load', coverUpdated);
-      } else {
+      } else if (lyricVideoIsOpen) {
         captureException(new Error('Cover not found'));
       }
 

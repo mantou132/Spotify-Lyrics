@@ -17,6 +17,7 @@ export interface Req {
 }
 
 async function bgFetch(uri: string, options: RequestInit = {}) {
+  // ignore abort signal
   const { body, headers, method } = options;
   reqId++;
   const data: Req = { reqId, uri, options: { body, headers, method } };
