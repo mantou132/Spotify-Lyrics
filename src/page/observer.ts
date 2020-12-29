@@ -80,8 +80,6 @@ config.then(
       const cover = document.querySelector(ALBUM_COVER_SELECTOR) as HTMLImageElement | null;
       if (cover) {
         cover.addEventListener('load', coverUpdated);
-      } else if (lyricVideoIsOpen) {
-        captureException(new Error('Cover not found'));
       }
 
       const likeBtn = documentQueryHasSelector(BTN_LIKE_SELECTOR);
@@ -92,6 +90,10 @@ config.then(
       }
 
       sharedData.updateTrack();
+
+      if (lyricVideoIsOpen && !cover) {
+        captureException(new Error('Cover not found'));
+      }
     };
 
     let infoElement: Element | null = null;
