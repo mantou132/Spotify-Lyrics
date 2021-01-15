@@ -163,12 +163,13 @@ export class EditorApp extends GemElement<State> {
 
   offsetLine = (step: number, index?: number) => {
     let { lyrics } = this.state;
+    const addOffset = (n: number | null, step: number) => (n === null ? null : n + step);
     if (typeof index === 'number') {
-      lyrics[index].startTime = (lyrics[index].startTime || 0) + step;
+      lyrics[index].startTime = addOffset(lyrics[index].startTime, step);
     } else {
       lyrics = lyrics.map(({ text, startTime }) => ({
         text,
-        startTime: (startTime || 0) + step,
+        startTime: addOffset(startTime, step),
       }));
     }
     this.setState({ lyrics });
@@ -426,7 +427,7 @@ export class EditorApp extends GemElement<State> {
                     title=${startTime === null ? '' : i18nMap.pageEditorSeek}
                     class="timestamp ${startTime === null ? 'placeholder' : ''}"
                   >
-                    ${startTime === null ? '00:00.00' : formatLRCTime(startTime)}
+                    ${startTime === null ? '' : formatLRCTime(startTime)}
                   </td>
                   <td class="timechange">
                     <span
