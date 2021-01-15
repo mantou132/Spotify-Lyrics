@@ -226,8 +226,8 @@ export async function matchingLyrics(
     let currentScore = 0;
 
     if (
-      !isProd ||
       !audio ||
+      (!isProd && audio.duration < 40) ||
       !song.duration ||
       Math.abs(audio.duration - song.duration / 1000) < 2
     ) {
