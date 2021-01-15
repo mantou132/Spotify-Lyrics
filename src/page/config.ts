@@ -181,7 +181,7 @@ export const localConfig: LocalConfig = (() => {
         /* not logged in */
         [data-testid='cookie-notice'],
         /* webpage: download link */
-        .Root__nav-bar nav div a[href*=download],
+        .Root__nav-bar div a[href*=download],
         /* webpage: logo */
         [role='banner'] {
           display: none;

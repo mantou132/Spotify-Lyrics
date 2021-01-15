@@ -1,7 +1,7 @@
 {
   "API_HOST": "https://music.xianqiao.wang/neteaseapi",
   "LOGGED_MARK_SELECTOR": "header [data-testid=user-widget-link]",
-  "LYRICS_CONTAINER_SELECTOR": ".Root__nav-bar nav",
+  "LYRICS_CONTAINER_SELECTOR": ".Root__nav-bar > div",
   "PAGE_PIP_STYLE": "position: relative; width: 100%; height: auto;",
   "ALBUM_COVER_SELECTOR": "[role=contentinfo] > div:nth-child(1) img",
   "ALBUM_COVER_LARGE_REGEXP_REPLACE": ["00004851(?=\\w{24}$)", "0000b273"],
