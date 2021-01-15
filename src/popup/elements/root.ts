@@ -24,7 +24,7 @@ export class SongList extends GemElement {
     changeSong(0);
   };
   render() {
-    if (store.list.length === 0) {
+    if (store.list.length === 0 && !store.id) {
       return html`
         <style>
           :host {
