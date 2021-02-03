@@ -26,7 +26,7 @@ export function documentQueryHasSelector(s: string) {
   return child?.closest(parentSelector);
 }
 
-export const headReady = new Promise((res) => {
+export const headReady = new Promise<void>((res) => {
   if (document.head) res();
   document.addEventListener('readystatechange', () => {
     if (document.head) res();
