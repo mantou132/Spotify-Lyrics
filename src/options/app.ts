@@ -30,7 +30,6 @@ export class OptionsApp extends GemElement<State> {
     const options = await getOptions();
     sendEvent(options.cid, events.openOptionsPage);
     this.setState({ options });
-    this.loadLocalFonts();
     window.addEventListener('keydown', this.copyIdHandler, true);
   }
 
@@ -40,10 +39,11 @@ export class OptionsApp extends GemElement<State> {
 
   loadLocalFonts = async () => {
     // https://github.com/WICG/local-font-access
-    if ('fonts' in navigator) {
+    if ('fonts' in navigator && !this.state.localFonts.length) {
       const fonts: Set<string> = new Set();
-      const asyncIterable = navigator.fonts.query();
-      for await (const font of asyncIterable) {
+      // Chromium is implemented as a Promise
+      const iterable = await navigator.fonts.query();
+      for await (const font of iterable) {
         fonts.add(font.family);
       }
       this.setState({ localFonts: [...fonts] });
