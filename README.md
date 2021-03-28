@@ -1,13 +1,10 @@
-[![Chrome WebStore version](https://img.shields.io/chrome-web-store/v/mkjfooclbdgjdclepjeepbmmjaclipod)](https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod)
-[![Mozilla Add-on version](https://img.shields.io/amo/v/spotify-lyrics)](https://addons.mozilla.org/en-US/firefox/addon/spotify-lyrics/)
 [![Discord](https://img.shields.io/discord/763927057549099028)](https://discord.com/invite/fQbzzdJ)
 
 # Spotify Lyrics
 
 Install Extension:
-[Chrome/Edge/Opera](https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod) |
-[Firefox](https://addons.mozilla.org/en-US/firefox/addon/spotify-lyrics/) |
-Safari(Soon)
+- Chrome/Chromium/Firefox: Download the zip on the [release](https://github.com/mantou132/Spotify-Lyrics/releases) page, and then load the extension on the extension management page of the browser. [reason](https://github.com/mantou132/Spotify-Lyrics/issues/68).
+- Safari(Soon)
 
 The extension adds a button to the bottom left corner of Spotify Web Player,
 Click to switch the display status of the lyrics,
