@@ -10,7 +10,7 @@
   "TRACK_ARTIST_SELECTOR": "[role=contentinfo] > div:nth-child(2) > div:nth-child(2)",
   "BTN_WRAPPER_SELECTOR": "[role=contentinfo] > div:nth-child(3)",
   "BTN_LIKE_SELECTOR": "[role=contentinfo] > div:nth-child(3) > [class*=heart]",
-  "PIP_BTN_SELECTOR": "[role=contentinfo] > div[class*=pip]",
+  "PIP_BTN_SELECTOR": "[role=contentinfo] button[data-testid*=pip]",
   "AUDIO_SELECTOR": "NONE",
   "YOUTUBE": {
     "LOGGED_MARK_SELECTOR": "ytmusic-settings-button",
