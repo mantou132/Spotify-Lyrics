@@ -1,5 +1,5 @@
 {
-  "API_HOST": "https://music.xianqiao.wang/neteaseapi",
+  "API_HOST": "https://music.xianqiao.wang/neteaseapiv2",
   "LOGGED_MARK_SELECTOR": "header [data-testid=user-widget-link]",
   "LYRICS_CONTAINER_SELECTOR": ".Root__nav-bar > div",
   "PAGE_PIP_STYLE": "position: relative; width: 100%; height: auto;",
