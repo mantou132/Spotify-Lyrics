@@ -40,18 +40,17 @@ Requirement: [Node.js](https://nodejs.org)
 
 ```bash
 # install dependencies
-npm install
-npm --prefix functions install
+yarn
 # start develop
-npm run start
+yarn run start
 # optional: start firebase function simulation
-npm run start:firebase
+yarn run start:firebase
 ```
 
 Build:
 
 ```bash
-npm run build:zip
+yarn run build:zip
 
 # firebase depoly and config update
 # npm i -g firebase-tools

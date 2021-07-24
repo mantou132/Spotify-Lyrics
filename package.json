@@ -6,14 +6,15 @@
     "lint": "tsc --noEmit && eslint --ext .ts --fix src/",
     "test": "jest",
     "serve": "web-ext --config web-ext.config.js run --start-url open.spotify.com",
-    "serve:chromium": "npm run serve -- -t chromium",
+    "serve:chromium": "yarn run serve -- -t chromium",
     "watch": "webpack --watch",
     "start": "concurrently npm:watch npm:serve:chromium",
     "test:matchrate": "cross-env TEST=matchrate concurrently npm:watch npm:serve:chromium",
     "release": "npx mantou132/release#web-ext -w public patch",
     "build": "cross-env NODE_ENV=production webpack",
-    "build:zip": "npm run build && web-ext --config web-ext.config.js build",
-    "start:firebase": "npm --prefix functions run build && firebase emulators:start",
+    "build:zip": "yarn run build && web-ext --config web-ext.config.js build",
+    "start:firebase": "yarn --cwd functions run build && firebase emulators:start",
+    "install": "yarn --cwd functions",
     "s:singer": "deno run --allow-read --allow-net script/singer.ts"
   },
   "author": "mantou132",
@@ -60,6 +61,6 @@
     }
   },
   "lint-staged": {
-    "*.ts": "npm run lint"
+    "*.ts": "eslint --fix"
   }
 }

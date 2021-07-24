@@ -84,7 +84,7 @@ export const localConfig: LocalConfig = (() => {
           -webkit-mask: url(${iconUrl}) center / 100% no-repeat;
           mask: url(${iconUrl}) center / 100% no-repeat;
         }
-        .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} iron-icon {
+        .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} tp-yt-iron-icon {
           background: var(--ytmusic-text-primary);
         }
       `,
@@ -186,21 +186,17 @@ export const localConfig: LocalConfig = (() => {
         [role='banner'] {
           display: none;
         }
-        .${LYRICS_CLASSNAME} button > * {
-          display: none;
+        .${LYRICS_CLASSNAME} svg {
+          fill: transparent;
+          background: currentColor;
+          -webkit-mask: url(${microphoneIconUrl}) center / 100% no-repeat;
+          mask: url(${microphoneIconUrl}) center / 100% no-repeat;
         }
-        .${LYRICS_CLASSNAME} button::before {
-          font-family: glue1-spoticon;
-          display: inline-block;
-          content: '\\f345';
-          font-size: 16px;
-          transform: rotate(90deg);
-          color: #b3b3b3;
-        }
-        .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} button::before {
-          color: #1db954;
+        .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} svg {
+          background: #1db954;
         }
       `,
+      // hidden album expand button
       NO_PIP_STYLE: css`
         [role='contentinfo'] > div:nth-child(1) > button {
           display: none;

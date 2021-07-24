@@ -16,9 +16,9 @@ jobs:
       with:
         node-version: 14.x
 
-    - run: npm install
-    - run: npm --prefix functions install
-    - run: npm run build:zip
+    - run: yarn
+    - run: yarn --cwd functions
+    - run: yarn run build:zip
 
     - name: Upload to release
       uses: svenstaro/upload-release-action@v2
