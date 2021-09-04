@@ -186,6 +186,9 @@ export const localConfig: LocalConfig = (() => {
         [role='banner'] {
           display: none;
         }
+        .${LYRICS_CLASSNAME} {
+          order: 100;
+        }
         .${LYRICS_CLASSNAME} svg {
           fill: transparent;
           background: currentColor;
