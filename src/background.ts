@@ -106,6 +106,7 @@ browser.contextMenus.create({
 const storeLinkMap: Record<string, string> = {
   '{d5bcc68d-856a-41e2-8021-d4c51f3b8e4a}':
     'https://addons.mozilla.org/en-US/firefox/addon/spotify-lyrics/',
+  '{9bbdd06f-4fe2-4d05-8c2d-1ef6bf71f84d}': 'https://github.com/mantou132/Spotify-Lyrics',
   mkjfooclbdgjdclepjeepbmmjaclipod:
     'https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod/reviews',
   aiehldpoaeaidnljjimhbojpblkbembm:

@@ -12,7 +12,6 @@
     "test:matchrate": "cross-env TEST=matchrate concurrently npm:watch npm:serve:chromium",
     "release": "npx mantou132/release#web-ext -w public patch",
     "build": "cross-env NODE_ENV=production webpack",
-    "build:zip": "yarn run build && web-ext --config web-ext.config.js build",
     "start:firebase": "yarn --cwd functions run build && firebase emulators:start",
     "install": "yarn --cwd functions",
     "s:singer": "deno run --allow-read --allow-net script/singer.ts"
@@ -51,7 +50,7 @@
     "ts-loader": "^6.2.2",
     "typescript": "^4.0.5",
     "url-loader": "^2.3.0",
-    "web-ext": "^4.3.0",
+    "web-ext": "^6.3.0",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.12"
   },

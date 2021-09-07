@@ -18,7 +18,12 @@ jobs:
 
     - run: yarn
     - run: yarn --cwd functions
-    - run: yarn run build:zip
+    - run: yarn run build
+    - run: npx web-ext --config web-ext.config.js build
+    - run: npx web-ext --config web-ext.config.js sign
+      env:
+        WEB_EXT_API_KEY: ${{ secrets.FIREFOX_API_KEY }}
+        WEB_EXT_API_SECRET: ${{ secrets.FIREFOX_API_SECRET }}
 
     - name: Upload to release
       uses: svenstaro/upload-release-action@v2
@@ -30,27 +35,15 @@ jobs:
         overwrite: true
 
     - run: |
-        export VERSION=$(node -e "console.log(require('./package.json').version)")
-        export ZIP_NAME=spotify_lyrics-${VERSION}.zip
-        export ZIP_PATH=build/${ZIP_NAME}
-        echo "ZIP_NAME=${ZIP_NAME}" >> $GITHUB_ENV
-        echo "ZIP_PATH=${ZIP_PATH}" >> $GITHUB_ENV
-        echo ${ZIP_NAME}
-        echo ${ZIP_PATH}
-
-    # https://github.com/trmcnvn/firefox-addon
-    - uses: trmcnvn/firefox-addon@v1
-      with:
-        uuid: '{d5bcc68d-856a-41e2-8021-d4c51f3b8e4a}'
-        xpi: ${{ env.ZIP_PATH }}
-        manifest: extension/manifest.json
-        api-key: ${{ secrets.FIREFOX_API_KEY }}
-        api-secret: ${{ secrets.FIREFOX_API_SECRET }}
+        export NAME=spotify_lyrics-$(node -p "require('./package.json').version")
+        export PATH=build/${NAME}
+        echo "PATH=${PATH}" >> $GITHUB_ENV
+        echo ${PATH}
 
     - uses: trmcnvn/chrome-addon@v2
       with:
         extension: mkjfooclbdgjdclepjeepbmmjaclipod
-        zip: ${{ env.ZIP_PATH }}
+        zip: ${{ env.PATH }}.zip
         client-id: ${{ secrets.CHROME_CLIENT_ID }}
         client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
         refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
