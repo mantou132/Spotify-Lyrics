@@ -443,8 +443,9 @@ export class EditorApp extends GemElement<State> {
                       >-</span
                     >
                   </td>
-                  ${// The following contenteditable element wrapping will cause the TextNode to be modified during editing
-                  // eslint-disable-next-line prettier/prettier
+                  ${
+                    // The following contenteditable element wrapping will cause the TextNode to be modified during editing
+                    // eslint-disable-next-line prettier/prettier
                     html`<td class="lyrics-line" contenteditable @dragover=${this.dragOver} @paste=${this.pasteText} @input=${(e: InputEvent) => this.modifyLine(e, index)}>${text}</td>`}
                   <td class="remove" @click=${() => this.removeLine(index)}>✕</td>
                 </tr>

@@ -100,12 +100,8 @@ export class SongList extends GemElement {
         ${store.id && store.id !== store.aId
           ? html`
               <p class="highlight">${i18n.popupConfirmTip()}</p>
-              <button @click=${cancelMId}>
-                ${i18n.popupConfirmCancel()}
-              </button>
-              <button @click=${confirmedMId}>
-                ${i18n.popupConfirmSave()}
-              </button>
+              <button @click=${cancelMId}>${i18n.popupConfirmCancel()}</button>
+              <button @click=${confirmedMId}>${i18n.popupConfirmSave()}</button>
             `
           : html`
               <p>
