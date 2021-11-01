@@ -1,0 +1,995 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A07BFD1E272FF58C001694DA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07BFD1D272FF58C001694DA /* AppDelegate.swift */; };
+		A07BFD20272FF58C001694DA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07BFD1F272FF58C001694DA /* SceneDelegate.swift */; };
+		A07BFD23272FF58C001694DA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD21272FF58C001694DA /* LaunchScreen.storyboard */; };
+		A07BFD26272FF58C001694DA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD24272FF58C001694DA /* Main.storyboard */; };
+		A07BFD2F272FF58C001694DA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07BFD2E272FF58C001694DA /* AppDelegate.swift */; };
+		A07BFD32272FF58C001694DA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD30272FF58C001694DA /* Main.storyboard */; };
+		A07BFD3A272FF58C001694DA /* Spotify Lyrics Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A07BFD39272FF58C001694DA /* Spotify Lyrics Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A07BFD44272FF58C001694DA /* Spotify Lyrics Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A07BFD43272FF58C001694DA /* Spotify Lyrics Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A07BFD4A272FF58C001694DA /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD0D272FF58B001694DA /* Main.html */; };
+		A07BFD4B272FF58C001694DA /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD0D272FF58B001694DA /* Main.html */; };
+		A07BFD4C272FF58C001694DA /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD0F272FF58B001694DA /* Icon.png */; };
+		A07BFD4D272FF58C001694DA /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD0F272FF58B001694DA /* Icon.png */; };
+		A07BFD4E272FF58C001694DA /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD10272FF58B001694DA /* Style.css */; };
+		A07BFD4F272FF58C001694DA /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD10272FF58B001694DA /* Style.css */; };
+		A07BFD50272FF58C001694DA /* Script.js in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD11272FF58B001694DA /* Script.js */; };
+		A07BFD51272FF58C001694DA /* Script.js in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD11272FF58B001694DA /* Script.js */; };
+		A07BFD52272FF58C001694DA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07BFD12272FF58B001694DA /* ViewController.swift */; };
+		A07BFD53272FF58C001694DA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07BFD12272FF58B001694DA /* ViewController.swift */; };
+		A07BFD54272FF58C001694DA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD13272FF58C001694DA /* Assets.xcassets */; };
+		A07BFD55272FF58C001694DA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD13272FF58C001694DA /* Assets.xcassets */; };
+		A07BFD56272FF58C001694DA /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07BFD15272FF58C001694DA /* SafariWebExtensionHandler.swift */; };
+		A07BFD57272FF58C001694DA /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07BFD15272FF58C001694DA /* SafariWebExtensionHandler.swift */; };
+		A07BFD76272FF58C001694DA /* popup.js in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD69272FF58C001694DA /* popup.js */; };
+		A07BFD77272FF58C001694DA /* page.js in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD6A272FF58C001694DA /* page.js */; };
+		A07BFD78272FF58C001694DA /* privacy-policy.html in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD6B272FF58C001694DA /* privacy-policy.html */; };
+		A07BFD79272FF58C001694DA /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD6C272FF58C001694DA /* background.js */; };
+		A07BFD7A272FF58C001694DA /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD6D272FF58C001694DA /* popup.html */; };
+		A07BFD7B272FF58C001694DA /* options.js in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD6E272FF58C001694DA /* options.js */; };
+		A07BFD7C272FF58C001694DA /* welcome.js in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD6F272FF58C001694DA /* welcome.js */; };
+		A07BFD7D272FF58C001694DA /* icons in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD70272FF58C001694DA /* icons */; };
+		A07BFD7E272FF58C001694DA /* welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD71272FF58C001694DA /* welcome.html */; };
+		A07BFD7F272FF58C001694DA /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD72272FF58C001694DA /* manifest.json */; };
+		A07BFD80272FF58C001694DA /* options.html in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD73272FF58C001694DA /* options.html */; };
+		A07BFD81272FF58C001694DA /* _locales in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD74272FF58C001694DA /* _locales */; };
+		A07BFD82272FF58C001694DA /* content.js in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD75272FF58C001694DA /* content.js */; };
+		A07BFD83272FF58C001694DA /* popup.js in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD69272FF58C001694DA /* popup.js */; };
+		A07BFD84272FF58C001694DA /* page.js in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD6A272FF58C001694DA /* page.js */; };
+		A07BFD85272FF58C001694DA /* privacy-policy.html in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD6B272FF58C001694DA /* privacy-policy.html */; };
+		A07BFD86272FF58C001694DA /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD6C272FF58C001694DA /* background.js */; };
+		A07BFD87272FF58C001694DA /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD6D272FF58C001694DA /* popup.html */; };
+		A07BFD88272FF58C001694DA /* options.js in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD6E272FF58C001694DA /* options.js */; };
+		A07BFD89272FF58C001694DA /* welcome.js in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD6F272FF58C001694DA /* welcome.js */; };
+		A07BFD8A272FF58C001694DA /* icons in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD70272FF58C001694DA /* icons */; };
+		A07BFD8B272FF58C001694DA /* welcome.html in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD71272FF58C001694DA /* welcome.html */; };
+		A07BFD8C272FF58C001694DA /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD72272FF58C001694DA /* manifest.json */; };
+		A07BFD8D272FF58C001694DA /* options.html in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD73272FF58C001694DA /* options.html */; };
+		A07BFD8E272FF58C001694DA /* _locales in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD74272FF58C001694DA /* _locales */; };
+		A07BFD8F272FF58C001694DA /* content.js in Resources */ = {isa = PBXBuildFile; fileRef = A07BFD75272FF58C001694DA /* content.js */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A07BFD3B272FF58C001694DA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A07BFD07272FF58B001694DA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A07BFD38272FF58C001694DA;
+			remoteInfo = "Spotify Lyrics Extension (iOS)";
+		};
+		A07BFD45272FF58C001694DA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A07BFD07272FF58B001694DA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A07BFD42272FF58C001694DA;
+			remoteInfo = "Spotify Lyrics Extension (macOS)";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A07BFD5D272FF58C001694DA /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A07BFD3A272FF58C001694DA /* Spotify Lyrics Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A07BFD64272FF58C001694DA /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A07BFD44272FF58C001694DA /* Spotify Lyrics Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		A07BFD0E272FF58B001694DA /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = ../Base.lproj/Main.html; sourceTree = "<group>"; };
+		A07BFD0F272FF58B001694DA /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		A07BFD10272FF58B001694DA /* Style.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = Style.css; sourceTree = "<group>"; };
+		A07BFD11272FF58B001694DA /* Script.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = Script.js; sourceTree = "<group>"; };
+		A07BFD12272FF58B001694DA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		A07BFD13272FF58C001694DA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A07BFD15272FF58C001694DA /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
+		A07BFD1A272FF58C001694DA /* Spotify Lyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Spotify Lyrics.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A07BFD1D272FF58C001694DA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		A07BFD1F272FF58C001694DA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		A07BFD22272FF58C001694DA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		A07BFD25272FF58C001694DA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		A07BFD27272FF58C001694DA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A07BFD2C272FF58C001694DA /* Spotify Lyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Spotify Lyrics.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A07BFD2E272FF58C001694DA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		A07BFD31272FF58C001694DA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		A07BFD33272FF58C001694DA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A07BFD34272FF58C001694DA /* Spotify Lyrics.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Spotify Lyrics.entitlements"; sourceTree = "<group>"; };
+		A07BFD39272FF58C001694DA /* Spotify Lyrics Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Spotify Lyrics Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A07BFD3E272FF58C001694DA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A07BFD43272FF58C001694DA /* Spotify Lyrics Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Spotify Lyrics Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A07BFD48272FF58C001694DA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A07BFD49272FF58C001694DA /* Spotify Lyrics.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Spotify Lyrics.entitlements"; sourceTree = "<group>"; };
+		A07BFD69272FF58C001694DA /* popup.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = popup.js; path = "../../spotify_lyrics-1/popup.js"; sourceTree = "<group>"; };
+		A07BFD6A272FF58C001694DA /* page.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = page.js; path = "../../spotify_lyrics-1/page.js"; sourceTree = "<group>"; };
+		A07BFD6B272FF58C001694DA /* privacy-policy.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = "privacy-policy.html"; path = "../../spotify_lyrics-1/privacy-policy.html"; sourceTree = "<group>"; };
+		A07BFD6C272FF58C001694DA /* background.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = background.js; path = "../../spotify_lyrics-1/background.js"; sourceTree = "<group>"; };
+		A07BFD6D272FF58C001694DA /* popup.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = popup.html; path = "../../spotify_lyrics-1/popup.html"; sourceTree = "<group>"; };
+		A07BFD6E272FF58C001694DA /* options.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = options.js; path = "../../spotify_lyrics-1/options.js"; sourceTree = "<group>"; };
+		A07BFD6F272FF58C001694DA /* welcome.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = welcome.js; path = "../../spotify_lyrics-1/welcome.js"; sourceTree = "<group>"; };
+		A07BFD70272FF58C001694DA /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = "../../spotify_lyrics-1/icons"; sourceTree = "<group>"; };
+		A07BFD71272FF58C001694DA /* welcome.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = welcome.html; path = "../../spotify_lyrics-1/welcome.html"; sourceTree = "<group>"; };
+		A07BFD72272FF58C001694DA /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = manifest.json; path = "../../spotify_lyrics-1/manifest.json"; sourceTree = "<group>"; };
+		A07BFD73272FF58C001694DA /* options.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = options.html; path = "../../spotify_lyrics-1/options.html"; sourceTree = "<group>"; };
+		A07BFD74272FF58C001694DA /* _locales */ = {isa = PBXFileReference; lastKnownFileType = folder; name = _locales; path = "../../spotify_lyrics-1/_locales"; sourceTree = "<group>"; };
+		A07BFD75272FF58C001694DA /* content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = content.js; path = "../../spotify_lyrics-1/content.js"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A07BFD17272FF58C001694DA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A07BFD29272FF58C001694DA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A07BFD36272FF58C001694DA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A07BFD40272FF58C001694DA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A07BFD06272FF58B001694DA = {
+			isa = PBXGroup;
+			children = (
+				A07BFD0B272FF58B001694DA /* Shared (App) */,
+				A07BFD14272FF58C001694DA /* Shared (Extension) */,
+				A07BFD1C272FF58C001694DA /* iOS (App) */,
+				A07BFD2D272FF58C001694DA /* macOS (App) */,
+				A07BFD3D272FF58C001694DA /* iOS (Extension) */,
+				A07BFD47272FF58C001694DA /* macOS (Extension) */,
+				A07BFD1B272FF58C001694DA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A07BFD0B272FF58B001694DA /* Shared (App) */ = {
+			isa = PBXGroup;
+			children = (
+				A07BFD12272FF58B001694DA /* ViewController.swift */,
+				A07BFD13272FF58C001694DA /* Assets.xcassets */,
+				A07BFD0C272FF58B001694DA /* Resources */,
+			);
+			path = "Shared (App)";
+			sourceTree = "<group>";
+		};
+		A07BFD0C272FF58B001694DA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A07BFD0D272FF58B001694DA /* Main.html */,
+				A07BFD0F272FF58B001694DA /* Icon.png */,
+				A07BFD10272FF58B001694DA /* Style.css */,
+				A07BFD11272FF58B001694DA /* Script.js */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A07BFD14272FF58C001694DA /* Shared (Extension) */ = {
+			isa = PBXGroup;
+			children = (
+				A07BFD68272FF58C001694DA /* Resources */,
+				A07BFD15272FF58C001694DA /* SafariWebExtensionHandler.swift */,
+			);
+			path = "Shared (Extension)";
+			sourceTree = "<group>";
+		};
+		A07BFD1B272FF58C001694DA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A07BFD1A272FF58C001694DA /* Spotify Lyrics.app */,
+				A07BFD2C272FF58C001694DA /* Spotify Lyrics.app */,
+				A07BFD39272FF58C001694DA /* Spotify Lyrics Extension.appex */,
+				A07BFD43272FF58C001694DA /* Spotify Lyrics Extension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A07BFD1C272FF58C001694DA /* iOS (App) */ = {
+			isa = PBXGroup;
+			children = (
+				A07BFD1D272FF58C001694DA /* AppDelegate.swift */,
+				A07BFD1F272FF58C001694DA /* SceneDelegate.swift */,
+				A07BFD21272FF58C001694DA /* LaunchScreen.storyboard */,
+				A07BFD24272FF58C001694DA /* Main.storyboard */,
+				A07BFD27272FF58C001694DA /* Info.plist */,
+			);
+			path = "iOS (App)";
+			sourceTree = "<group>";
+		};
+		A07BFD2D272FF58C001694DA /* macOS (App) */ = {
+			isa = PBXGroup;
+			children = (
+				A07BFD2E272FF58C001694DA /* AppDelegate.swift */,
+				A07BFD30272FF58C001694DA /* Main.storyboard */,
+				A07BFD33272FF58C001694DA /* Info.plist */,
+				A07BFD34272FF58C001694DA /* Spotify Lyrics.entitlements */,
+			);
+			path = "macOS (App)";
+			sourceTree = "<group>";
+		};
+		A07BFD3D272FF58C001694DA /* iOS (Extension) */ = {
+			isa = PBXGroup;
+			children = (
+				A07BFD3E272FF58C001694DA /* Info.plist */,
+			);
+			path = "iOS (Extension)";
+			sourceTree = "<group>";
+		};
+		A07BFD47272FF58C001694DA /* macOS (Extension) */ = {
+			isa = PBXGroup;
+			children = (
+				A07BFD48272FF58C001694DA /* Info.plist */,
+				A07BFD49272FF58C001694DA /* Spotify Lyrics.entitlements */,
+			);
+			path = "macOS (Extension)";
+			sourceTree = "<group>";
+		};
+		A07BFD68272FF58C001694DA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A07BFD69272FF58C001694DA /* popup.js */,
+				A07BFD6A272FF58C001694DA /* page.js */,
+				A07BFD6B272FF58C001694DA /* privacy-policy.html */,
+				A07BFD6C272FF58C001694DA /* background.js */,
+				A07BFD6D272FF58C001694DA /* popup.html */,
+				A07BFD6E272FF58C001694DA /* options.js */,
+				A07BFD6F272FF58C001694DA /* welcome.js */,
+				A07BFD70272FF58C001694DA /* icons */,
+				A07BFD71272FF58C001694DA /* welcome.html */,
+				A07BFD72272FF58C001694DA /* manifest.json */,
+				A07BFD73272FF58C001694DA /* options.html */,
+				A07BFD74272FF58C001694DA /* _locales */,
+				A07BFD75272FF58C001694DA /* content.js */,
+			);
+			name = Resources;
+			path = "Shared (Extension)";
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A07BFD19272FF58C001694DA /* Spotify Lyrics (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A07BFD5E272FF58C001694DA /* Build configuration list for PBXNativeTarget "Spotify Lyrics (iOS)" */;
+			buildPhases = (
+				A07BFD16272FF58C001694DA /* Sources */,
+				A07BFD17272FF58C001694DA /* Frameworks */,
+				A07BFD18272FF58C001694DA /* Resources */,
+				A07BFD5D272FF58C001694DA /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A07BFD3C272FF58C001694DA /* PBXTargetDependency */,
+			);
+			name = "Spotify Lyrics (iOS)";
+			productName = "Spotify Lyrics (iOS)";
+			productReference = A07BFD1A272FF58C001694DA /* Spotify Lyrics.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A07BFD2B272FF58C001694DA /* Spotify Lyrics (macOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A07BFD65272FF58C001694DA /* Build configuration list for PBXNativeTarget "Spotify Lyrics (macOS)" */;
+			buildPhases = (
+				A07BFD28272FF58C001694DA /* Sources */,
+				A07BFD29272FF58C001694DA /* Frameworks */,
+				A07BFD2A272FF58C001694DA /* Resources */,
+				A07BFD64272FF58C001694DA /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A07BFD46272FF58C001694DA /* PBXTargetDependency */,
+			);
+			name = "Spotify Lyrics (macOS)";
+			productName = "Spotify Lyrics (macOS)";
+			productReference = A07BFD2C272FF58C001694DA /* Spotify Lyrics.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A07BFD38272FF58C001694DA /* Spotify Lyrics Extension (iOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A07BFD5A272FF58C001694DA /* Build configuration list for PBXNativeTarget "Spotify Lyrics Extension (iOS)" */;
+			buildPhases = (
+				A07BFD35272FF58C001694DA /* Sources */,
+				A07BFD36272FF58C001694DA /* Frameworks */,
+				A07BFD37272FF58C001694DA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Spotify Lyrics Extension (iOS)";
+			productName = "Spotify Lyrics Extension (iOS)";
+			productReference = A07BFD39272FF58C001694DA /* Spotify Lyrics Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		A07BFD42272FF58C001694DA /* Spotify Lyrics Extension (macOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A07BFD61272FF58C001694DA /* Build configuration list for PBXNativeTarget "Spotify Lyrics Extension (macOS)" */;
+			buildPhases = (
+				A07BFD3F272FF58C001694DA /* Sources */,
+				A07BFD40272FF58C001694DA /* Frameworks */,
+				A07BFD41272FF58C001694DA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Spotify Lyrics Extension (macOS)";
+			productName = "Spotify Lyrics Extension (macOS)";
+			productReference = A07BFD43272FF58C001694DA /* Spotify Lyrics Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A07BFD07272FF58B001694DA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1310;
+				LastUpgradeCheck = 1310;
+				TargetAttributes = {
+					A07BFD19272FF58C001694DA = {
+						CreatedOnToolsVersion = 13.1;
+					};
+					A07BFD2B272FF58C001694DA = {
+						CreatedOnToolsVersion = 13.1;
+					};
+					A07BFD38272FF58C001694DA = {
+						CreatedOnToolsVersion = 13.1;
+					};
+					A07BFD42272FF58C001694DA = {
+						CreatedOnToolsVersion = 13.1;
+					};
+				};
+			};
+			buildConfigurationList = A07BFD0A272FF58B001694DA /* Build configuration list for PBXProject "Spotify Lyrics" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A07BFD06272FF58B001694DA;
+			productRefGroup = A07BFD1B272FF58C001694DA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A07BFD19272FF58C001694DA /* Spotify Lyrics (iOS) */,
+				A07BFD2B272FF58C001694DA /* Spotify Lyrics (macOS) */,
+				A07BFD38272FF58C001694DA /* Spotify Lyrics Extension (iOS) */,
+				A07BFD42272FF58C001694DA /* Spotify Lyrics Extension (macOS) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A07BFD18272FF58C001694DA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A07BFD4C272FF58C001694DA /* Icon.png in Resources */,
+				A07BFD23272FF58C001694DA /* LaunchScreen.storyboard in Resources */,
+				A07BFD4A272FF58C001694DA /* Main.html in Resources */,
+				A07BFD50272FF58C001694DA /* Script.js in Resources */,
+				A07BFD54272FF58C001694DA /* Assets.xcassets in Resources */,
+				A07BFD26272FF58C001694DA /* Main.storyboard in Resources */,
+				A07BFD4E272FF58C001694DA /* Style.css in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A07BFD2A272FF58C001694DA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A07BFD4D272FF58C001694DA /* Icon.png in Resources */,
+				A07BFD4F272FF58C001694DA /* Style.css in Resources */,
+				A07BFD32272FF58C001694DA /* Main.storyboard in Resources */,
+				A07BFD51272FF58C001694DA /* Script.js in Resources */,
+				A07BFD55272FF58C001694DA /* Assets.xcassets in Resources */,
+				A07BFD4B272FF58C001694DA /* Main.html in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A07BFD37272FF58C001694DA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A07BFD86272FF58C001694DA /* background.js in Resources */,
+				A07BFD8A272FF58C001694DA /* icons in Resources */,
+				A07BFD8C272FF58C001694DA /* manifest.json in Resources */,
+				A07BFD88272FF58C001694DA /* options.js in Resources */,
+				A07BFD8F272FF58C001694DA /* content.js in Resources */,
+				A07BFD8D272FF58C001694DA /* options.html in Resources */,
+				A07BFD89272FF58C001694DA /* welcome.js in Resources */,
+				A07BFD8E272FF58C001694DA /* _locales in Resources */,
+				A07BFD87272FF58C001694DA /* popup.html in Resources */,
+				A07BFD83272FF58C001694DA /* popup.js in Resources */,
+				A07BFD8B272FF58C001694DA /* welcome.html in Resources */,
+				A07BFD85272FF58C001694DA /* privacy-policy.html in Resources */,
+				A07BFD84272FF58C001694DA /* page.js in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A07BFD41272FF58C001694DA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A07BFD79272FF58C001694DA /* background.js in Resources */,
+				A07BFD7D272FF58C001694DA /* icons in Resources */,
+				A07BFD7F272FF58C001694DA /* manifest.json in Resources */,
+				A07BFD7B272FF58C001694DA /* options.js in Resources */,
+				A07BFD82272FF58C001694DA /* content.js in Resources */,
+				A07BFD80272FF58C001694DA /* options.html in Resources */,
+				A07BFD7C272FF58C001694DA /* welcome.js in Resources */,
+				A07BFD81272FF58C001694DA /* _locales in Resources */,
+				A07BFD7A272FF58C001694DA /* popup.html in Resources */,
+				A07BFD76272FF58C001694DA /* popup.js in Resources */,
+				A07BFD7E272FF58C001694DA /* welcome.html in Resources */,
+				A07BFD78272FF58C001694DA /* privacy-policy.html in Resources */,
+				A07BFD77272FF58C001694DA /* page.js in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A07BFD16272FF58C001694DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A07BFD52272FF58C001694DA /* ViewController.swift in Sources */,
+				A07BFD1E272FF58C001694DA /* AppDelegate.swift in Sources */,
+				A07BFD20272FF58C001694DA /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A07BFD28272FF58C001694DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A07BFD53272FF58C001694DA /* ViewController.swift in Sources */,
+				A07BFD2F272FF58C001694DA /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A07BFD35272FF58C001694DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A07BFD56272FF58C001694DA /* SafariWebExtensionHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A07BFD3F272FF58C001694DA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A07BFD57272FF58C001694DA /* SafariWebExtensionHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A07BFD3C272FF58C001694DA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A07BFD38272FF58C001694DA /* Spotify Lyrics Extension (iOS) */;
+			targetProxy = A07BFD3B272FF58C001694DA /* PBXContainerItemProxy */;
+		};
+		A07BFD46272FF58C001694DA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A07BFD42272FF58C001694DA /* Spotify Lyrics Extension (macOS) */;
+			targetProxy = A07BFD45272FF58C001694DA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		A07BFD0D272FF58B001694DA /* Main.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A07BFD0E272FF58B001694DA /* Base */,
+			);
+			name = Main.html;
+			sourceTree = "<group>";
+		};
+		A07BFD21272FF58C001694DA /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A07BFD22272FF58C001694DA /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		A07BFD24272FF58C001694DA /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A07BFD25272FF58C001694DA /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		A07BFD30272FF58C001694DA /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A07BFD31272FF58C001694DA /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		A07BFD58272FF58C001694DA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A07BFD59272FF58C001694DA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		A07BFD5B272FF58C001694DA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Spotify Lyrics Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourCompany.Spotify-Lyrics.Extension";
+				PRODUCT_NAME = "Spotify Lyrics Extension";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A07BFD5C272FF58C001694DA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Spotify Lyrics Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourCompany.Spotify-Lyrics.Extension";
+				PRODUCT_NAME = "Spotify Lyrics Extension";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A07BFD5F272FF58C001694DA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (App)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Spotify Lyrics";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourCompany.Spotify-Lyrics";
+				PRODUCT_NAME = "Spotify Lyrics";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A07BFD60272FF58C001694DA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "iOS (App)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Spotify Lyrics";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourCompany.Spotify-Lyrics";
+				PRODUCT_NAME = "Spotify Lyrics";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A07BFD62272FF58C001694DA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "macOS (Extension)/Spotify Lyrics.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Spotify Lyrics Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourCompany.Spotify-Lyrics.Extension";
+				PRODUCT_NAME = "Spotify Lyrics Extension";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A07BFD63272FF58C001694DA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "macOS (Extension)/Spotify Lyrics.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (Extension)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Spotify Lyrics Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourCompany.Spotify-Lyrics.Extension";
+				PRODUCT_NAME = "Spotify Lyrics Extension";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		A07BFD66272FF58C001694DA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "macOS (App)/Spotify Lyrics.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (App)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Spotify Lyrics";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourCompany.Spotify-Lyrics";
+				PRODUCT_NAME = "Spotify Lyrics";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A07BFD67272FF58C001694DA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "macOS (App)/Spotify Lyrics.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "macOS (App)/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Spotify Lyrics";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourCompany.Spotify-Lyrics";
+				PRODUCT_NAME = "Spotify Lyrics";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A07BFD0A272FF58B001694DA /* Build configuration list for PBXProject "Spotify Lyrics" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A07BFD58272FF58C001694DA /* Debug */,
+				A07BFD59272FF58C001694DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A07BFD5A272FF58C001694DA /* Build configuration list for PBXNativeTarget "Spotify Lyrics Extension (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A07BFD5B272FF58C001694DA /* Debug */,
+				A07BFD5C272FF58C001694DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A07BFD5E272FF58C001694DA /* Build configuration list for PBXNativeTarget "Spotify Lyrics (iOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A07BFD5F272FF58C001694DA /* Debug */,
+				A07BFD60272FF58C001694DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A07BFD61272FF58C001694DA /* Build configuration list for PBXNativeTarget "Spotify Lyrics Extension (macOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A07BFD62272FF58C001694DA /* Debug */,
+				A07BFD63272FF58C001694DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A07BFD65272FF58C001694DA /* Build configuration list for PBXNativeTarget "Spotify Lyrics (macOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A07BFD66272FF58C001694DA /* Debug */,
+				A07BFD67272FF58C001694DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A07BFD07272FF58B001694DA /* Project object */;
+}
