@@ -79,7 +79,7 @@ export const localConfig: LocalConfig = (() => {
           margin-left: var(--ytmusic-like-button-renderer-button-spacing, 8px);
         }
         .${LYRICS_CLASSNAME} tp-yt-iron-icon {
-          background: var(--ytmusic-icon-inactive);
+          background: var(--iron-icon-fill-color, currentcolor);
           transform: rotate(90deg) scale(1.2);
           -webkit-mask: url(${iconUrl}) center / 100% no-repeat;
           mask: url(${iconUrl}) center / 100% no-repeat;
