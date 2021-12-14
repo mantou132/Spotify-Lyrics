@@ -1,0 +1,267 @@
+{
+  "extensionName": {
+    "message": "Spotify Lyrics",
+    "description": "Name of the extension"
+  },
+
+  "extensionDescription": {
+    "message": "מילות השיר המסונכרנות מיידית יוצגו בחלון תמונה בתוך תמונה",
+    "description": "Description of the extension"
+  },
+
+  "actionDisableTitle": {
+    "message": "הצג מילות שיר אחר לאחר פתיחת המילים",
+    "description": "Browser action disable title"
+  },
+
+  "actionEnableTitle": {
+    "message": "נסה מילות שיר אחר",
+    "description": "Browser action enable title"
+  },
+
+  "popupMissMatch": {
+    "message": "אין שירים זמינים",
+    "description": "The currently playing song was not found on the lyrics service."
+  },
+
+  "popupConfirmTip": {
+    "message": "האם לשמור את השינויים?",
+    "description": "Request confirmation from the user"
+  },
+
+  "popupConfirmSave" : {
+    "message": "שמור",
+    "description": "Save user selection"
+  },
+
+  "popupConfirmCancel" : {
+    "message": "בטל",
+    "description": "Cancel manually set lyrics"
+  },
+
+  "popupMatchDescription1": {
+    "message": "אין שירים זמינים או",
+    "description": "Lyric matching description1"
+  },
+
+  "popupMatchDescription2": {
+    "message": "השתמש בברירת מחדל",
+    "description": "Lyric matching use default"
+  },
+
+  "popupMatchDescription3": {
+    "message": "",
+    "description": "Lyric matching description3"
+  },
+
+  "optionsSaveTip1": {
+    "message": "החלף שיר כדי להפעיל",
+    "description": "Some tips for saving options"
+  },
+
+  "optionsSaveTip2": {
+    "message": "פתח מחדש את מילות השיר כדי להפעיל",
+    "description": "Some tips for saving options"
+  },
+
+  "optionsFontSize": {
+    "message": "גודל גופן",
+    "description": "Specify lyrics font size"
+  },
+
+  "optionsFontSizeDetail": {
+    "message": "זהו גודל יחסי, רוחב חלון המילים הוא 640px",
+    "description": "Specify font size detail"
+  },
+
+
+  "optionsFontFamily": {
+    "message": "גופן",
+    "description": "Specify lyrics font family"
+  },
+
+  "optionsLyricsAlign": {
+    "message": "יישור",
+    "description": "Specify alignment"
+  },
+  "optionsHDCover": {
+    "message": "השתמש ברזולוציה גבוהה כרקע של המילים",
+    "description": "Use high-resolution cover as the lyrics background"
+  },
+
+  "optionsHDCoverDetail": {
+    "message": "השתמש בכיסוי אלבום מטושטש כאשר הכיסוי אלבום ברזולוציה גבוהה לא מצליח להיטען",
+    "description": "Use high-resolution cover as the lyrics background detail"
+  },
+
+  "optionsUseUnreviewedLyrics": {
+    "message": "השתמש במילים שלא נבדקו",
+    "description": "Use unreviewed lyrics"
+  },
+
+  "optionsUseUnreviewedLyricsDetail": {
+    "message": "השתמש במילים שהועלו על ידי משתמשים אחרים אך לא נבדקו",
+    "description": "Use unreviewed lyrics detail"
+  },
+
+  "optionsShowLyrics": {
+    "message": "רק הצג את הכיסוי אלבום",
+    "description": "Only show cover option"
+  },
+
+  "optionsShowCleanLyrics": {
+    "message": "הצג מילים נקיות",
+    "description": "Show clean lyrics option"
+  },
+
+  "optionsShowCleanLyricsDetail": {
+    "message": "הסתר מידע על מלחין ומפיק",
+    "description": "Show clean lyrics option detail"
+  },
+
+  "optionsTraditionalChineseLyrics": {
+    "message": "מילים בסינית מסורתית",
+    "description": "Lyrics use traditional chinese"
+  },
+
+  "optionsLyricsPosition": {
+    "message": "איפה מופיעות המילים",
+    "description": "Lyrics position option"
+  },
+
+  "optionsToggleShortcut": {
+    "message": "קיצור",
+    "description": "Toggle show lyrics shortcut"
+  },
+
+  "optionsToggleShortcutDetail": {
+    "message": "כאשר אפליקציית האינטרנט ממוקדת, אתה יכול להשתמש בקיצורי דרך כדי לפתוח ולסגור מילים",
+    "description": "Toggle show lyrics shortcut detail"
+  },
+
+  "menusFeedback": {
+    "message": "משוב",
+    "description": "Feedback context menus item"
+  },
+
+  "menusWelcome": {
+    "message": "ברוך הבא",
+    "description": "Welcome menus item"
+  },
+
+  "menusRateMe": {
+    "message": "דרג את ההרחבה",
+    "description": "Rate me context menus item"
+  },
+
+  "pageButtonTitle": {
+    "message": "מילות שיר",
+    "description": "Lyrics button title"
+  },
+
+  "pageTipError": {
+    "message": "תקלה",
+    "description": "Load lyrics error tip"
+  },
+
+  "pageTipNoLyrics": {
+    "message": "אין מילות שיר",
+    "description": "No lyrics tip"
+  },
+
+  "pageTipLoading": {
+    "message": "טוען...",
+    "description": "Loading lyrics tip"
+  },
+
+  "pageTipWaiting": {
+    "message": "מחכה להפעלת השיר...",
+    "description": "Waiting for music tip"
+  },
+
+  "pageEditorOpenValid": {
+    "message": "בבקשה תפתח את מילות השיר",
+    "description": "Open LRC editor fail tip"
+  },
+
+  "pageEditorTitle": {
+    "message": "עורך LRC",
+    "description": "LRC editor title"
+  },
+
+  "pageEditorSearch": {
+    "message": "חפש מילות שיר",
+    "description": "Search lyrics tip"
+  },
+
+  "pageEditorPlaybackRate": {
+    "message": "קצב השמעה",
+    "description": "Audio playback rate"
+  },
+  
+  "pageEditorOffset": {
+    "message": "היסט כללי",
+    "description": "Lyrics offset lable"
+  },
+  
+  "pageEditorOffsetDetail": {
+    "message": "הסט ב-0.1ש",
+    "description": "Lyrics offset button title"
+  },
+  
+  "pageEditorClearAll": {
+    "message": "נקה הכל",
+    "description": "Cleaer all lyrics"
+  },
+
+
+  "pageEditorSeek": {
+    "message": "הבא",
+    "description": "Track seek tip"
+  },
+
+  "pageEditorAddLyrics1": {
+    "message": "הדבק או",
+    "description": "Paste or upload lyrics"
+  },
+
+  "pageEditorAddLyrics2": {
+    "message": "העלה",
+    "description": "Paste or upload lyrics"
+  },
+
+  "pageEditorAddLyrics3": {
+    "message": "מילות שיר",
+    "description": "Paste or upload lyrics"
+  },
+
+  "pageEditorMarkLine": {
+    "message": "סמן קו",
+    "description": "Mark line"
+  },
+
+  "pageEditorInsetLine": {
+    "message": "הכנס קו",
+    "description": "Inset line"
+  },
+
+  "pageEditorReset": {
+    "message": "אפס",
+    "description": "Reset remote and local lyrics"
+  },
+
+  "pageEditorDownload": {
+    "message": "הורד",
+    "description": "Download lyrics"
+  },
+
+  "pageEditorSave": {
+    "message": "שמור",
+    "description": "Save lyrics"
+  },
+
+  "pageEditorSaveValid": {
+    "message": "נא הוסף חותמת זמן לכל שורת טקסט",
+    "description": "Save lyrics valid tip"
+  }
+}
