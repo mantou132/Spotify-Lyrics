@@ -1,6 +1,6 @@
 import { Message, Event, isProd } from '../common/consts';
 
-const Kuroshiro = require("kuroshiro");
+const Kuroshiro = require('kuroshiro');
 
 export function raw(arr: TemplateStringsArray, ...args: any[]) {
   return arr.reduce((prev, current, index) => prev + (args[index - 1] || '') + current);

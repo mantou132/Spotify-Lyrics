@@ -2,9 +2,6 @@ import { Event } from '../common/consts';
 import { PopupStore } from '../popup/store';
 // import { kuroshiro } from './utils'
 
-const Kuroshiro = require("kuroshiro");
-const KuromojiAnalyzer = require("kuroshiro-analyzer-kuromoji");
-
 import {
   drawText,
   drawBackground,
@@ -19,6 +16,9 @@ import { optionsPromise, OptionsAndI18n } from './options';
 import { appendStyle } from './utils';
 import { localConfig } from './config';
 import { getFPS } from './fps';
+
+const KuromojiAnalyzer = require('kuroshiro-analyzer-kuromoji');
+const Kuroshiro = require('kuroshiro');
 
 import './observer';
 

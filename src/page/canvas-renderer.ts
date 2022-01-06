@@ -69,7 +69,7 @@ function drawParagraph(ctx: CanvasRenderingContext2D, str = '', options: Options
     const mea = ctx.measureText(line);
     const isSpace = /\s/.test(word);
     const isNewLine = word == RomanjiIdentifier;
-    if (mea.width > maxWidth && tempLine && !isSpace || isNewLine) {
+    if ((mea.width > maxWidth && tempLine && !isSpace) || isNewLine) {
       actualWidth = Math.max(actualWidth, textMeasures.width);
       lines.push(tempLine);
       measures.push(textMeasures);
