@@ -6,6 +6,8 @@ export const VERSION = process.env.VERSION || 'UNKNOWN';
 export const isProd = process.env.NODE_ENV === 'production';
 export const isWebApp = location.protocol.startsWith('http');
 
+export const RomanjiIdentifier = '$RMJ$';
+
 export interface Message<T = any> {
   type: Event;
   data?: T;

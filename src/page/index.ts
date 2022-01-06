@@ -1,5 +1,9 @@
 import { Event } from '../common/consts';
 import { PopupStore } from '../popup/store';
+// import { kuroshiro } from './utils'
+
+const Kuroshiro = require("kuroshiro");
+const KuromojiAnalyzer = require("kuroshiro-analyzer-kuromoji");
 
 import {
   drawText,
@@ -20,6 +24,11 @@ import './observer';
 
 const tick = async (options: OptionsAndI18n) => {
   const audio = await audioPromise;
+  console.log(Kuroshiro);
+  const kuroshiro = new Kuroshiro();
+  await kuroshiro.init(new KuromojiAnalyzer());
+  console.log('kuroshiro loaded');
+
   const i18nMap = options.i18nMap;
 
   const isOnlyCover = options['only-cover'] === 'on';

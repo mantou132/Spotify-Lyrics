@@ -1,6 +1,6 @@
 import { sify, tify } from 'chinese-conv';
 
-import { isProd } from '../common/consts';
+import { isProd, RomanjiIdentifier } from '../common/consts';
 
 import config from './config';
 import { request } from './request';
@@ -389,6 +389,16 @@ function capitalize(s: string) {
   return s.replace(/^(\w)/, ($1) => $1.toUpperCase());
 }
 
+function hasJapanese(s: string): boolean {
+  const jpReg = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf]/g;
+  return jpReg.test(s);
+}
+
+function hasKorean(s: string): boolean {
+  const krReg = /[\u3131-\uD79D]/g;
+  return krReg.test(s);
+}
+
 export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) {
   if (!lyricStr) return null;
   const otherInfoKeys = [
@@ -415,6 +425,9 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
         text = capitalize(normalize(text, false));
         text = sify(text).replace(/\.|,|\?|!|;$/u, '');
       }
+
+      text += ` ${RomanjiIdentifier}romanji example`;
+
       if (!matchResult.length && options.keepPlainText) {
         return [new Line(text)];
       }

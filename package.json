@@ -6,7 +6,7 @@
     "lint": "tsc --noEmit && eslint --ext .ts --fix src/",
     "test": "jest",
     "serve": "web-ext --config web-ext.config.js run --start-url open.spotify.com",
-    "serve:chromium": "yarn run serve -- -t chromium",
+    "serve:chromium": "yarn run serve -- -t firefox-desktop",
     "watch": "webpack --watch",
     "start": "concurrently npm:watch npm:serve:chromium",
     "test:matchrate": "cross-env TEST=matchrate concurrently npm:watch npm:serve:chromium",
@@ -24,6 +24,8 @@
     "@types/wicg-mediasession": "^1.0.4",
     "@webcomponents/webcomponentsjs": "^2.4.4",
     "chinese-conv": "^1.0.1",
+    "kuroshiro": "^1.2.0",
+    "kuroshiro-analyzer-kuromoji": "^1.1.0",
     "webextension-polyfill-ts": "^0.9.1"
   },
   "devDependencies": {
