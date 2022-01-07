@@ -5,4 +5,7 @@ module.exports = {
   build: {
     overwriteDest: true,
   },
+  run: {
+    firefox: 'C:\\Program Files\\Mozilla Firefox\\firefox.exe'
+  }
 };

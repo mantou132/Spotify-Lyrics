@@ -19,14 +19,15 @@ import { getFPS } from './fps';
 
 const KuromojiAnalyzer = require('kuroshiro-analyzer-kuromoji');
 const Kuroshiro = require('kuroshiro');
+// import Kuroshiro from 'kuroshiro'
 
 import './observer';
 
 const tick = async (options: OptionsAndI18n) => {
   const audio = await audioPromise;
-  console.log(Kuroshiro);
-  const kuroshiro = new Kuroshiro();
-  await kuroshiro.init(new KuromojiAnalyzer());
+  
+  const kuroshiro = new Kuroshiro.default;
+  await kuroshiro.init(new KuromojiAnalyzer.default);
   console.log('kuroshiro loaded');
 
   const i18nMap = options.i18nMap;
