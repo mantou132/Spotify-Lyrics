@@ -25,9 +25,9 @@ import './observer';
 
 const tick = async (options: OptionsAndI18n) => {
   const audio = await audioPromise;
-  
-  const kuroshiro = new Kuroshiro.default;
-  await kuroshiro.init(new KuromojiAnalyzer.default);
+
+  const kuroshiro = new Kuroshiro.default();
+  await kuroshiro.init(new KuromojiAnalyzer.default());
   console.log('kuroshiro loaded');
 
   const i18nMap = options.i18nMap;
