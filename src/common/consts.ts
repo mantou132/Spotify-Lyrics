@@ -25,6 +25,7 @@ export enum Event {
   CAPTURE_EXCEPTION = 'capture-exception',
   SEND_REQUEST = 'send-request',
   SEND_RESPONSE = 'send-response',
+  GET_EXTURL = 'get-extension-url'
 }
 
 export const ContextItems = {

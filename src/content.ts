@@ -6,6 +6,15 @@ browser.runtime.onMessage.addListener((msg: Message) => {
   window.postMessage(msg, '*');
 });
 
+window.postMessage({ type: Event.GET_EXTURL, data: browser.runtime.getURL('dict') }, '*');
+
+function logTabs(windowInfo: any) {
+  for (let tabInfo of windowInfo.tabs) {
+    console.log(tabInfo.url);
+  }
+}
+
+
 window.addEventListener('message', ({ data }) => {
   const { type } = data || {};
   if (type === Event.GET_OPTIONS) {
@@ -39,6 +48,7 @@ if (!isProd || browser.runtime.getURL('').startsWith('moz')) {
 } else {
   script.textContent = __webpackReplaceWithChunk__('page');
 }
+
 // "run_at": "document_start"
 // The head element may not exist
 document.documentElement.append(script);
