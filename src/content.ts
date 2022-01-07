@@ -9,11 +9,10 @@ browser.runtime.onMessage.addListener((msg: Message) => {
 window.postMessage({ type: Event.GET_EXTURL, data: browser.runtime.getURL('dict') }, '*');
 
 function logTabs(windowInfo: any) {
-  for (let tabInfo of windowInfo.tabs) {
+  for (const tabInfo of windowInfo.tabs) {
     console.log(tabInfo.url);
   }
 }
-
 
 window.addEventListener('message', ({ data }) => {
   const { type } = data || {};
