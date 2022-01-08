@@ -24,6 +24,7 @@
     "@sentry/browser": "^5.25.0",
     "@types/wicg-mediasession": "^1.0.4",
     "@webcomponents/webcomponentsjs": "^2.4.4",
+    "aromanize": "^0.1.5",
     "chinese-conv": "^1.0.1",
     "kuroshiro": "^1.2.0",
     "kuroshiro-analyzer-kuromoji": "https://github.com/siegrainwong/kuroshiro-analyzer-kuromoji.git",

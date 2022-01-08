@@ -2,6 +2,7 @@ import { Message, Event, isProd } from '../common/consts';
 
 const KuromojiAnalyzer = require('kuroshiro-analyzer-kuromoji');
 const Kuroshiro = require('kuroshiro');
+const Aromanize = require("aromanize");
 
 export function raw(arr: TemplateStringsArray, ...args: any[]) {
   return arr.reduce((prev, current, index) => prev + (args[index - 1] || '') + current);
@@ -22,15 +23,16 @@ window.addEventListener('message', async ({ data }: MessageEvent) => {
     kuroshiro = new Kuroshiro.default();
     await kuroshiro.init(new KuromojiAnalyzer.default({ dictPath: url }));
 
-    const content = '这个是中文 and レミリア最高！';
+    // const content = '안녕하세요 and レミリア最高！';
 
-    console.log(await jpToRomanji(content));
+    // console.debug('kuromoji test: ', await jpToRomanji(content));
+    // console.debug('aromanize test: ', krToRomaji(content));
   }
 });
 
 export async function jpToRomanji(source: string): Promise<string> {
   if (!kuroshiro) throw new Error('kuroshiro is not loaded!');
-  if (!kutil.hasJapanese(source)) return source;
+  if (!hasJapanese(source)) return source;
   let result = '';
   [...source].map((c, i) => {
     result += c;
@@ -42,8 +44,36 @@ export async function jpToRomanji(source: string): Promise<string> {
   return await kuroshiro.convert(result, { to: 'romaji' });
 }
 
+export function krToRomaji(source: string): string {
+  if (!Aromanize) throw new Error('Aromanize is not loaded!');
+  if (!hasKorean(source)) return source;
+  let result = '';
+  [...source].map((c, i) => {
+    result += c;
+    const next = source.charAt(i + 1);
+    if (isKorean(c) && isKorean(next)) {
+      result += source.lastIndexOf(c) == source.length - 1 ? '' : ' ';
+    }
+  });
+  return Aromanize.romanize(result);
+}
+
 export function getSVGDataUrl(s: string) {
   return `data:image/svg+xml,${encodeURIComponent(s)}`;
+}
+
+export function hasJapanese(s: string): boolean {
+  return (kutil.hasHiragana(s) || kutil.hasKatakana(s)) && kutil.hasJapanese(s);
+}
+
+export function hasKorean(s: string): boolean {
+  const krReg = /[\u3130-\u318F\uAC00-\uD7AF]/g;
+  return krReg.test(s);
+}
+
+function isKorean(s: string): boolean {
+  const krReg = /^[\u3130-\u318F\uAC00-\uD7AF]{1}$/g;
+  return krReg.test(s);
 }
 
 /**

@@ -4,7 +4,7 @@ import { isProd, RomanjiIdentifier } from '../common/consts';
 
 import config from './config';
 import { request } from './request';
-import { captureException } from './utils';
+import { captureException, hasJapanese, hasKorean, krToRomaji, jpToRomanji } from './utils';
 
 export interface Query {
   name: string;
@@ -389,17 +389,17 @@ function capitalize(s: string) {
   return s.replace(/^(\w)/, ($1) => $1.toUpperCase());
 }
 
-function hasJapanese(s: string): boolean {
-  const jpReg = /[\u3000-\u303f\u3040-\u309f\u30a0-\u30ff\uff00-\uff9f\u4e00-\u9faf\u3400-\u4dbf]/g;
-  return jpReg.test(s);
+async function getRomaji(source: string): Promise<string>{
+  var romaji = ''; 
+  if (hasKorean(source))
+    romaji = krToRomaji(source);
+  else if (hasJapanese(source))
+    romaji = await jpToRomanji(source);
+
+  return romaji.length ? `${source} ${RomanjiIdentifier}${romaji}` : source;
 }
 
-function hasKorean(s: string): boolean {
-  const krReg = /[\u3131-\uD79D]/g;
-  return krReg.test(s);
-}
-
-export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) {
+export async function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) {
   if (!lyricStr) return null;
   const otherInfoKeys = [
     '作?\\s*词|作?\\s*曲|编\\s*曲?|监\\s*制?',
@@ -410,8 +410,8 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
   const otherInfoRegexp = new RegExp(`^(${otherInfoKeys.join('|')}).*(:|：)`, 'i');
 
   const lines = lyricStr.split(/\r?\n/).map((line) => line.trim());
-  const lyrics = lines
-    .map((line) => {
+  const lyricPromises = lines
+    .map(async (line) => {
       // ["[ar:Beyond]"]
       // ["[03:10]"]
       // ["[03:10]", "永远高唱我歌"]
@@ -426,7 +426,7 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
         text = sify(text).replace(/\.|,|\?|!|;$/u, '');
       }
 
-      text += ` ${RomanjiIdentifier}romanji example`;
+      text = await getRomaji(text);
 
       if (!matchResult.length && options.keepPlainText) {
         return [new Line(text)];
@@ -446,8 +446,11 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
         }
         return result;
       });
-    })
-    .flat()
+    });
+
+    var lyrics = await Promise.all(lyricPromises);
+
+    var result = lyrics.flat()
     .sort((a, b) => {
       if (a.startTime === null) {
         return 0;
@@ -467,7 +470,7 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
       return true;
     });
 
-  return lyrics.length ? lyrics : null;
+  return result.length ? result : null;
 }
 
 export function correctionLyrics(lyrics: Lyric, str: string) {
