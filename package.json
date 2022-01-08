@@ -26,7 +26,7 @@
     "@webcomponents/webcomponentsjs": "^2.4.4",
     "chinese-conv": "^1.0.1",
     "kuroshiro": "^1.2.0",
-    "kuroshiro-analyzer-kuromoji": "^1.1.0",
+    "kuroshiro-analyzer-kuromoji": "https://github.com/siegrainwong/kuroshiro-analyzer-kuromoji.git",
     "webextension-polyfill-ts": "^0.9.1"
   },
   "devDependencies": {

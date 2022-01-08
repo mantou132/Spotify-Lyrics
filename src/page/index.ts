@@ -1,6 +1,5 @@
 import { Event } from '../common/consts';
 import { PopupStore } from '../popup/store';
-
 import {
   drawText,
   drawBackground,
@@ -16,27 +15,7 @@ import { appendStyle } from './utils';
 import { localConfig } from './config';
 import { getFPS } from './fps';
 
-declare let window: any;
-const KuromojiAnalyzer = require('kuroshiro-analyzer-kuromoji');
-const Kuroshiro = require('kuroshiro');
-
 import './observer';
-
-window.addEventListener('message', async ({ data }: MessageEvent) => {
-  const { type } = data || {};
-  if (type === Event.GET_EXTURL) {
-    const url = data.data as string;
-
-    const kuroshiro = new Kuroshiro.default();
-    await kuroshiro.init(new KuromojiAnalyzer.default({ dictPath: url }));
-
-    const content = '感じ取れたら手を繋ごう、重なるのは人生のライン and レミリア最高！'
-      .split('')
-      .join(' ');
-
-    console.log(await kuroshiro.convert(content, { to: 'romaji' }));
-  }
-});
 
 const tick = async (options: OptionsAndI18n) => {
   const audio = await audioPromise;

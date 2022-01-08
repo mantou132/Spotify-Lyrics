@@ -1,5 +1,5 @@
 import { Message, Event, isProd } from '../common/consts';
-
+const KuromojiAnalyzer = require('kuroshiro-analyzer-kuromoji');
 const Kuroshiro = require('kuroshiro');
 
 export function raw(arr: TemplateStringsArray, ...args: any[]) {
@@ -8,6 +8,38 @@ export function raw(arr: TemplateStringsArray, ...args: any[]) {
 export const svg = raw;
 export const html = raw;
 export const css = raw;
+
+export const kutil = Kuroshiro.default.Util;
+
+// initialize kuroshiro
+let kuroshiro: any;
+window.addEventListener('message', async ({ data }: MessageEvent) => {
+  const { type } = data || {};
+  if (type === Event.GET_EXTURL) {
+    const url = data.data as string;
+
+    kuroshiro = new Kuroshiro.default();
+    await kuroshiro.init(new KuromojiAnalyzer.default({ dictPath: url }));
+
+    const content = '这个是中文 and レミリア最高！';
+
+    console.log(await jpToRomanji(content));
+  }
+});
+
+export async function jpToRomanji(source: string): Promise<string> {
+  if (!kuroshiro) throw new Error('kuroshiro is not loaded!');
+  if (!kutil.hasJapanese(source)) return source;
+  let result = '';
+  [...source].map((c, i) => {
+    result += c;
+    const next = source.charAt(i + 1);
+    if (kutil.isJapanese(c) && kutil.isJapanese(next)) {
+      result += (source.lastIndexOf(c) == source.length - 1 ? '' : ' ');
+    }
+  })
+  return await kuroshiro.convert(result, {to: 'romaji'});
+}
 
 export function getSVGDataUrl(s: string) {
   return `data:image/svg+xml,${encodeURIComponent(s)}`;

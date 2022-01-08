@@ -5727,21 +5727,19 @@ kleur@^3.0.3:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
-kuromoji@^0.1.1:
+"kuromoji@https://github.com/siegrainwong/kuromoji.js.git":
   version "0.1.2"
-  resolved "https://registry.yarnpkg.com/kuromoji/-/kuromoji-0.1.2.tgz#293f0d6706df006112137980588d5daac26d0790"
-  integrity sha512-V0dUf+C2LpcPEXhoHLMAop/bOht16Dyr+mDiIE39yX3vqau7p80De/koFqpiTcL1zzdZlc3xuHZ8u5gjYRfFaQ==
+  resolved "https://github.com/siegrainwong/kuromoji.js.git#b0b438e56462cb6a46996c1e3daa8d629fd2a4e9"
   dependencies:
     async "^2.0.1"
     doublearray "0.0.2"
     zlibjs "^0.3.1"
 
-kuroshiro-analyzer-kuromoji@^1.1.0:
+"kuroshiro-analyzer-kuromoji@https://github.com/siegrainwong/kuroshiro-analyzer-kuromoji.git":
   version "1.1.0"
-  resolved "https://registry.yarnpkg.com/kuroshiro-analyzer-kuromoji/-/kuroshiro-analyzer-kuromoji-1.1.0.tgz#c4b1715d92896e02ccd89194d31910f8b1c109d2"
-  integrity sha512-BSJFhpsQdPwfFLfjKxfLA9iL+/PC6LCR9vgwgb5Jc7jZwk9ilX8SAV6CwhAQZY611tiuhbB52ONYKDO8hgY1bA==
+  resolved "https://github.com/siegrainwong/kuroshiro-analyzer-kuromoji.git#70c5150268c88bd259a4c509348c3d425e1a6195"
   dependencies:
-    kuromoji "^0.1.1"
+    kuromoji "https://github.com/siegrainwong/kuromoji.js.git"
 
 kuroshiro@^1.2.0:
   version "1.2.0"
