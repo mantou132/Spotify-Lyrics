@@ -1,4 +1,5 @@
 import { Message, Event, isProd } from '../common/consts';
+import { tify } from 'chinese-conv';
 
 const KuromojiAnalyzer = require('kuroshiro-analyzer-kuromoji');
 const Kuroshiro = require('kuroshiro');
@@ -23,25 +24,17 @@ window.addEventListener('message', async ({ data }: MessageEvent) => {
     kuroshiro = new Kuroshiro.default();
     await kuroshiro.init(new KuromojiAnalyzer.default({ dictPath: url }));
 
-    // const content = '안녕하세요 and レミリア最高！';
+    const content = '本当の夢のカタチに気づく';
 
-    // console.debug('kuromoji test: ', await jpToRomanji(content));
-    // console.debug('aromanize test: ', krToRomaji(content));
+    console.debug('kuromoji test: ', await jpToRomanji(content));
+    console.debug('aromanize test: ', krToRomaji(content));
   }
 });
 
 export async function jpToRomanji(source: string): Promise<string> {
   if (!kuroshiro) throw new Error('kuroshiro is not loaded!');
   if (!hasJapanese(source)) return source;
-  let result = '';
-  [...source].map((c, i) => {
-    result += c;
-    const next = source.charAt(i + 1);
-    if (kutil.isJapanese(c) && kutil.isJapanese(next)) {
-      result += source.lastIndexOf(c) == source.length - 1 ? '' : ' ';
-    }
-  });
-  return await kuroshiro.convert(result, { to: 'romaji' });
+  return await kuroshiro.convert(source, { mode: 'spaced', to: 'romaji' });
 }
 
 export function krToRomaji(source: string): string {

@@ -420,14 +420,16 @@ export async function parseLyrics(lyricStr: string, options: ParseLyricsOptions 
     if (textIndex > -1) {
       text = matchResult.splice(textIndex, 1)[0];
       text = capitalize(normalize(text, false));
-      text = sify(text).replace(/\.|,|\?|!|;$/u, '');
+      // can't simplified here cause it will impact jp to romaji translation.
+      if (!hasJapanese(text))
+        text = sify(text).replace(/\.|,|\?|!|;$/u, '');
     }
-
-    text = await getRomaji(text);
 
     if (!matchResult.length && options.keepPlainText) {
       return [new Line(text)];
     }
+
+    text = await getRomaji(text);
     return matchResult.map((slice) => {
       const result = new Line();
       const matchResut = slice.match(/[^\[\]]+/g);
