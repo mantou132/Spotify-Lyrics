@@ -1,5 +1,6 @@
 import { Event } from '../common/consts';
 import { PopupStore } from '../popup/store';
+
 import {
   drawText,
   drawBackground,

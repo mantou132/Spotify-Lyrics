@@ -1,4 +1,5 @@
 import { Message, Event, isProd } from '../common/consts';
+
 const KuromojiAnalyzer = require('kuroshiro-analyzer-kuromoji');
 const Kuroshiro = require('kuroshiro');
 
@@ -35,10 +36,10 @@ export async function jpToRomanji(source: string): Promise<string> {
     result += c;
     const next = source.charAt(i + 1);
     if (kutil.isJapanese(c) && kutil.isJapanese(next)) {
-      result += (source.lastIndexOf(c) == source.length - 1 ? '' : ' ');
+      result += source.lastIndexOf(c) == source.length - 1 ? '' : ' ';
     }
-  })
-  return await kuroshiro.convert(result, {to: 'romaji'});
+  });
+  return await kuroshiro.convert(result, { to: 'romaji' });
 }
 
 export function getSVGDataUrl(s: string) {
