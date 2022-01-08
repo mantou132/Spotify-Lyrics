@@ -421,8 +421,7 @@ export async function parseLyrics(lyricStr: string, options: ParseLyricsOptions 
       text = matchResult.splice(textIndex, 1)[0];
       text = capitalize(normalize(text, false));
       // can't simplified here cause it will impact jp to romaji translation.
-      if (!hasJapanese(text))
-        text = sify(text).replace(/\.|,|\?|!|;$/u, '');
+      if (!hasJapanese(text)) text = sify(text).replace(/\.|,|\?|!|;$/u, '');
     }
 
     if (!matchResult.length && options.keepPlainText) {

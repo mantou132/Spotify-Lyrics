@@ -1,5 +1,6 @@
-import { Message, Event, isProd } from '../common/consts';
 import { tify } from 'chinese-conv';
+
+import { Message, Event, isProd } from '../common/consts';
 
 const KuromojiAnalyzer = require('kuroshiro-analyzer-kuromoji');
 const Kuroshiro = require('kuroshiro');
