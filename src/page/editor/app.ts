@@ -17,10 +17,10 @@ function removeEmptyLine(text: string) {
 
 async function initLyrics(text: string) {
   return (
-    await parseLyrics(removeEmptyLine(text), {
+    (await parseLyrics(removeEmptyLine(text), {
       cleanLyrics: true,
       keepPlainText: true,
-    }) || []
+    })) || []
   );
 }
 

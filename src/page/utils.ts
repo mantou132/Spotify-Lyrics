@@ -2,7 +2,7 @@ import { Message, Event, isProd } from '../common/consts';
 
 const KuromojiAnalyzer = require('kuroshiro-analyzer-kuromoji');
 const Kuroshiro = require('kuroshiro');
-const Aromanize = require("aromanize");
+const Aromanize = require('aromanize');
 
 export function raw(arr: TemplateStringsArray, ...args: any[]) {
   return arr.reduce((prev, current, index) => prev + (args[index - 1] || '') + current);

@@ -389,12 +389,10 @@ function capitalize(s: string) {
   return s.replace(/^(\w)/, ($1) => $1.toUpperCase());
 }
 
-async function getRomaji(source: string): Promise<string>{
-  var romaji = ''; 
-  if (hasKorean(source))
-    romaji = krToRomaji(source);
-  else if (hasJapanese(source))
-    romaji = await jpToRomanji(source);
+async function getRomaji(source: string): Promise<string> {
+  let romaji = '';
+  if (hasKorean(source)) romaji = krToRomaji(source);
+  else if (hasJapanese(source)) romaji = await jpToRomanji(source);
 
   return romaji.length ? `${source} ${RomanjiIdentifier}${romaji}` : source;
 }
@@ -410,47 +408,47 @@ export async function parseLyrics(lyricStr: string, options: ParseLyricsOptions 
   const otherInfoRegexp = new RegExp(`^(${otherInfoKeys.join('|')}).*(:|：)`, 'i');
 
   const lines = lyricStr.split(/\r?\n/).map((line) => line.trim());
-  const lyricPromises = lines
-    .map(async (line) => {
-      // ["[ar:Beyond]"]
-      // ["[03:10]"]
-      // ["[03:10]", "永远高唱我歌"]
-      // ["永远高唱我歌"]
-      // ["[03:10]", "[03:10]", "永远高唱我歌"]
-      const matchResult = line.match(/(\[.*?\])|([^\[\]]+)/g) || [line];
-      const textIndex = matchResult.findIndex((slice) => !slice.endsWith(']'));
-      let text = '';
-      if (textIndex > -1) {
-        text = matchResult.splice(textIndex, 1)[0];
-        text = capitalize(normalize(text, false));
-        text = sify(text).replace(/\.|,|\?|!|;$/u, '');
-      }
+  const lyricPromises = lines.map(async (line) => {
+    // ["[ar:Beyond]"]
+    // ["[03:10]"]
+    // ["[03:10]", "永远高唱我歌"]
+    // ["永远高唱我歌"]
+    // ["[03:10]", "[03:10]", "永远高唱我歌"]
+    const matchResult = line.match(/(\[.*?\])|([^\[\]]+)/g) || [line];
+    const textIndex = matchResult.findIndex((slice) => !slice.endsWith(']'));
+    let text = '';
+    if (textIndex > -1) {
+      text = matchResult.splice(textIndex, 1)[0];
+      text = capitalize(normalize(text, false));
+      text = sify(text).replace(/\.|,|\?|!|;$/u, '');
+    }
 
-      text = await getRomaji(text);
+    text = await getRomaji(text);
 
-      if (!matchResult.length && options.keepPlainText) {
-        return [new Line(text)];
-      }
-      return matchResult.map((slice) => {
-        const result = new Line();
-        const matchResut = slice.match(/[^\[\]]+/g);
-        const [key, value] = matchResut?.[0].split(':') || [];
-        const [min, sec] = [parseFloat(key), parseFloat(value)];
-        if (!isNaN(min)) {
-          if (!options.cleanLyrics || !otherInfoRegexp.test(text)) {
-            result.startTime = min * 60 + sec;
-            result.text = options.useTChinese ? tify(text) : text;
-          }
-        } else if (!options.cleanLyrics && key && value) {
-          result.text = `${key.toUpperCase()}: ${value}`;
+    if (!matchResult.length && options.keepPlainText) {
+      return [new Line(text)];
+    }
+    return matchResult.map((slice) => {
+      const result = new Line();
+      const matchResut = slice.match(/[^\[\]]+/g);
+      const [key, value] = matchResut?.[0].split(':') || [];
+      const [min, sec] = [parseFloat(key), parseFloat(value)];
+      if (!isNaN(min)) {
+        if (!options.cleanLyrics || !otherInfoRegexp.test(text)) {
+          result.startTime = min * 60 + sec;
+          result.text = options.useTChinese ? tify(text) : text;
         }
-        return result;
-      });
+      } else if (!options.cleanLyrics && key && value) {
+        result.text = `${key.toUpperCase()}: ${value}`;
+      }
+      return result;
     });
+  });
 
-    var lyrics = await Promise.all(lyricPromises);
+  const lyrics = await Promise.all(lyricPromises);
 
-    var result = lyrics.flat()
+  const result = lyrics
+    .flat()
     .sort((a, b) => {
       if (a.startTime === null) {
         return 0;
