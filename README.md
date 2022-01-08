@@ -3,7 +3,9 @@
 # Spotify Lyrics
 
 ## Siegrain update
+
 Add romaji support for Japanese and Korean lyrics.
+
 ![romaji-jp-support](./screenshot/romaji-jp.jpg)
 ![romaji-kr-support](./screenshot/romaji-kr.jpg)
 
