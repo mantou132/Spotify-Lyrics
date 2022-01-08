@@ -25,10 +25,10 @@ window.addEventListener('message', async ({ data }: MessageEvent) => {
     kuroshiro = new Kuroshiro.default();
     await kuroshiro.init(new KuromojiAnalyzer.default({ dictPath: url }));
 
-    const content = '本当の夢のカタチに気づく';
+    // const content = '本当の夢のカタチに気づく';
 
-    console.debug('kuromoji test: ', await jpToRomanji(content));
-    console.debug('aromanize test: ', krToRomaji(content));
+    // console.debug('kuromoji test: ', await jpToRomanji(content));
+    // console.debug('aromanize test: ', krToRomaji(content));
   }
 });
 
