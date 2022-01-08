@@ -11,7 +11,7 @@
     "watch": "webpack --watch",
     "start": "concurrently npm:watch npm:serve:firefox",
     "test:matchrate": "cross-env TEST=matchrate concurrently npm:watch npm:serve:chromium",
-    "release": "npx mantou132/release#web-ext -w public patch",
+    "release": "npx siegrainwong/release#web-ext -w public patch",
     "build": "cross-env NODE_ENV=production webpack",
     "start:firebase": "yarn --cwd functions run build && firebase emulators:start",
     "install": "yarn --cwd functions",
