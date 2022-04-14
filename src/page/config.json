@@ -10,7 +10,7 @@
   "TRACK_ARTIST_SELECTOR": "[role=contentinfo] > div:nth-child(2) > div:last-of-type",
   "BTN_WRAPPER_SELECTOR": "[role=contentinfo]",
   "BTN_LIKE_SELECTOR": "[role=contentinfo] > [class*=heart]",
-  "PIP_BTN_SELECTOR": "[role=contentinfo] button[data-testid*=pip], [data-testid=now-playing-bar] .ExtraControls > button[aria-label]",
+  "PIP_BTN_SELECTOR": "[role=contentinfo] button[data-testid*=pip], [data-testid=now-playing-bar] > div > div:last-of-type > div > button[aria-label]",
   "AUDIO_SELECTOR": "NONE",
   "YOUTUBE": {
     "LOGGED_MARK_SELECTOR": "ytmusic-settings-button",
