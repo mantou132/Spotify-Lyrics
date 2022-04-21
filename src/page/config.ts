@@ -7,9 +7,6 @@ import config from './config.json';
 import { request } from './request';
 import { css, svg, getSVGDataUrl } from './utils';
 
-const REMOTE_URL =
-  'https://raw.githubusercontent.com/mantou132/Spotify-Lyrics/master/src/page/config.json';
-
 // Identify platform
 // Identify the platform, the platform should be the same as in config.json
 export const currentPlatform: Platform = (() => {
@@ -25,7 +22,9 @@ async function getConfig() {
   let result = config;
   if (isProd) {
     try {
-      result = await request(REMOTE_URL);
+      result = await request(
+        `https://raw.githubusercontent.com/mantou132/Spotify-Lyrics/master/src/page/config.json?t=${Date.now()}`,
+      );
     } catch {}
   }
   return currentPlatform === 'SPOTIFY' ? result : Object.assign(result, result[currentPlatform]);
