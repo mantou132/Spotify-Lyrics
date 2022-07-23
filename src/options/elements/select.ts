@@ -46,6 +46,8 @@ export class Select extends GemElement {
           position: relative;
         }
         select {
+          outline: none;
+          color: currentColor;
           -moz-appearance: none;
           -webkit-appearance: none;
           appearance: none;

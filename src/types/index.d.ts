@@ -29,12 +29,8 @@ interface FontMetadata {
   postscriptName: string;
 }
 
-interface FontManager {
-  query: () => AsyncIterable<FontMetadata>;
-}
-
-interface Navigator {
-  fonts: FontManager;
+interface Window {
+  queryLocalFonts: () => Promise<FontMetadata[]>;
 }
 
 declare module '*.jpg' {

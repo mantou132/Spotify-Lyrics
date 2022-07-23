@@ -127,10 +127,15 @@ export const localConfig: LocalConfig = (() => {
     return {
       SERVICE_WORKER: '',
       STATIC_STYLE: css`
-        nav .web-navigation__native-upsell,
-        .web-navigation .upsell-banner,
         .web-chrome-playback-lcd__platter--preview,
-        footer.dt-footer {
+        /* logo */
+        .web-navigation__logo-container,
+        /* nav native links */
+        nav .web-navigation__native-upsell,
+        /* page footer */
+        footer.dt-footer,
+        /* footer banner */
+        cwc-music-upsell-banner-web {
           display: none;
         }
         .${LYRICS_CLASSNAME} svg path {
@@ -140,12 +145,12 @@ export const localConfig: LocalConfig = (() => {
           background: transparent !important;
         }
         .${LYRICS_CLASSNAME} svg {
-          background: var(--labelSecondary);
+          background: var(--systemSecondary);
           -webkit-mask: url(${microphoneIconUrl}) center / 65% no-repeat;
           mask: url(${microphoneIconUrl}) center / 65% no-repeat;
         }
         .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} svg {
-          background: var(--primaryColor);
+          background: var(--playerPlatterButtonBGFill);
         }
       `,
       NO_PIP_STYLE: '',
@@ -177,8 +182,8 @@ export const localConfig: LocalConfig = (() => {
     return {
       SERVICE_WORKER: 'https://open.spotify.com/service-worker.js',
       STATIC_STYLE: css`
-        /* not logged in */
-        [data-testid='cookie-notice'],
+        /* not logged in, cookie banner */
+        #onetrust-consent-sdk,
         /* webpage: download link */
         .Root__nav-bar div a[href*=download],
         /* webpage: logo */
