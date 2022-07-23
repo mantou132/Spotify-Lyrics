@@ -55,11 +55,8 @@ const domParser = new DOMParser();
 export async function fetchGeniusLyrics(songId: number, fetchOptions?: RequestInit) {
   try {
     const html = await request(
-      `https://cors-anywhere.herokuapp.com/https://genius.com/songs/${songId}`,
-      {
-        headers: { 'x-requested-with': location.origin },
-        ...fetchOptions,
-      },
+      `https://files.xianqiao.wang/https://genius.com/songs/${songId}`,
+      fetchOptions,
     );
     const doc = domParser.parseFromString(html, 'text/html');
     const lyricsEle = doc.querySelector('.lyrics') as HTMLElement | null;

@@ -127,6 +127,7 @@ export const localConfig: LocalConfig = (() => {
     return {
       SERVICE_WORKER: '',
       STATIC_STYLE: css`
+        /* preview tag */
         .web-chrome-playback-lcd__platter--preview,
         /* logo */
         .web-navigation__logo-container,
