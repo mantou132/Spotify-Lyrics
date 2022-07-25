@@ -2,6 +2,14 @@
 
 # Spotify Lyrics
 
+## Siegrain update
+
+Add romaji support for Japanese and Korean lyrics.
+
+![romaji-jp-support](./screenshot/romaji-jp.jpg)
+![romaji-kr-support](./screenshot/romaji-kr.jpg)
+
+---
 Install Extension:
 - Chrome/Chromium/Firefox: Download the zip on the [release](https://github.com/mantou132/Spotify-Lyrics/releases) page, and then load the extension on the extension management page of the browser. [reason](https://github.com/mantou132/Spotify-Lyrics/issues/68).
 - Safari(Soon)

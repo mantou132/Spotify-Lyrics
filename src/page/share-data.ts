@@ -92,7 +92,7 @@ export class SharedData {
         sendEvent(options.cid, events.noLyrics, { cd1: this.cd1, cd2: this.cd2 });
         this._lyrics = null;
       } else {
-        this._lyrics = parseLyrics(lyricsStr, {
+        this._lyrics = await parseLyrics(lyricsStr, {
           cleanLyrics: options['clean-lyrics'] === 'on',
           useTChinese: options['traditional-chinese-lyrics'] === 'on',
         });
@@ -136,14 +136,14 @@ export class SharedData {
     const reviewed = options['use-unreviewed-lyrics'] === 'on' || remoteData?.reviewed;
     const isSelf = remoteData?.user === options.cid;
     if (isSelf && remoteData?.lyric) {
-      this._lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
+      this._lyrics = await parseLyrics(remoteData.lyric, parseLyricsOptions);
       sendEvent(options.cid, events.useRemoteLyrics);
     } else if (isSelf && remoteData?.neteaseID) {
       this._id = remoteData.neteaseID;
       this._aId = this._id;
       await this.updateLyrics(fetchOptions);
     } else if (reviewed && remoteData?.lyric) {
-      this._lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
+      this._lyrics = await parseLyrics(remoteData.lyric, parseLyricsOptions);
       sendEvent(options.cid, events.useRemoteLyrics);
     } else {
       this._id = (reviewed ? remoteData?.neteaseID || id : id || remoteData?.neteaseID) || 0;

@@ -15,12 +15,12 @@ function removeEmptyLine(text: string) {
   return text.replace(/(\r?\n)\s*\1+/g, '$1');
 }
 
-function initLyrics(text: string) {
+async function initLyrics(text: string) {
   return (
-    parseLyrics(removeEmptyLine(text), {
+    (await parseLyrics(removeEmptyLine(text), {
       cleanLyrics: true,
       keepPlainText: true,
-    }) || []
+    })) || []
   );
 }
 
@@ -76,7 +76,7 @@ export class EditorApp extends GemElement<State> {
   }
 
   pasteHandler = async (e: ClipboardEvent) => {
-    const lyrics = initLyrics(e.clipboardData?.getData('text') || '');
+    const lyrics = await initLyrics(e.clipboardData?.getData('text') || '');
     this.resetLocal({ lyrics });
     sharedData.setLyrics(lyrics);
   };
@@ -116,7 +116,7 @@ export class EditorApp extends GemElement<State> {
     if (!file) return;
     const reader = new FileReader();
     reader.addEventListener('load', async (event) => {
-      const lyrics = initLyrics(event.target!.result as string);
+      const lyrics = await initLyrics(event.target!.result as string);
       this.resetLocal({ lyrics });
       sharedData.setLyrics(lyrics);
     });
@@ -189,7 +189,7 @@ export class EditorApp extends GemElement<State> {
       artists: sharedData.artists,
       lyric: '',
     });
-    const lyrics = initLyrics(sharedData.text);
+    const lyrics = await initLyrics(sharedData.text);
     this.resetLocal({ lyrics });
     sharedData.setLyrics(lyrics);
   };

@@ -1,17 +1,20 @@
-import { LyricsAlign } from '../common/consts';
+import { LyricsAlign, RomanjiIdentifier } from '../common/consts';
 
 import { Lyric } from './lyrics';
 
 // simple word segmentation rules
 export function getWords(str: string) {
-  const result: string[] = [];
+  let result: string[] = [];
   const words = str.split(
     /(\p{sc=Han}|\p{sc=Katakana}|\p{sc=Hiragana}|\p{sc=Hang}|\p{gc=Punctuation})|\s+/gu,
   );
   let tempWord = '';
   words.forEach((word = ' ') => {
     if (word) {
-      if (tempWord && /(“|')$/.test(tempWord) && word !== ' ') {
+      const romanji = word.match(/^\$RMJ\$|\w*\S/g);
+      if (romanji && romanji.length > 1) {
+        result = result.concat(romanji);
+      } else if (tempWord && /(“|')$/.test(tempWord) && word !== ' ') {
         // End of line not allowed
         tempWord += word;
       } else if (/(,|\.|\?|:|;|'|，|。|？|：|；|”)/.test(word) && tempWord !== ' ') {
@@ -65,11 +68,12 @@ function drawParagraph(ctx: CanvasRenderingContext2D, str = '', options: Options
     const line = tempLine + word;
     const mea = ctx.measureText(line);
     const isSpace = /\s/.test(word);
-    if (mea.width > maxWidth && tempLine && !isSpace) {
+    const isNewLine = word == RomanjiIdentifier;
+    if ((mea.width > maxWidth && tempLine && !isSpace) || isNewLine) {
       actualWidth = Math.max(actualWidth, textMeasures.width);
       lines.push(tempLine);
       measures.push(textMeasures);
-      tempLine = word;
+      tempLine = isNewLine ? '' : word;
     } else {
       tempLine = line;
       if (!isSpace) {

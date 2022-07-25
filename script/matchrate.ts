@@ -313,7 +313,7 @@ window.addEventListener('load', async () => {
             data[location.pathname].noMatch++;
             data[location.pathname].detail.push({ query, noMatch: true, noLyrics: false });
           } else {
-            const lyrics = parseLyrics(await fetchLyric(id));
+            const lyrics = await parseLyrics(await fetchLyric(id));
             if (lyrics?.length) {
               data[location.pathname].success++;
               data[location.pathname].detail.push({ query, noMatch: false, noLyrics: false });

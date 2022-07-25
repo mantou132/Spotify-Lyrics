@@ -1,10 +1,10 @@
 import { sify, tify } from 'chinese-conv';
 
-import { isProd } from '../common/consts';
+import { isProd, RomanjiIdentifier } from '../common/consts';
 
 import config from './config';
 import { request } from './request';
-import { captureException } from './utils';
+import { captureException, hasJapanese, hasKorean, krToRomaji, jpToRomanji } from './utils';
 
 export interface Query {
   name: string;
@@ -389,7 +389,15 @@ function capitalize(s: string) {
   return s.replace(/^(\w)/, ($1) => $1.toUpperCase());
 }
 
-export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) {
+async function getRomaji(source: string): Promise<string> {
+  let romaji = '';
+  if (hasKorean(source)) romaji = krToRomaji(source);
+  else if (hasJapanese(source)) romaji = await jpToRomanji(source);
+
+  return romaji.length ? `${source} ${RomanjiIdentifier}${romaji}` : source;
+}
+
+export async function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) {
   if (!lyricStr) return null;
   const otherInfoKeys = [
     '作?\\s*词|作?\\s*曲|编\\s*曲?|监\\s*制?',
@@ -400,40 +408,47 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
   const otherInfoRegexp = new RegExp(`^(${otherInfoKeys.join('|')}).*(:|：)`, 'i');
 
   const lines = lyricStr.split(/\r?\n/).map((line) => line.trim());
-  const lyrics = lines
-    .map((line) => {
-      // ["[ar:Beyond]"]
-      // ["[03:10]"]
-      // ["[03:10]", "永远高唱我歌"]
-      // ["永远高唱我歌"]
-      // ["[03:10]", "[03:10]", "永远高唱我歌"]
-      const matchResult = line.match(/(\[.*?\])|([^\[\]]+)/g) || [line];
-      const textIndex = matchResult.findIndex((slice) => !slice.endsWith(']'));
-      let text = '';
-      if (textIndex > -1) {
-        text = matchResult.splice(textIndex, 1)[0];
-        text = capitalize(normalize(text, false));
-        text = sify(text).replace(/\.|,|\?|!|;$/u, '');
-      }
-      if (!matchResult.length && options.keepPlainText) {
-        return [new Line(text)];
-      }
-      return matchResult.map((slice) => {
-        const result = new Line();
-        const matchResut = slice.match(/[^\[\]]+/g);
-        const [key, value] = matchResut?.[0].split(':') || [];
-        const [min, sec] = [parseFloat(key), parseFloat(value)];
-        if (!isNaN(min)) {
-          if (!options.cleanLyrics || !otherInfoRegexp.test(text)) {
-            result.startTime = min * 60 + sec;
-            result.text = options.useTChinese ? tify(text) : text;
-          }
-        } else if (!options.cleanLyrics && key && value) {
-          result.text = `${key.toUpperCase()}: ${value}`;
+  const lyricPromises = lines.map(async (line) => {
+    // ["[ar:Beyond]"]
+    // ["[03:10]"]
+    // ["[03:10]", "永远高唱我歌"]
+    // ["永远高唱我歌"]
+    // ["[03:10]", "[03:10]", "永远高唱我歌"]
+    const matchResult = line.match(/(\[.*?\])|([^\[\]]+)/g) || [line];
+    const textIndex = matchResult.findIndex((slice) => !slice.endsWith(']'));
+    let text = '';
+    if (textIndex > -1) {
+      text = matchResult.splice(textIndex, 1)[0];
+      text = capitalize(normalize(text, false));
+      // can't simplified here cause it will impact jp to romaji translation.
+      if (!hasJapanese(text)) text = sify(text).replace(/\.|,|\?|!|;$/u, '');
+    }
+
+    if (!matchResult.length && options.keepPlainText) {
+      return [new Line(text)];
+    }
+
+    text = await getRomaji(text);
+    return matchResult.map((slice) => {
+      const result = new Line();
+      const matchResut = slice.match(/[^\[\]]+/g);
+      const [key, value] = matchResut?.[0].split(':') || [];
+      const [min, sec] = [parseFloat(key), parseFloat(value)];
+      if (!isNaN(min)) {
+        if (!options.cleanLyrics || !otherInfoRegexp.test(text)) {
+          result.startTime = min * 60 + sec;
+          result.text = options.useTChinese ? tify(text) : text;
         }
-        return result;
-      });
-    })
+      } else if (!options.cleanLyrics && key && value) {
+        result.text = `${key.toUpperCase()}: ${value}`;
+      }
+      return result;
+    });
+  });
+
+  const lyrics = await Promise.all(lyricPromises);
+
+  const result = lyrics
     .flat()
     .sort((a, b) => {
       if (a.startTime === null) {
@@ -454,7 +469,7 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
       return true;
     });
 
-  return lyrics.length ? lyrics : null;
+  return result.length ? result : null;
 }
 
 export function correctionLyrics(lyrics: Lyric, str: string) {

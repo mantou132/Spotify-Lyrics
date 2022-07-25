@@ -20,6 +20,7 @@ import './observer';
 
 const tick = async (options: OptionsAndI18n) => {
   const audio = await audioPromise;
+
   const i18nMap = options.i18nMap;
 
   const isOnlyCover = options['only-cover'] === 'on';

@@ -6,9 +6,10 @@
     "lint": "tsc --noEmit && eslint --ext .ts --fix src/",
     "test": "jest",
     "serve": "web-ext --config web-ext.config.js run --start-url open.spotify.com",
+    "serve:firefox": "yarn run serve",
     "serve:chromium": "yarn run serve -- -t chromium",
     "watch": "webpack --watch",
-    "start": "concurrently npm:watch npm:serve:chromium",
+    "start": "concurrently npm:watch npm:serve:firefox",
     "test:matchrate": "cross-env TEST=matchrate concurrently npm:watch npm:serve:chromium",
     "release": "npx mantou132/release#b4228eed684d0e4a23ecc333d416f4ea7b67a845 -w public patch",
     "build": "cross-env NODE_ENV=production webpack",
@@ -23,7 +24,10 @@
     "@sentry/browser": "^5.25.0",
     "@types/wicg-mediasession": "^1.0.4",
     "@webcomponents/webcomponentsjs": "^2.4.4",
+    "aromanize": "^0.1.5",
     "chinese-conv": "^1.0.1",
+    "kuroshiro": "^1.2.0",
+    "kuroshiro-analyzer-kuromoji": "https://github.com/siegrainwong/kuroshiro-analyzer-kuromoji.git",
     "webextension-polyfill-ts": "^0.9.1"
   },
   "devDependencies": {
