@@ -445,7 +445,11 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
       return a.startTime - b.startTime;
     })
     .filter(({ text }, index, arr) => {
-      if (index) {
+      if (index === 0) {
+        if (text === '') {
+          return false;
+        }
+      } else {
         const prevEle = arr[index - 1];
         if (prevEle.text === text && text === '') {
           return false;

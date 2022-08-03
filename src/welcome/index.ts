@@ -113,14 +113,15 @@ render(
       <details>
         <summary><h3>Error: Failed to fetch</h3></summary>
         <p>
-          The extension uses
+          The extension uses the agent
           <a href="https://firebase.google.com/products/functions" target="_blank"
             >Google Cloud Functions</a
           >, please make sure your network can access
-          <a href="https://us-central1-spotify-lyrics-ef482.cloudfunctions.net" target="_blank"
-            >https://us-central1-spotify-lyrics-ef482.cloudfunctions.net</a
-          >, if you need a proxy to access Google services, it is recommended to add
-          <code>cloudfunctions.net</code> to the whitelist.
+          <a
+            href="https://files.xianqiao.wang/https://us-central1-spotify-lyrics-ef482.cloudfunctions.net"
+            target="_blank"
+            >this url</a
+          >.
         </p>
       </details>
       <details>

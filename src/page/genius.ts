@@ -24,7 +24,7 @@ interface GeniusResponse<T> {
   response?: T;
 }
 
-const API_HOST = 'https://api.genius.com';
+const API_HOST = 'https://files.xianqiao.wang/https://api.genius.com';
 const TOKEN = 'jjffIV35KV6yy1XYK1lDAdOjVmQX7Pf4MApr2-1Kmw4Sh6gJilaFEDsmv3VkBiWA';
 
 export async function fetchSongList(q: string, fetchOptions?: RequestInit): Promise<Song[]> {

@@ -9,7 +9,8 @@ import { currentPlatform } from './config';
 import { request } from './request';
 
 // const API_HOST = 'http://localhost:5001/spotify-lyrics-ef482/us-central1';
-const API_HOST = 'https://us-central1-spotify-lyrics-ef482.cloudfunctions.net';
+const API_HOST =
+  'https://files.xianqiao.wang/https://us-central1-spotify-lyrics-ef482.cloudfunctions.net';
 
 async function fetchData(pathname: string, params: Lyric | Lyric[], fetchOptions?: RequestInit) {
   return await request(`${API_HOST}${pathname}`, {

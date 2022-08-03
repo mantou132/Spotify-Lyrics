@@ -33,7 +33,7 @@ export const ContextItems = {
 
 export const LyricsPositions = ['page', 'pip'] as const;
 export const LyricsAlign = ['left', 'center'] as const;
-export const LyricsFontFamily = ['spotify-circular', 'sans-serif', 'serif', 'cursive'] as const;
+export const LyricsFontFamily = ['CircularSp', 'Sans-Serif', 'Serif', 'Cursive'] as const;
 export interface Options {
   cid: string;
   'font-size': string;
