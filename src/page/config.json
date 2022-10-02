@@ -22,7 +22,7 @@
     "TRACK_NAME_SELECTOR": "ytmusic-player-bar .content-info-wrapper .title",
     "TRACK_ARTIST_SELECTOR": "ytmusic-player-bar .content-info-wrapper .subtitle yt-formatted-string > :first-child",
     "BTN_WRAPPER_SELECTOR": "ytmusic-player-bar ytmusic-like-button-renderer",
-    "BTN_LIKE_SELECTOR": "ytmusic-player-bar ytmusic-like-button-renderer tp-yt-paper-icon-button:last-child",
+    "BTN_LIKE_SELECTOR": "ytmusic-player-bar ytmusic-like-button-renderer tp-yt-paper-icon-button:last-of-type",
     "PIP_BTN_SELECTOR": "NONE",
     "AUDIO_SELECTOR": "video.html5-main-video"
   },
