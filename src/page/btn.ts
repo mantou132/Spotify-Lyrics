@@ -72,6 +72,7 @@ export const insetLyricsBtn = async () => {
   lyricsBtn.classList.add(localConfig.LYRICS_CLASSNAME);
 
   lyricsBtn.disabled = false;
+  lyricsBtn.hidden = false;
   lyricsBtn.title = options.i18nMap.pageButtonTitle;
   lyricsBtn.setAttribute('aria-label', lyricsBtn.title);
   lyricsBtn.querySelectorAll('*').forEach((e) => {
