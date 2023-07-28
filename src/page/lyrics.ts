@@ -3,6 +3,7 @@ import { sify, tify } from 'chinese-conv';
 import { isProd } from '../common/consts';
 
 import config from './config';
+import { optionsPromise } from './options';
 import { request } from './request';
 import { captureException } from './utils';
 
@@ -149,11 +150,19 @@ async function fetchSongList(s: string, fetchOptions?: RequestInit): Promise<Son
     type: '1',
     limit: '100',
   });
-  const { result }: SearchSongsResult = await request(
-    `${API_HOST}/search?${searchQuery}`,
-    fetchOptions,
-  );
-  return result?.songs || [];
+  const options = await optionsPromise;
+  const fetchPromise = request(`${API_HOST}/search?${searchQuery}`, fetchOptions);
+  if (!options['use-unreviewed-lyrics']) {
+    const { result }: SearchSongsResult = await fetchPromise;
+    return result?.songs || [];
+  }
+  try {
+    const { result }: SearchSongsResult = await fetchPromise;
+    return result?.songs || [];
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
 }
 
 interface MatchingLyricsOptions {
