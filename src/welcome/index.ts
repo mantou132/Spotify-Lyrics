@@ -121,7 +121,7 @@ render(
             href="https://files.xianqiao.wang/https://us-central1-spotify-lyrics-ef482.cloudfunctions.net"
             target="_blank"
             >this url</a
-          >.
+          >(Return "Not Found" means that your network is very good).
         </p>
       </details>
       <details>

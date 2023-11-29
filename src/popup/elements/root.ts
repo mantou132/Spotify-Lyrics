@@ -23,6 +23,18 @@ export class SongList extends GemElement {
     sendEvent(cid, events.autoSelectTrack);
     changeSong(0);
   };
+
+  // https://github.com/mantou132/Spotify-Lyrics/issues/105
+  // 不知道为什么第一次不能渲染内容
+  // 让他延时渲染内容就可以了
+  // ？？？？？？？？？？？？？？？？？？？？？？
+  #rendered = false;
+  mounted = () => {
+    setTimeout(() => {
+      this.#rendered = true;
+      this.update();
+    }, 100);
+  };
   render() {
     if (store.list.length === 0 && !store.id) {
       return html`
@@ -38,7 +50,7 @@ export class SongList extends GemElement {
             text-align: center;
           }
         </style>
-        <slot></slot>
+        ${this.#rendered ? html`<slot></slot>` : ''}
       `;
     }
     return html`
