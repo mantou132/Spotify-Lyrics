@@ -1,6 +1,6 @@
 {
   "name": "spotify-lyrics",
-  "version": "1.5.32",
+  "version": "1.5.33",
   "description": "Desktop Spotify Web Player Instant Synchronised Lyrics",
   "scripts": {
     "lint": "tsc --noEmit && eslint --ext .ts --fix src/",
