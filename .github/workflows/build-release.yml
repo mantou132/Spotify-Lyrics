@@ -35,7 +35,7 @@ jobs:
         overwrite: true
 
     - run: |
-        export NAME=spotify_lyrics-$(node -p "require('./package.json').version")
+        export NAME=slyrics-$(node -p "require('./package.json').version")
         export PATH=build/${NAME}
         echo "PATH=${PATH}" >> $GITHUB_ENV
         echo ${PATH}
