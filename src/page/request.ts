@@ -1,4 +1,4 @@
-import { Event, Message } from '../common/consts';
+import { Event, Message } from '../common/constants';
 
 let cspError = false;
 

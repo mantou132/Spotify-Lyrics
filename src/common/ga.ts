@@ -4,7 +4,7 @@
 
 import type { Req } from '../page/request';
 
-import { isProd, isWebApp, VERSION, Event } from './consts';
+import { isProd, isWebApp, VERSION, Event } from './constants';
 
 const postReq = (params: Record<string, string>) => {
   const uri = 'https://www.google-analytics.com/collect';

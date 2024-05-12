@@ -1,5 +1,4 @@
-import config from './config';
-
+import { configPromise } from './config';
 import { coverCtx, coverHDCtx, lyricVideoIsOpen } from './element';
 import { insetLyricsBtn } from './btn';
 import { sharedData } from './share-data';
@@ -11,7 +10,7 @@ export const loggedPromise = new Promise((res) => (loginResolve = res));
 
 const weakMap = new WeakMap<Element, MutationObserver>();
 
-config.then(
+configPromise.then(
   ({
     ALBUM_COVER_SELECTOR,
     ALBUM_COVER_LARGE_REGEXP_REPLACE,

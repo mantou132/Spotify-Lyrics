@@ -3,7 +3,7 @@ import '@webcomponents/webcomponentsjs';
 import { browser } from 'webextension-polyfill-ts';
 import { render, html } from '@mantou/gem/lib/element';
 
-import { isWebApp } from '../common/consts';
+import { isWebApp } from '../common/constants';
 import { fontStyle } from '../common/font';
 
 import './app';

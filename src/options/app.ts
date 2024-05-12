@@ -1,7 +1,7 @@
 import { customElement, refobject, RefObject } from '@mantou/gem/lib/decorators';
 import { GemElement, html } from '@mantou/gem/lib/element';
 
-import { Options, LyricsPositions, LyricsAlign, LyricsFontFamily } from '../common/consts';
+import { Options, LyricsPositions, LyricsAlign, LyricsFontFamily } from '../common/constants';
 import { sendEvent, events } from '../common/ga';
 import { theme } from '../common/theme';
 

@@ -1,12 +1,12 @@
 import { html, customElement, connectStore, GemElement } from '@mantou/gem';
 
-import './list';
-
 import { store, changeSong, confirmedMId, cancelMId } from '../store';
 import { events, sendEvent } from '../../common/ga';
 import { getOptions } from '../../options/store';
 import { theme } from '../../common/theme';
 import { i18n } from '../../i18n';
+
+import './list';
 
 window.addEventListener('keydown', (e) => {
   if (e.key === 'i') {

@@ -1,9 +1,10 @@
 import { browser } from 'webextension-polyfill-ts';
 import { createStore, updateStore } from '@mantou/gem';
 
-import { Event, Message } from '../common/consts';
+import { Event, Message } from '../common/constants';
+import { sendMessage } from '../common/bg';
 
-import { Song } from '../page/lyrics';
+import type { Song } from '../page/lyrics';
 
 export interface PopupStore {
   // current track name
@@ -25,16 +26,6 @@ export const store = createStore<PopupStore>({
   id: 0,
   aId: 0,
 });
-
-export function sendMessage(msg: Message) {
-  const manifest = browser.runtime.getManifest() as typeof import('../../public/manifest.json');
-  browser.tabs.query({ url: manifest.content_scripts[0].matches }).then((tabs) => {
-    tabs.forEach((tab) => {
-      // Only the tab that open the lyrics will response
-      if (tab?.id) browser.tabs.sendMessage(tab.id, msg);
-    });
-  });
-}
 
 export function changeSong(id: number) {
   updateStore(store, { id });

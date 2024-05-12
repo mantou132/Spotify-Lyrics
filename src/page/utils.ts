@@ -1,4 +1,4 @@
-import { Message, Event, isProd } from '../common/consts';
+import { Message, Event, isProd } from '../common/constants';
 
 export function raw(arr: TemplateStringsArray, ...args: any[]) {
   return arr.reduce((prev, current, index) => prev + (args[index - 1] || '') + current);

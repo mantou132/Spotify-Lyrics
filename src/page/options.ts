@@ -1,4 +1,4 @@
-import { Event, Message, Options } from '../common/consts';
+import { Event, Message, Options } from '../common/constants';
 // The I18n Extension API cannot be used directly in the webpage
 import type { i18nMap } from '../i18n';
 

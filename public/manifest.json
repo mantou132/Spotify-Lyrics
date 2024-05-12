@@ -54,6 +54,15 @@
     "default_popup": "popup.html",
     "default_icon": "icons/48.png"
   },
+  "commands": {
+    "toggle": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+L",
+        "mac": "Command+Shift+L"
+      },
+      "description": "Toggle lyrics"
+    }
+  },
   "options_ui": {
     "page": "options.html"
   },

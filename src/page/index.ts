@@ -1,4 +1,4 @@
-import { Event } from '../common/consts';
+import { Event } from '../common/constants';
 import { PopupStore } from '../popup/store';
 
 import {
@@ -15,6 +15,7 @@ import { optionsPromise, OptionsAndI18n } from './options';
 import { appendStyle } from './utils';
 import { localConfig } from './config';
 import { getFPS } from './fps';
+import { getLyricsBtn } from './btn';
 
 import './observer';
 
@@ -80,6 +81,11 @@ const tick = async (options: OptionsAndI18n) => {
 optionsPromise.then(tick);
 
 window.addEventListener('message', async ({ data }: MessageEvent) => {
+  switch (data.type) {
+    case Event.TOGGLE:
+      return (await getLyricsBtn())?.click();
+  }
+
   if (!lyricVideoIsOpen) return;
   if (!data?.type) return;
 

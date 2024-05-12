@@ -1,7 +1,7 @@
 import { sendEvent, events } from '../common/ga';
-import { Event, Message } from '../common/consts';
+import { Event, isProd, Message } from '../common/constants';
 
-import config, { localConfig } from './config';
+import { configPromise, localConfig } from './config';
 import { lyricVideo, audioPromise, lyricVideoIsOpen } from './element';
 import { appendStyle, css, captureException, documentQueryHasSelector } from './utils';
 import { sharedData } from './share-data';
@@ -13,7 +13,7 @@ import { openLyrics, closeLyrics } from './pip';
 // In spotify is the pip button
 // In deezer is the native lyrics button, and many lyrics buttons
 // Note that the css selector needs to support multiple languages
-config.then(({ PIP_BTN_SELECTOR }) => {
+configPromise.then(({ PIP_BTN_SELECTOR }) => {
   appendStyle(css`
     ${PIP_BTN_SELECTOR} {
       display: none;
@@ -22,7 +22,7 @@ config.then(({ PIP_BTN_SELECTOR }) => {
 });
 
 export async function getLyricsBtn() {
-  const { BTN_WRAPPER_SELECTOR } = await config;
+  const { BTN_WRAPPER_SELECTOR } = await configPromise;
   const btnWrapper = document.querySelector(BTN_WRAPPER_SELECTOR);
   return btnWrapper?.getElementsByClassName(
     localConfig.LYRICS_CLASSNAME,
@@ -59,7 +59,26 @@ export const insetLyricsBtn = async () => {
   await audioPromise;
 
   const options = await optionsPromise;
-  const { BTN_WRAPPER_SELECTOR, BTN_LIKE_SELECTOR } = await config;
+  const { BTN_WRAPPER_SELECTOR, BTN_LIKE_SELECTOR } = await configPromise;
+
+  // test selector
+  if (!isProd) {
+    console.log('===============================');
+    Object.entries(await configPromise).forEach(([k, v]) => {
+      if (k.includes('SELECTOR')) {
+        console.log(k, document.querySelector(`${v}`));
+      }
+    });
+    Object.entries(localConfig).forEach(([k, v]) => {
+      if (k.includes('STYLE')) {
+        const styleSheet = new CSSStyleSheet();
+        styleSheet.replaceSync(v);
+        [...styleSheet.cssRules].forEach((rule: CSSStyleRule) => {
+          console.log(rule.selectorText, document.querySelectorAll(rule.selectorText));
+        });
+      }
+    });
+  }
 
   const btnWrapper = document.querySelector(BTN_WRAPPER_SELECTOR) as HTMLDivElement;
   const likeBtn = documentQueryHasSelector(BTN_LIKE_SELECTOR) as HTMLButtonElement;

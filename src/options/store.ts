@@ -1,6 +1,7 @@
 import { browser } from 'webextension-polyfill-ts';
 
-import { Message, Event, Options, isWebApp, LyricsFontFamily } from '../common/consts';
+import { sendMessage } from '../common/bg';
+import { Event, Options, isWebApp, LyricsFontFamily } from '../common/constants';
 
 const uiLanguage = browser.i18n.getUILanguage();
 
@@ -30,18 +31,9 @@ export async function updateOptions(value: Partial<Options>) {
   await browser.storage.sync.set(value);
   const options = await getOptions();
   if (isWebApp) {
-    window.postMessage({ type: Event.SEND_OPTIONS, data: await getOptions() }, '*');
+    window.postMessage({ type: Event.SEND_OPTIONS, data: options }, '*');
   } else {
-    const manifest = browser.runtime.getManifest() as typeof import('../../public/manifest.json');
-    const tabs = await browser.tabs.query({ url: manifest.content_scripts[0].matches });
-    tabs.forEach((tab) => {
-      if (tab.id) {
-        browser.tabs.sendMessage(tab.id, {
-          type: Event.SEND_OPTIONS,
-          data: options,
-        } as Message);
-      }
-    });
+    sendMessage({ type: Event.SEND_OPTIONS, data: options });
   }
   return options;
 }

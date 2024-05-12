@@ -1,4 +1,4 @@
-import { LyricsAlign } from '../common/consts';
+import { LyricsAlign } from '../common/constants';
 
 import { Lyric } from './lyrics';
 

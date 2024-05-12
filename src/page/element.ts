@@ -1,9 +1,9 @@
-import { Message, Event } from '../common/consts';
+import { Message, Event } from '../common/constants';
 
 import { captureException, documentQueryHasSelector } from './utils';
 import { getLyricsBtn } from './btn';
 import { loggedPromise } from './observer';
-import config, { currentPlatform, localConfig } from './config';
+import { configPromise, currentPlatform, localConfig } from './config';
 
 export const lyricVideo = document.createElement('video');
 lyricVideo.muted = true;
@@ -81,7 +81,7 @@ export const audioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
   // Youtube Music: without using `document.createElement`
   // Apple Music
   const queryAudio = async () => {
-    const { AUDIO_SELECTOR } = await config;
+    const { AUDIO_SELECTOR } = await configPromise;
     const element = document.querySelector(AUDIO_SELECTOR);
     if (element) {
       audio = element as HTMLAudioElement;
@@ -121,7 +121,7 @@ audioPromise.then((audio) => {
     const isMusic = audio.duration && audio.duration > 2.6 * 60 && audio.duration < 4 * 60;
     if (!reported && isMusic && !(await getLyricsBtn())) {
       reported = true;
-      const { BTN_WRAPPER_SELECTOR, BTN_LIKE_SELECTOR, TRACK_NAME_SELECTOR } = await config;
+      const { BTN_WRAPPER_SELECTOR, BTN_LIKE_SELECTOR, TRACK_NAME_SELECTOR } = await configPromise;
       captureException(new Error('Lyrics button not found'), {
         duration: audio.duration,
         TRACK_NAME: document.querySelector(TRACK_NAME_SELECTOR)?.textContent,

@@ -1,4 +1,4 @@
-import { Message, Event } from '../common/consts';
+import { Message, Event } from '../common/constants';
 import { sendEvent, events } from '../common/ga';
 
 import { PopupStore } from '../popup/store';
@@ -9,7 +9,7 @@ import { setSong, getSong } from './store';
 import { optionsPromise } from './options';
 import { captureException } from './utils';
 import { audioPromise, lyricVideoIsOpen } from './element';
-import config from './config';
+import { configPromise } from './config';
 
 export class SharedData {
   private _name = '';
@@ -201,7 +201,7 @@ export class SharedData {
   async updateTrack(isTrust = false) {
     if (!lyricVideoIsOpen) return;
 
-    const { TRACK_NAME_SELECTOR, TRACK_ARTIST_SELECTOR } = await config;
+    const { TRACK_NAME_SELECTOR, TRACK_ARTIST_SELECTOR } = await configPromise;
     const name = document.querySelector(TRACK_NAME_SELECTOR)?.textContent;
     const artists = document.querySelector(TRACK_ARTIST_SELECTOR)?.textContent;
 

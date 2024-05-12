@@ -1,6 +1,6 @@
 import { browser } from 'webextension-polyfill-ts';
 
-import { Message, Event, isProd } from './common/consts';
+import { Message, Event, isProd } from './common/constants';
 
 browser.runtime.onMessage.addListener((msg: Message) => {
   window.postMessage(msg, '*');
@@ -8,25 +8,25 @@ browser.runtime.onMessage.addListener((msg: Message) => {
 
 window.addEventListener('message', ({ data }) => {
   const { type } = data || {};
-  if (type === Event.GET_OPTIONS) {
-    browser.runtime
-      .sendMessage(data)
-      .then((options) => {
-        window.postMessage({ type: Event.SEND_OPTIONS, data: options }, '*');
-      })
-      .catch(() => {
+  switch (type) {
+    case Event.GET_OPTIONS: {
+      return browser.runtime
+        .sendMessage(data)
+        .then((options) => {
+          window.postMessage({ type: Event.SEND_OPTIONS, data: options }, '*');
+        })
+        .catch(() => {
+          //
+        });
+    }
+    case Event.SEND_REQUEST:
+    case Event.POPUP_ACTIVE:
+    case Event.CAPTURE_EXCEPTION:
+    case Event.SEND_SONGS: {
+      return browser.runtime.sendMessage(data).catch(() => {
         //
       });
-  }
-  if (
-    type === Event.SEND_REQUEST ||
-    type === Event.POPUP_ACTIVE ||
-    type === Event.CAPTURE_EXCEPTION ||
-    type === Event.SEND_SONGS
-  ) {
-    browser.runtime.sendMessage(data).catch(() => {
-      //
-    });
+    }
   }
 });
 

@@ -1,8 +1,8 @@
 import { sify, tify } from 'chinese-conv';
 
-import { isProd } from '../common/consts';
+import { isProd } from '../common/constants';
 
-import config from './config';
+import { configPromise } from './config';
 import { optionsPromise } from './options';
 import { request } from './request';
 import { captureException } from './utils';
@@ -103,7 +103,7 @@ const getText = (s: string) => {
 };
 
 const buildInSingerAliasPromise = new Promise<Record<string, string>>(async (resolve) => {
-  const { SINGER } = await config;
+  const { SINGER } = await configPromise;
   resolve(
     Object.keys(SINGER).reduce((p, v: keyof typeof SINGER) => {
       p[simplifiedText(v)] = SINGER[v];
@@ -113,7 +113,7 @@ const buildInSingerAliasPromise = new Promise<Record<string, string>>(async (res
 });
 
 async function fetchChineseName(s: string, fetchOptions?: RequestInit) {
-  const { API_HOST } = await config;
+  const { API_HOST } = await configPromise;
   const singerAlias: Record<string, string> = {};
   const searchQuery = new URLSearchParams({
     keywords: s,
@@ -144,7 +144,7 @@ async function fetchChineseName(s: string, fetchOptions?: RequestInit) {
 }
 
 async function fetchSongList(s: string, fetchOptions?: RequestInit): Promise<Song[]> {
-  const { API_HOST } = await config;
+  const { API_HOST } = await configPromise;
   const searchQuery = new URLSearchParams({
     keywords: s,
     type: '1',
@@ -369,7 +369,7 @@ export async function matchingLyrics(
 }
 
 export async function fetchLyric(songId: number, fetchOptions?: RequestInit) {
-  const { API_HOST } = await config;
+  const { API_HOST } = await configPromise;
   const { lrc }: SongResult = await request(
     `${API_HOST}/lyric?${new URLSearchParams({ id: String(songId) })}`,
     fetchOptions,

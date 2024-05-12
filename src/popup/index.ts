@@ -3,12 +3,11 @@ import { render, html } from '@mantou/gem';
 
 import { theme } from '../common/theme';
 import { fontStyle } from '../common/font';
-
 import { sendEvent, events } from '../common/ga';
-
-import './elements/root';
 import { getOptions } from '../options/store';
 import { i18n } from '../i18n';
+
+import './elements/root';
 
 function main(fontSize: number) {
   render(
