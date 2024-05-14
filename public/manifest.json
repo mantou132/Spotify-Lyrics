@@ -1,17 +1,24 @@
 {
+  "$schema": "https://raw.githubusercontent.com/extend-chrome/manifest-json-schema/main/schema/manifest.schema.json",
   "name": "__MSG_extensionName__",
   "version": "1.5.33",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "description": "__MSG_extensionDescription__",
   "default_locale": "en",
   "web_accessible_resources": [
-    "*"
+    {
+      "resources": ["*"],
+      "matches": ["*://*/*"]
+    }
   ],
-  "permissions": [
-    "contextMenus",
-    "storage",
-    "tabs"
+  "host_permissions": [
+    "*://open.spotify.com/*",
+    "*://www.deezer.com/*",
+    "*://music.youtube.com/*",
+    "*://music.apple.com/*",
+    "*://listen.tidal.com/*"
   ],
+  "permissions": ["scripting", "contextMenus", "storage", "tabs"],
   "browser_specific_settings": {
     "gecko": {
       "id": "{9bbdd06f-4fe2-4d05-8c2d-1ef6bf71f84d}",
@@ -19,9 +26,7 @@
     }
   },
   "background": {
-    "scripts": [
-      "background.js"
-    ]
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
@@ -32,9 +37,7 @@
         "*://music.apple.com/*",
         "*://listen.tidal.com/*"
       ],
-      "js": [
-        "content.js"
-      ],
+      "js": ["content.js"],
       "run_at": "document_start"
     },
     {
@@ -45,14 +48,17 @@
         "*://music.apple.com/*",
         "*://listen.tidal.com/*"
       ],
-      "js": [
-        "options.js"
-      ]
+      "js": ["options/index.js"]
     }
   ],
-  "browser_action": {
+  "options_ui": {
+    "page": "options.html"
+  },
+  "action": {
     "default_popup": "popup.html",
-    "default_icon": "icons/48.png"
+    "default_icon": {
+      "48": "icons/48.png"
+    }
   },
   "commands": {
     "toggle": {
@@ -62,9 +68,6 @@
       },
       "description": "Toggle lyrics"
     }
-  },
-  "options_ui": {
-    "page": "options.html"
   },
   "icons": {
     "48": "icons/48.png",

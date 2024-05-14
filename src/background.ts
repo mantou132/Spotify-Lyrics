@@ -1,22 +1,23 @@
-import { browser } from 'webextension-polyfill-ts';
+import browser from 'webextension-polyfill';
 import * as Sentry from '@sentry/browser';
 
-import { Message, Event, ContextItems, isProd, VERSION } from './common/constants';
+import {
+  Message,
+  Event,
+  ContextItems,
+  isProd,
+  VERSION,
+  isFirefox,
+  isRateTest,
+} from './common/constants';
 import { sendMessage } from './common/bg';
 import { getOptions } from './options/store';
 import { i18n, i18nMap } from './i18n';
 import type { Req, Res } from './page/request';
 
-declare global {
-  interface Window {
-    Sentry?: typeof Sentry;
-  }
-}
-
-// popup, options, contentpage share a Sentry instance
+// popup, options, content page share a Sentry instance
 // the submitted error event environment is background_page, such as console
 
-window.Sentry = Sentry;
 Sentry.init({
   dsn: 'https://124df8398d8b466fbcf09ec64bcfe144@o55145.ingest.sentry.io/5353517',
   release: VERSION,
@@ -25,15 +26,16 @@ Sentry.init({
 getOptions().then(({ cid }) => Sentry.setUser({ id: cid }));
 
 function disableBrowserAction() {
-  browser.browserAction.disable();
-  browser.browserAction.setTitle({ title: i18n.actionDisableTitle() });
+  browser.action.disable();
+  browser.action.setTitle({ title: i18n.actionDisableTitle() });
 }
 
 function enableBrowserAction() {
-  browser.browserAction.enable();
-  browser.browserAction.setTitle({ title: i18n.actionEnableTitle() });
+  browser.action.enable();
+  browser.action.setTitle({ title: i18n.actionEnableTitle() });
 }
 
+// enable on page message
 disableBrowserAction();
 
 browser.runtime.onMessage.addListener(async (msg: Message, sender) => {
@@ -59,7 +61,7 @@ browser.runtime.onMessage.addListener(async (msg: Message, sender) => {
       const err = new Error(data.message);
       err.name = data.name;
       err.stack = data.stack;
-      window.Sentry?.captureException(err, {
+      Sentry?.captureException(err, {
         extra: data.extra,
       });
       return;
@@ -105,13 +107,13 @@ browser.runtime.setUninstallURL('https://forms.gle/bUWyEqfSTCU9NEwEA');
 browser.contextMenus.create({
   id: ContextItems.WELCOME,
   title: i18n.menusWelcome(),
-  contexts: ['browser_action'],
+  contexts: ['action'],
 });
 
 browser.contextMenus.create({
   id: ContextItems.FEEDBACK,
   title: i18n.menusFeedback(),
-  contexts: ['browser_action'],
+  contexts: ['action'],
 });
 
 const storeLinkMap: Record<string, string> = {
@@ -127,7 +129,7 @@ if (storeLinkMap[browser.runtime.id]) {
   browser.contextMenus.create({
     id: ContextItems.RATE_ME,
     title: i18n.menusRateMe(),
-    contexts: ['browser_action'],
+    contexts: ['action'],
   });
 }
 
@@ -155,3 +157,17 @@ browser.runtime.onInstalled.addListener(({ reason }) => {
     openPage(browser.runtime.getURL('welcome.html'));
   }
 });
+
+if (!isFirefox) {
+  browser.scripting.registerContentScripts([
+    {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      world: 'MAIN',
+      id: 'page',
+      runAt: 'document_start',
+      matches: browser.runtime.getManifest().content_scripts![0].matches,
+      js: [isRateTest ? 'page/rate.js' : 'page/index.js'],
+    },
+  ]);
+}

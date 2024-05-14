@@ -195,7 +195,7 @@ function initOffscreenCtx(ctx: CanvasRenderingContext2D) {
 export interface RenderLyricsOptions {
   backgroundImage: CanvasImageSource;
   focusLineFontSize: number;
-  align: typeof LyricsAlign[number];
+  align: (typeof LyricsAlign)[number];
   smooth: boolean;
   fontFamily: string;
 }

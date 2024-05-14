@@ -1,4 +1,4 @@
-import { browser } from 'webextension-polyfill-ts';
+import browser from 'webextension-polyfill';
 import { createStore, updateStore } from '@mantou/gem';
 
 import { Event, Message } from '../common/constants';

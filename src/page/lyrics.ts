@@ -105,10 +105,13 @@ const getText = (s: string) => {
 const buildInSingerAliasPromise = new Promise<Record<string, string>>(async (resolve) => {
   const { SINGER } = await configPromise;
   resolve(
-    Object.keys(SINGER).reduce((p, v: keyof typeof SINGER) => {
-      p[simplifiedText(v)] = SINGER[v];
-      return p;
-    }, {} as Record<string, string>),
+    Object.keys(SINGER).reduce(
+      (p, v: keyof typeof SINGER) => {
+        p[simplifiedText(v)] = SINGER[v];
+        return p;
+      },
+      {} as Record<string, string>,
+    ),
   );
 });
 

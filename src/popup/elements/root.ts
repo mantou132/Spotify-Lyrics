@@ -33,7 +33,7 @@ export class SongList extends GemElement {
     setTimeout(() => {
       this.#rendered = true;
       this.update();
-    }, 100);
+    }, 200);
   };
   render() {
     if (store.list.length === 0 && !store.id) {

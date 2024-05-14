@@ -1,8 +1,8 @@
-import { browser } from 'webextension-polyfill-ts';
+import { runtime } from 'webextension-polyfill';
 
-import { Message, Event, isProd } from './common/constants';
+import { Message, Event, isFirefox, isRateTest } from './common/constants';
 
-browser.runtime.onMessage.addListener((msg: Message) => {
+runtime.onMessage.addListener((msg: Message) => {
   window.postMessage(msg, '*');
 });
 
@@ -10,7 +10,7 @@ window.addEventListener('message', ({ data }) => {
   const { type } = data || {};
   switch (type) {
     case Event.GET_OPTIONS: {
-      return browser.runtime
+      return runtime
         .sendMessage(data)
         .then((options) => {
           window.postMessage({ type: Event.SEND_OPTIONS, data: options }, '*');
@@ -23,23 +23,17 @@ window.addEventListener('message', ({ data }) => {
     case Event.POPUP_ACTIVE:
     case Event.CAPTURE_EXCEPTION:
     case Event.SEND_SONGS: {
-      return browser.runtime.sendMessage(data).catch(() => {
+      return runtime.sendMessage(data).catch(() => {
         //
       });
     }
   }
 });
 
-declare let __webpackReplaceWithChunk__: (chunk: string) => string;
-
-const script = document.createElement('script');
-if (!isProd || browser.runtime.getURL('').startsWith('moz')) {
+if (isFirefox) {
   // Firefox CSP Issue: https://bugzilla.mozilla.org/show_bug.cgi?id=1267027
-  script.src = browser.runtime.getURL('page.js');
-} else {
-  script.textContent = __webpackReplaceWithChunk__('page');
+  const script = document.createElement('script');
+  script.src = runtime.getURL(isRateTest ? 'page/rate.js' : 'page/index.js');
+  document.documentElement.append(script);
+  script.remove();
 }
-// "run_at": "document_start"
-// The head element may not exist
-document.documentElement.append(script);
-script.remove();

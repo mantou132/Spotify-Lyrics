@@ -1,4 +1,4 @@
-import { Query, matchingLyrics, fetchLyric, parseLyrics } from '../src/page/lyrics';
+import { Query, matchingLyrics, fetchLyric, parseLyrics } from './lyrics';
 
 interface MatchDetail {
   query: Query;

@@ -1,10 +1,10 @@
 // https://bugs.chromium.org/p/chromium/issues/detail?id=390807
 import '@webcomponents/webcomponentsjs';
-import { browser } from 'webextension-polyfill-ts';
 import { render, html } from '@mantou/gem/lib/element';
 
 import { isWebApp } from '../common/constants';
 import { fontStyle } from '../common/font';
+import { captureException } from '../common/bg';
 
 import './app';
 import './modal';
@@ -40,9 +40,7 @@ if (!isWebApp) {
     document.body,
   );
 
-  browser.runtime.getBackgroundPage().then((win) => {
-    window.addEventListener('error', (e) => {
-      win?.Sentry?.captureException(e);
-    });
+  window.addEventListener('error', (e) => {
+    captureException(e);
   });
 }

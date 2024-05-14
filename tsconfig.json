@@ -12,9 +12,8 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,
-    "target": "ES2017",
-    "lib": ["es2020", "dom", "DOM.Iterable"],
-    "typeRoots": ["node_modules/@types", "src/types"]
+    "target": "ES2018",
+    "lib": ["ES2021", "DOM", "DOM.Iterable"]
   },
   "include": ["src", "script", "functions"]
 }

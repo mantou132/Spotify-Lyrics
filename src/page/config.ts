@@ -3,9 +3,9 @@
  */
 import { isProd, Platform } from '../common/constants';
 
-import config from './config.json';
 import { request } from './request';
 import { css, svg, getSVGDataUrl } from './utils';
+import config from './config.json';
 
 // Identify platform
 // Identify the platform, the platform should be the same as in config.json
@@ -132,14 +132,14 @@ export const localConfig: LocalConfig = (() => {
         STATIC_STYLE: css`
           /* preview tag */
           .web-chrome-playback-lcd__platter--preview,
-        /* logo */
-        .web-navigation__logo-container,
-        /* nav native links */
-        nav .web-navigation__native-upsell,
-        /* page footer */
-        footer.dt-footer,
-        /* footer banner */
-        cwc-music-upsell-banner-web {
+          /* logo */
+          .web-navigation__logo-container,
+          /* nav native links */
+          nav .web-navigation__native-upsell,
+          /* page footer */
+          footer.dt-footer,
+          /* footer banner */
+          cwc-music-upsell-banner-web {
             display: none;
           }
           .${LYRICS_CLASSNAME} svg path {
@@ -190,10 +190,10 @@ export const localConfig: LocalConfig = (() => {
         STATIC_STYLE: css`
           /* not logged in, cookie banner */
           #onetrust-consent-sdk,
+          /* webpage: upgrade button */
+          .Root [data-testid="topbar"] [data-testid="upgrade-button"],
           /* webpage: download link */
-          .Root__nav-bar div a[href*=download],
-          /* webpage: logo */
-          [role='banner'] {
+          .Root [data-testid="topbar"] [href*=download] {
             display: none;
           }
           .${LYRICS_CLASSNAME} {

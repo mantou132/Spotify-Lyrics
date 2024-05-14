@@ -112,7 +112,11 @@ export const insetLyricsBtn = async () => {
     'contextmenu',
     (e) => {
       lyricsBtn.blur();
-      window.postMessage({ type: Event.OPEN_OPTIONS } as Message, '*');
+      if (e.metaKey || e.ctrlKey) {
+        openEditor();
+      } else {
+        window.postMessage({ type: Event.OPEN_OPTIONS } as Message, '*');
+      }
       e.stopPropagation();
       e.preventDefault();
     },

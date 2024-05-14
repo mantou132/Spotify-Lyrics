@@ -1,4 +1,4 @@
-import { browser } from 'webextension-polyfill-ts';
+import browser from 'webextension-polyfill';
 
 import i18nEnMessages from '../public/_locales/en/messages.json';
 
@@ -11,10 +11,13 @@ type Keys<T> = {
  * const extensionName = i18n.extensionName()
  * ```
  */
-export const i18n = Object.keys(i18nEnMessages).reduce((p, c: keyof typeof i18nEnMessages) => {
-  p[c] = (...rest) => browser.i18n.getMessage(c, ...rest);
-  return p;
-}, {} as Keys<typeof i18nEnMessages>);
+export const i18n = Object.keys(i18nEnMessages).reduce(
+  (p, c: keyof typeof i18nEnMessages) => {
+    p[c] = (...rest) => browser.i18n.getMessage(c, ...rest);
+    return p;
+  },
+  {} as Keys<typeof i18nEnMessages>,
+);
 
 type KeysMap<T> = {
   [K in keyof T]: string;
@@ -25,7 +28,10 @@ type KeysMap<T> = {
  * const extensionName = i18nMap.extensionName
  * ```
  */
-export const i18nMap = Object.keys(i18nEnMessages).reduce((p, c: keyof typeof i18nEnMessages) => {
-  p[c] = browser.i18n.getMessage(c);
-  return p;
-}, {} as KeysMap<typeof i18nEnMessages>);
+export const i18nMap = Object.keys(i18nEnMessages).reduce(
+  (p, c: keyof typeof i18nEnMessages) => {
+    p[c] = browser.i18n.getMessage(c);
+    return p;
+  },
+  {} as KeysMap<typeof i18nEnMessages>,
+);

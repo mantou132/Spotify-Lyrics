@@ -1,4 +1,4 @@
-import { browser } from 'webextension-polyfill-ts';
+import browser from 'webextension-polyfill';
 
 import { sendMessage } from '../common/bg';
 import { Event, Options, isWebApp, LyricsFontFamily } from '../common/constants';
@@ -8,7 +8,7 @@ const uiLanguage = browser.i18n.getUILanguage();
 const defaultOptions: Options = {
   cid: `${Date.now()}-${Math.random()}`,
   'only-cover': 'off',
-  'hd-cover': 'filter' in CanvasRenderingContext2D.prototype ? 'off' : 'on',
+  'hd-cover': 'filter' in OffscreenCanvasRenderingContext2D.prototype ? 'off' : 'on',
   'clean-lyrics': 'on',
   'show-on': 'pip',
   'lyrics-align': 'left',

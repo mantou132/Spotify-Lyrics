@@ -54,7 +54,7 @@ export function captureException(err: Error, extra?: any) {
       name: err.name,
       message: err.message,
       stack: err.stack,
-      extra: { herf: location.href, ...extra },
+      extra: { href: location.href, ...extra },
     },
   };
   window.postMessage(msg, '*');

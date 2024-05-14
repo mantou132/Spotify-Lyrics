@@ -1,66 +1,50 @@
 {
   "name": "spotify-lyrics",
   "version": "1.5.33",
-  "description": "Desktop Spotify Web Player Instant Synchronised Lyrics",
+  "description": "Desktop Spotify Web Player Instant Synchronized Lyrics",
   "scripts": {
     "lint": "tsc --noEmit && eslint --ext .ts --fix src/",
-    "test": "jest",
+    "test": "vitest",
+    "build": "vite build",
+    "watch": "yarn build --watch",
     "serve": "web-ext --config web-ext.config.js run --start-url open.spotify.com",
     "serve:chromium": "yarn run serve -- -t chromium",
-    "watch": "webpack --watch",
     "start": "concurrently npm:watch npm:serve:chromium",
-    "test:matchrate": "cross-env TEST=matchrate concurrently npm:watch npm:serve:chromium",
+    "test:rate": "cross-env TEST=rate concurrently npm:watch npm:serve:chromium",
     "release": "npx mantou132/release#b4228eed684d0e4a23ecc333d416f4ea7b67a845 -w public patch",
-    "build": "cross-env NODE_ENV=production webpack",
     "start:firebase": "yarn --cwd functions run build && firebase emulators:start",
     "install": "yarn --cwd functions",
-    "s:singer": "deno run --allow-read --allow-net script/singer.ts"
+    "prepare": "husky install && yarn build",
+    "s:singer": "deno run --allow-read --allow-net scripts/singer.ts"
   },
   "author": "mantou132",
   "license": "ISC",
   "dependencies": {
-    "@mantou/gem": "^0.6.8",
+    "@mantou/gem": "^1.7.12",
     "@sentry/browser": "^5.25.0",
-    "@types/wicg-mediasession": "^1.0.4",
-    "@webcomponents/webcomponentsjs": "^2.4.4",
+    "@webcomponents/webcomponentsjs": "^2.8.0",
     "chinese-conv": "^1.0.1",
-    "webextension-polyfill-ts": "^0.9.1"
+    "webextension-polyfill": "^0.12.0"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.5",
-    "@typescript-eslint/eslint-plugin": "^4.5.0",
-    "@typescript-eslint/parser": "^4.5.0",
-    "babel-eslint": "^10.1.0",
-    "clean-webpack-plugin": "^3.0.0",
+    "@types/webextension-polyfill": "^0.10.7",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
     "concurrently": "^5.2.0",
-    "copy-webpack-plugin": "^6.0.2",
     "cross-env": "^7.0.2",
-    "eslint": "^7.11.0",
-    "eslint-config-prettier": "^6.14.0",
-    "eslint-plugin-import": "^2.21.2",
-    "eslint-plugin-prettier": "^3.1.4",
-    "file-loader": "^4.3.0",
-    "html-webpack-plugin": "^4.5.0",
-    "husky": "^2.7.0",
-    "jest": "^26.1.0",
-    "lint-staged": "^8.2.1",
-    "prettier": "^2.0.5",
-    "replace-with-chunk-webpack-plugin": "0.0.1",
-    "ts-jest": "^26.1.3",
-    "ts-loader": "^6.2.2",
-    "typescript": "^4.0.5",
-    "url-loader": "^2.3.0",
-    "web-ext": "^6.3.0",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.12"
-  },
-  "engines": {
-    "node": "^14.20.0"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "esbuild": "^0.20.2",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "happy-dom": "^14.10.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.1.0",
+    "prettier": "^3.1.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.10",
+    "vitest": "^1.6.0",
+    "web-ext": "^7.8.0"
   },
   "lint-staged": {
     "*.ts": "eslint --fix"

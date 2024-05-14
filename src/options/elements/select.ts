@@ -82,16 +82,15 @@ export class Select extends GemElement {
       </style>
       <select ref=${this.selectRef.ref} @input=${this.inputHandler}>
         ${this.options.map(
-          (option) =>
-            html`
-              <option
-                ?selected=${this.defaultValue === option.value}
-                value=${option.value}
-                style=${option.style || ''}
-              >
-                ${option.label}
-              </option>
-            `,
+          (option) => html`
+            <option
+              ?selected=${this.defaultValue === option.value}
+              value=${option.value}
+              style=${option.style || ''}
+            >
+              ${option.label}
+            </option>
+          `,
         )}
       </select>
       <div class="mark"></div>

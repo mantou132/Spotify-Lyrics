@@ -1,12 +1,8 @@
 [![Discord](https://img.shields.io/discord/763927057549099028)](https://discord.com/invite/fQbzzdJ)
 
-# Spotify Lyrics
+# Lyrics for Spotify
 
-Install Extension:
-- Chrome/Chromium/Firefox: Download the zip on the [release](https://github.com/mantou132/Spotify-Lyrics/releases) page, and then load the extension on the extension management page of the browser. [reason](https://github.com/mantou132/Spotify-Lyrics/issues/68).
-- Safari(Soon)
-
-The extension adds a button to the bottom left corner of Spotify Web Player,
+The **browser extension** adds a button to the bottom left corner of **Spotify Web Player**,
 Click to switch the display status of the lyrics,
 which is displayed in the Picture-in-Picture window by default setting.
 Spotify can be [installed as pwa](https://support.google.com/chrome/answer/9658361) instead of desktop client.
@@ -15,9 +11,19 @@ If you have any questions, please submit an [issue](https://github.com/mantou132
 
 ![windows-pwa-spotify](./screenshot/windows-pwa-spotify.jpg)
 
-The extension also supports Youtube Music, Apple Music, Deezer and Tidal, but songs with videos in Youtube Music cannot be perfectly supported(because the duration of the video is different from the duration of the officially released audio track).
+## Install
 
-![macos-pwa-youtube](./screenshot/macos-pwa-youtube.jpg)
+- Chrome/Chromium/Firefox: Download the zip on the [release](https://github.com/mantou132/Spotify-Lyrics/releases) page, and then load the extension on the extension management page of the browser. [reason](https://github.com/mantou132/Spotify-Lyrics/issues/68).
+- Safari(Soon)
+
+## Features
+
+- Instant synchronized lyrics display
+- Lyrics style [setting](./screenshot/options-in-spotify.jpg)(Right Click)
+- Lyrics [editor](./screenshot/lrc-editor-in-spotify.jpg) and upload(Ctrl + Right Click)
+- [Experimental](https://github.com/mantou132/Spotify-Lyrics/issues/35) support Youtube Music, Apple Music, Deezer and Tidal
+
+  ![macos-pwa-youtube](./screenshot/macos-pwa-youtube.jpg)
 
 ## How To Work
 
@@ -52,9 +58,9 @@ Build:
 ```bash
 yarn run build:zip
 
-# firebase depoly and config update
+# firebase deploy and config update
 # npm i -g firebase-tools
-firebase depoly
+firebase deploy
 firebase functions:config:get
 firebase functions:config:set spotify-lyrics.manager-ids=xxx
 ```
@@ -133,7 +139,6 @@ Fork it, submit PR.
 - Add translation
 - If you can write code, you can fix [bugs](https://github.com/mantou132/Spotify-Lyrics/issues?q=is%3Aissue+is%3Aopen+label%3Abug) or improve [performance](https://github.com/mantou132/Spotify-Lyrics/issues?q=is%3Aissue+is%3Aopen+label%3Aperformance)
 - Optimize the matching rate of Chinese, Japanese and Korean lyrics.(edit [config.json](./src/page/config.json)). _Note: The extension already has automatic optimization, this list serves as a supplement_ . _[Unmatched lyrics report](https://datastudio.google.com/reporting/bfd79c68-f9f4-4af5-8e51-a12d3d6be450)_
-
 
 ## Privacy Policy
 

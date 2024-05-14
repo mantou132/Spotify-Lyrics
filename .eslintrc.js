@@ -5,11 +5,10 @@ module.exports = {
     'plugin:import/warnings',
     'plugin:import/typescript',
     'plugin:@typescript-eslint/recommended',
-    'prettier/@typescript-eslint',
     'plugin:prettier/recommended',
   ],
   parserOptions: {
-    ecmaVersion: 2018,
+    ecmaVersion: 2020,
     sourceType: 'module',
   },
   rules: {
@@ -23,6 +22,7 @@ module.exports = {
     ],
     'import/namespace': 0,
     'import/named': 0,
+    'import/no-extraneous-dependencies': 1,
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/explicit-member-accessibility': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',

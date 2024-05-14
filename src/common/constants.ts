@@ -4,7 +4,9 @@ import type { Value } from '../options/elements/switch';
 export const VERSION = process.env.VERSION || 'UNKNOWN';
 
 export const isProd = process.env.NODE_ENV === 'production';
+export const isRateTest = process.env.TEST === 'rate';
 export const isWebApp = location.protocol.startsWith('http');
+export const isFirefox = navigator.userAgent.includes('Firefox');
 
 export interface Message<T = any> {
   type: Event;
@@ -38,14 +40,14 @@ export const LyricsFontFamily = ['CircularSp', 'Sans-Serif', 'Serif', 'Cursive']
 export interface Options {
   cid: string;
   'font-size': string;
-  'font-family': typeof LyricsFontFamily[number] | string;
+  'font-family': (typeof LyricsFontFamily)[number] | string;
   'toggle-shortcut': string;
   'only-cover': Value;
   'clean-lyrics': Value;
   'hd-cover': Value;
   'use-unreviewed-lyrics': Value;
-  'show-on': typeof LyricsPositions[number];
-  'lyrics-align': typeof LyricsAlign[number];
+  'show-on': (typeof LyricsPositions)[number];
+  'lyrics-align': (typeof LyricsAlign)[number];
   'traditional-chinese-lyrics': Value;
   // Deprecated
   'lyrics-smooth-scroll'?: Value;

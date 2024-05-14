@@ -1,3 +1,5 @@
+import { expect, test, describe } from 'vitest';
+
 import { parseLyrics, Lyric, matchingLyrics, Song } from './lyrics';
 
 describe('parse lyrics', () => {

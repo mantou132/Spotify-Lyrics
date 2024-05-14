@@ -1,3 +1,5 @@
+import { expect, test } from 'vitest';
+
 import { getWords } from './canvas-renderer';
 
 test('line break', () => {

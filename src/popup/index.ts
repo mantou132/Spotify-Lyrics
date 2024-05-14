@@ -1,9 +1,9 @@
-import { browser } from 'webextension-polyfill-ts';
 import { render, html } from '@mantou/gem';
 
 import { theme } from '../common/theme';
 import { fontStyle } from '../common/font';
 import { sendEvent, events } from '../common/ga';
+import { captureException } from '../common/bg';
 import { getOptions } from '../options/store';
 import { i18n } from '../i18n';
 
@@ -75,8 +75,6 @@ getOptions().then(({ cid }) => {
   sendEvent(cid, events.openPopupPage);
 });
 
-browser.runtime.getBackgroundPage().then((win) => {
-  window.addEventListener('error', (e) => {
-    win?.Sentry?.captureException(e);
-  });
+window.addEventListener('error', (e) => {
+  captureException(e);
 });
