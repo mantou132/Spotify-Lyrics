@@ -1,3 +1,4 @@
+// Firefox 不能在内容脚本中使用自定义元素
 // https://bugs.chromium.org/p/chromium/issues/detail?id=390807
 import '@webcomponents/webcomponentsjs';
 import { render, html } from '@mantou/gem/lib/element';
@@ -45,7 +46,6 @@ if (!isWebApp) {
     captureException(e);
   });
 } else {
-  // https://bugs.chromium.org/p/chromium/issues/detail?id=390807
   // hack content script custom element
   Object.defineProperty(HTMLElement.prototype, 'attachInternals', {
     value: function attachInternals() {

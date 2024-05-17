@@ -18,7 +18,7 @@ jobs:
 
     - run: yarn
     - run: yarn --cwd functions
-    - run: yarn run build
+    - run: yarn run build:firefox
     - run: npx web-ext --config web-ext.config.js build
     - run: npx web-ext --config web-ext.config.js sign
       env:

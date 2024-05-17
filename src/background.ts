@@ -25,6 +25,23 @@ Sentry.init({
 });
 getOptions().then(({ cid }) => Sentry.setUser({ id: cid }));
 
+// firefox mv2
+if (!browser.action) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  browser.action = browser.browserAction;
+
+  const oCreate = browser.contextMenus.create;
+  browser.contextMenus.create = (arg) => {
+    return oCreate({
+      ...arg,
+      contexts: arg.contexts?.map((e) =>
+        e === 'action' ? 'browser_action' : '',
+      ) as browser.Menus.ContextType[],
+    });
+  };
+}
+
 function disableBrowserAction() {
   browser.action.disable();
   browser.action.setTitle({ title: i18n.actionDisableTitle() });
