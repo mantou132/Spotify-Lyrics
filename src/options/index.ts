@@ -1,6 +1,7 @@
 // https://bugs.chromium.org/p/chromium/issues/detail?id=390807
 import '@webcomponents/webcomponentsjs';
 import { render, html } from '@mantou/gem/lib/element';
+import { kebabToCamelCase } from '@mantou/gem/lib/utils';
 
 import { isWebApp } from '../common/constants';
 import { fontStyle } from '../common/font';
@@ -42,5 +43,19 @@ if (!isWebApp) {
 
   window.addEventListener('error', (e) => {
     captureException(e);
+  });
+} else {
+  // https://bugs.chromium.org/p/chromium/issues/detail?id=390807
+  // hack content script custom element
+  Object.defineProperty(HTMLElement.prototype, 'attachInternals', {
+    value: function attachInternals() {
+      return {
+        states: {
+          has: (v: string) => kebabToCamelCase(v) in this.dataset,
+          add: (v: string) => (this.dataset[kebabToCamelCase(v)] = ''),
+          delete: (v: string) => delete this.dataset[kebabToCamelCase(v)],
+        },
+      };
+    },
   });
 }

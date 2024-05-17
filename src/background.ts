@@ -158,16 +158,20 @@ browser.runtime.onInstalled.addListener(({ reason }) => {
   }
 });
 
-if (!isFirefox) {
-  browser.scripting.registerContentScripts([
-    {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      world: 'MAIN',
-      id: 'page',
-      runAt: 'document_start',
-      matches: browser.runtime.getManifest().content_scripts![0].matches,
-      js: [isRateTest ? 'page/rate.js' : 'page/index.js'],
-    },
-  ]);
+if (isProd && !isFirefox) {
+  browser.scripting
+    .registerContentScripts([
+      {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        world: 'MAIN',
+        id: 'page',
+        runAt: 'document_start',
+        matches: browser.runtime.getManifest().content_scripts![0].matches,
+        js: [isRateTest ? 'page/rate.js' : 'page/index.js'],
+      },
+    ])
+    .catch(() => {
+      //
+    });
 }

@@ -319,7 +319,8 @@ export class EditorApp extends GemElement<State> {
         .button:hover {
           opacity: 1;
         }
-        .text-button:hover {
+        .text-button:hover,
+        .title a:hover {
           border-bottom: 1px solid;
         }
         table {
