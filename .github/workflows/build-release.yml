@@ -19,12 +19,17 @@ jobs:
 
     - run: yarn
     - run: yarn --cwd functions
+
+    # xpi
     - run: yarn run build:firefox
-    - run: npx web-ext --config web-ext.config.js build
     - run: npx web-ext --config web-ext.config.js sign
       env:
         WEB_EXT_API_KEY: ${{ secrets.FIREFOX_API_KEY }}
         WEB_EXT_API_SECRET: ${{ secrets.FIREFOX_API_SECRET }}
+    
+    # zip
+    - run: yarn run build
+    - run: npx web-ext --config web-ext.config.js build
 
     - name: Upload to release
       uses: svenstaro/upload-release-action@v2

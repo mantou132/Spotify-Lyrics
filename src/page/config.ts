@@ -79,8 +79,8 @@ export const localConfig: LocalConfig = (() => {
             margin-left: var(--ytmusic-like-button-renderer-button-spacing, 8px);
           }
           .${LYRICS_CLASSNAME} tp-yt-iron-icon {
-            background: var(--iron-icon-fill-color, currentcolor);
-            transform: rotate(90deg) scale(1.2);
+            background: var(--ytmusic-text-secondary);
+            transform: rotate(90deg) scale(1.1);
             -webkit-mask: url(${iconUrl}) center / 100% no-repeat;
             mask: url(${iconUrl}) center / 100% no-repeat;
           }
@@ -201,12 +201,12 @@ export const localConfig: LocalConfig = (() => {
           }
           .${LYRICS_CLASSNAME} svg {
             fill: transparent;
-            background: currentColor;
+            background: var(--text-subdued, rgb(106, 106, 106));
             -webkit-mask: url(${microphoneIconUrl}) center / 100% no-repeat;
             mask: url(${microphoneIconUrl}) center / 100% no-repeat;
           }
           .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} svg {
-            background: #1db954;
+            background: var(--text-bright-accent, rgb(17, 122, 55));
           }
         `,
         // hidden album expand button
