@@ -1,4 +1,4 @@
-export interface Lyric {
+export interface LyricRecord {
   name: string;
   artists: string;
   platform: string;

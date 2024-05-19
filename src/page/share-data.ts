@@ -1,3 +1,19 @@
+/**
+ * Used to update the data and synchronize with Popup and Lyrics Editor,
+ * while the data is rendered into the PIP
+ *
+ * 1. The built -in lyrics cache through the API intercept
+ *    (cannot be sure that this call is the current played song)
+ * 2. Triggering lyrics update based on UI update
+ *    1. get cache
+ *    2. fetch NetEase data
+ *    3. fetch Google Firebase data
+ *    4. fetch Genius data
+ * 3. Sync to popup，response popup user interaction
+ * 4. Response lyrics editor user interaction
+ */
+import { Cache } from 'duoyun-ui/lib/cache';
+
 import { Message, Event } from '../common/constants';
 import { sendEvent, events } from '../common/ga';
 
@@ -8,19 +24,40 @@ import { fetchSongList, fetchGeniusLyrics } from './genius';
 import { setSong, getSong } from './store';
 import { optionsPromise } from './options';
 import { captureException } from './utils';
-import { audioPromise, lyricVideoIsOpen } from './element';
+import { audioPromise } from './element';
 import { configPromise } from './config';
 
+interface CacheItem {
+  name: string;
+  artists: string;
+  duration: number;
+  lyrics?: Lyric;
+  promiseLyrics?: Promise<Lyric | undefined>;
+  getLyrics?: () => Promise<Lyric | undefined>;
+}
+
+const cacheStore = new Cache<CacheItem>({ max: 100, renewal: true });
+const setCache = (info: CacheItem) => cacheStore.set([info.name, info.artists].join(), info);
+const getCache = (name: string, artists: string) => cacheStore.get([name, artists].join());
+
 export class SharedData {
+  // optional
+  private _duration = 0;
+
+  // Popup data
   private _name = '';
   private _artists = '';
   private _id = 0;
   private _aId = 0;
   private _list: Song[] = [];
-  private _lyrics: Lyric = [];
-  private _error: Error | null = null;
+
+  // PIP data
   private _text = '';
   private _highlightLyrics: string[] | null = [];
+  // length 0 is loading
+  // null is no lyrics
+  private _lyrics: Lyric = [];
+  private _error: Error | null = null;
   private _abortController = new AbortController();
 
   get cd1() {
@@ -31,8 +68,8 @@ export class SharedData {
     return `${this._id}`;
   }
 
-  get query() {
-    return { name: this._name, artists: this._artists };
+  get req() {
+    return { name: this._name, artists: this._artists, duration: this._duration };
   }
 
   get text() {
@@ -43,12 +80,12 @@ export class SharedData {
     return this._highlightLyrics;
   }
 
-  get error() {
-    return this._error;
-  }
-
   get lyrics() {
     return this._lyrics;
+  }
+
+  get error() {
+    return this._error;
   }
 
   get name() {
@@ -63,18 +100,23 @@ export class SharedData {
     this._lyrics = lyrics && [...lyrics];
   }
 
-  resetLyrics() {
-    this._lyrics = [];
-    this._error = null;
+  private _cancelRequest() {
     this._abortController.abort();
     this._abortController = new AbortController();
   }
 
+  private _resetLyrics() {
+    this._lyrics = [];
+    this._error = null;
+    this._cancelRequest();
+  }
+
   resetData() {
-    this.resetLyrics();
+    this._resetLyrics();
     this._id = 0;
     this._name = '';
     this._artists = '';
+    this._duration = 0;
     this._aId = 0;
     this._list = [];
     this._text = '';
@@ -82,7 +124,7 @@ export class SharedData {
   }
 
   // can only modify `lyrics`
-  async updateLyrics(fetchOptions: RequestInit) {
+  private async _updateLyrics(fetchOptions: RequestInit) {
     if (this._id === 0) {
       this._lyrics = null;
     } else {
@@ -100,9 +142,9 @@ export class SharedData {
     }
   }
 
-  async fetchHighlight(fetchOptions: RequestInit) {
+  private async _fetchHighlight(fetchOptions: RequestInit) {
     const fetchTransName = async () => ({});
-    const { id } = await matchingLyrics(this.query, {
+    const { id } = await matchingLyrics(this.req, {
       onlySearchName: false,
       fetchData: fetchSongList,
       fetchTransName,
@@ -119,7 +161,7 @@ export class SharedData {
   }
 
   // can only modify `lyrics`/`id`/`aId`/`list`
-  async matching(fetchOptions: RequestInit) {
+  private async _matching(fetchOptions: RequestInit) {
     const audio = await audioPromise;
     const startTime = audio.currentSrc ? performance.now() : null;
     const options = await optionsPromise;
@@ -127,12 +169,12 @@ export class SharedData {
       cleanLyrics: options['clean-lyrics'] === 'on',
       useTChinese: options['traditional-chinese-lyrics'] === 'on',
     };
-    const { list, id } = await matchingLyrics(this.query, {
+    const { list, id } = await matchingLyrics(this.req, {
       getAudioElement: () => audio,
       fetchOptions,
     });
     this._list = list;
-    const remoteData = await getSong(this.query, fetchOptions);
+    const remoteData = await getSong(this.req, fetchOptions);
     const reviewed = options['use-unreviewed-lyrics'] === 'on' || remoteData?.reviewed;
     const isSelf = remoteData?.user === options.cid;
     if (isSelf && remoteData?.lyric) {
@@ -141,14 +183,14 @@ export class SharedData {
     } else if (isSelf && remoteData?.neteaseID) {
       this._id = remoteData.neteaseID;
       this._aId = this._id;
-      await this.updateLyrics(fetchOptions);
+      await this._updateLyrics(fetchOptions);
     } else if (reviewed && remoteData?.lyric) {
       this._lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
       sendEvent(options.cid, events.useRemoteLyrics);
     } else {
       this._id = (reviewed ? remoteData?.neteaseID || id : id || remoteData?.neteaseID) || 0;
       this._aId = this._id;
-      await this.updateLyrics(fetchOptions);
+      await this._updateLyrics(fetchOptions);
     }
     if (this._lyrics && this._id !== id) {
       sendEvent(options.cid, events.useRemoteMatch);
@@ -160,7 +202,7 @@ export class SharedData {
       const ev = (performance.now() - startTime).toFixed();
       sendEvent(options.cid, { ev, ...events.loadLyrics }, { cd1: this.cd1 });
     }
-    this.fetchHighlight(fetchOptions);
+    this._fetchHighlight(fetchOptions);
   }
 
   async confirmedMId() {
@@ -180,16 +222,16 @@ export class SharedData {
     if (id === this._id) return;
     if (name !== this._name || artists !== this._artists) return;
     this._id = id;
-    this.resetLyrics();
+    this._resetLyrics();
     try {
       const fetchOptions = { signal: this._abortController.signal };
       if (id === 0) {
         // reset
         await setSong({ name, artists, id });
-        await this.matching(fetchOptions);
+        await this._matching(fetchOptions);
         this.sendToContentScript();
       } else {
-        await this.updateLyrics(fetchOptions);
+        await this._updateLyrics(fetchOptions);
       }
     } catch (e) {
       if (e.name !== 'AbortError') {
@@ -198,9 +240,7 @@ export class SharedData {
     }
   }
 
-  async updateTrack(isTrust = false) {
-    if (!lyricVideoIsOpen) return;
-
+  async dispatchTrackElementUpdateEvent(isUserAction = false) {
     const { TRACK_NAME_SELECTOR, TRACK_ARTIST_SELECTOR } = await configPromise;
     const name = document.querySelector(TRACK_NAME_SELECTOR)?.textContent;
     const artists = document.querySelector(TRACK_ARTIST_SELECTOR)?.textContent;
@@ -210,7 +250,7 @@ export class SharedData {
         return;
       }
       if (!name || !artists) {
-        if (isTrust) {
+        if (isUserAction) {
           throw new Error(`Track info not found`);
         }
         return;
@@ -218,7 +258,11 @@ export class SharedData {
       this.resetData();
       this._name = name;
       this._artists = artists;
-      await this.matching({ signal: this._abortController.signal });
+      // case1: spotify metadata API call before of UI update
+      const succuss = await this._restoreCurrentTrackAndLyrics();
+      if (!succuss) {
+        await this._matching({ signal: this._abortController.signal });
+      }
     } catch (e) {
       if (e.name !== 'AbortError') {
         this._error = e;
@@ -226,6 +270,36 @@ export class SharedData {
       }
     }
     this.sendToContentScript();
+  }
+
+  async cacheTrackAndLyrics(info: CacheItem) {
+    if (getCache(info.name, info.artists)) return;
+    setCache(info);
+    // case2: spotify metadata API call after of UI update
+    if (this.name === info.name && this.artists === info.artists) {
+      const succuss = await this._restoreCurrentTrackAndLyrics();
+      if (succuss) {
+        this._cancelRequest();
+      }
+    }
+  }
+
+  private async _restoreCurrentTrackAndLyrics() {
+    const cache = getCache(this.name, this.artists);
+    if (cache) {
+      this._duration = cache.duration;
+      if (cache.lyrics || cache.getLyrics) {
+        try {
+          const lyrics = cache.lyrics || (await (cache.promiseLyrics ||= cache.getLyrics?.()));
+          if (lyrics) {
+            this._lyrics = cache.lyrics = lyrics;
+            return true;
+          }
+        } catch {
+          //
+        }
+      }
+    }
   }
 
   sendToContentScript() {

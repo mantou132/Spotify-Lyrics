@@ -1,4 +1,4 @@
-import { sify, tify } from 'chinese-conv';
+import { sify as toSimplified, tify as toTraditional } from 'chinese-conv';
 
 import { isProd } from '../common/constants';
 
@@ -10,6 +10,8 @@ import { captureException } from './utils';
 export interface Query {
   name: string;
   artists: string;
+  /**sec */
+  duration?: number;
 }
 
 export interface Artist {
@@ -83,7 +85,7 @@ const ignoreAccented = (s: string) => {
 };
 
 const simplifiedText = (s: string) => {
-  return ignoreAccented(plainText(sify(normalize(s)).toLowerCase()));
+  return ignoreAccented(plainText(toSimplified(normalize(s)).toLowerCase()));
 };
 
 const removeSongFeat = (s: string) => {
@@ -132,9 +134,9 @@ async function fetchChineseName(s: string, fetchOptions?: RequestInit) {
     artists.forEach((artist) => {
       const alias = [...artist.alias, ...(artist.transNames || [])].map(simplifiedText).sort();
       // Chinese singer's English name as an alias
-      alias.forEach((alia) => {
-        if (s.includes(alia)) {
-          singerAlias[alia] = artist.name;
+      alias.forEach((n) => {
+        if (s.includes(n)) {
+          singerAlias[n] = artist.name;
         }
       });
     });
@@ -179,6 +181,7 @@ export async function matchingLyrics(
   query: Query,
   options: MatchingLyricsOptions = {},
 ): Promise<{ list: Song[]; id: number; score: number }> {
+  const { name = '', artists = '' } = query;
   const {
     getAudioElement,
     onlySearchName = false,
@@ -187,18 +190,18 @@ export async function matchingLyrics(
     fetchOptions,
   } = options;
 
-  let audio: HTMLAudioElement | null = null;
-  if (getAudioElement) {
-    audio = await getAudioElement();
+  let duration = query.duration || 0;
+  if (getAudioElement && !duration) {
+    const audio = await getAudioElement();
     if (!audio.duration) {
-      await new Promise((res) => audio!.addEventListener('loadedmetadata', res, { once: true }));
+      await new Promise((res) => audio.addEventListener('loadedmetadata', res, { once: true }));
+      duration = audio.duration;
     }
   }
-  const { name = '', artists = '' } = query;
 
   const queryName = normalize(name);
   const queryName1 = queryName.toLowerCase();
-  const queryName2 = sify(queryName1);
+  const queryName2 = toSimplified(queryName1);
   const queryName3 = plainText(queryName2);
   const queryName4 = ignoreAccented(queryName3);
   const queryName5 = removeSongFeat(queryName4);
@@ -208,7 +211,7 @@ export async function matchingLyrics(
     .map((e) => normalize(e.trim()))
     .sort();
   const queryArtistsArr1 = queryArtistsArr.map((e) => e.toLowerCase());
-  const queryArtistsArr2 = queryArtistsArr1.map((e) => sify(e));
+  const queryArtistsArr2 = queryArtistsArr1.map((e) => toSimplified(e));
   const queryArtistsArr3 = queryArtistsArr2.map((e) => ignoreAccented(plainText(e)));
 
   const singerAlias = await fetchTransName(
@@ -219,7 +222,7 @@ export async function matchingLyrics(
 
   const queryArtistsArr4 = queryArtistsArr3
     .map((e) => singerAlias[e] || buildInSingerAlias[e] || e)
-    .map((e) => sify(e).toLowerCase());
+    .map((e) => toSimplified(e).toLowerCase());
 
   const searchString = onlySearchName
     ? removeSongFeat(name)
@@ -235,10 +238,10 @@ export async function matchingLyrics(
     let currentScore = 0;
 
     if (
-      !audio ||
-      (!isProd && audio.duration < 40) ||
+      !duration ||
+      (!isProd && duration < 40) ||
       !song.duration ||
-      Math.abs(audio.duration - song.duration / 1000) < 2
+      Math.abs(duration - song.duration / 1000) < 2
     ) {
       currentScore += DURATION_WEIGHT;
     }
@@ -251,7 +254,7 @@ export async function matchingLyrics(
       if (songName === queryName1) {
         currentScore += 9.1;
       } else {
-        songName = sify(songName);
+        songName = toSimplified(songName);
         if (
           songName === queryName2 ||
           songName.endsWith(`(${queryName2})`) ||
@@ -273,7 +276,7 @@ export async function matchingLyrics(
               } else {
                 songName = getText(
                   // without `plainText`
-                  removeSongFeat(ignoreAccented(sify(normalize(song.name).toLowerCase()))),
+                  removeSongFeat(ignoreAccented(toSimplified(normalize(song.name).toLowerCase()))),
                 );
                 if (songName === queryName6) {
                   // name & name (abc)
@@ -305,7 +308,7 @@ export async function matchingLyrics(
       } else if (new Set([...queryArtistsArr1, ...songArtistsArr]).size < len) {
         currentScore += 5.4;
       } else {
-        songArtistsArr = songArtistsArr.map((e) => sify(e));
+        songArtistsArr = songArtistsArr.map((e) => toSimplified(e));
         if (queryArtistsArr2.join() === songArtistsArr.join()) {
           currentScore += 5.3;
         } else {
@@ -381,6 +384,7 @@ export async function fetchLyric(songId: number, fetchOptions?: RequestInit) {
 }
 
 class Line {
+  /**sec */
   startTime: number | null = null;
   text = '';
   constructor(text = '', starTime: number | null = null) {
@@ -425,20 +429,20 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
       if (textIndex > -1) {
         text = matchResult.splice(textIndex, 1)[0];
         text = capitalize(normalize(text, false));
-        text = sify(text).replace(/\.|,|\?|!|;$/u, '');
+        text = toSimplified(text).replace(/\.|,|\?|!|;$/u, '');
       }
       if (!matchResult.length && options.keepPlainText) {
         return [new Line(text)];
       }
       return matchResult.map((slice) => {
         const result = new Line();
-        const matchResut = slice.match(/[^\[\]]+/g);
-        const [key, value] = matchResut?.[0].split(':') || [];
+        const matchResult = slice.match(/[^\[\]]+/g);
+        const [key, value] = matchResult?.[0].split(':') || [];
         const [min, sec] = [parseFloat(key), parseFloat(value)];
         if (!isNaN(min)) {
           if (!options.cleanLyrics || !otherInfoRegexp.test(text)) {
             result.startTime = min * 60 + sec;
-            result.text = options.useTChinese ? tify(text) : text;
+            result.text = options.useTChinese ? toTraditional(text) : text;
           }
         } else if (!options.cleanLyrics && key && value) {
           result.text = `${key.toUpperCase()}: ${value}`;

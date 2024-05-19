@@ -138,7 +138,7 @@ export const insetLyricsBtn = async () => {
         sharedData.resetData();
       } else {
         await openLyrics();
-        sharedData.updateTrack(true);
+        sharedData.dispatchTrackElementUpdateEvent(true);
       }
     } catch (e) {
       captureException(e);

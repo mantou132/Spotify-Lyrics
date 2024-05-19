@@ -135,7 +135,7 @@
   },
 
   "optionsToggleShortcutDetail": {
-    "message": "When webapp is in focus, you can use shortcuts to open and close lyrics",
+    "message": "When webapp is in focus, you can use shortcuts to open and close lyrics, global shortcut: chrome://extensions/shortcuts",
     "description": "Toggle show lyrics shortcut detail"
   },
 

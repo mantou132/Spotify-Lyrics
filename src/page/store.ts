@@ -1,9 +1,5 @@
-/**
- * temporary plan: Stored in webpage localStorage
- */
-import type { Lyric, LyricsResponse } from '../../functions/src/type';
+import type { LyricRecord, LyricsResponse } from '../../functions/src/type';
 
-import { Query } from './lyrics';
 import { optionsPromise } from './options';
 import { currentPlatform } from './config';
 import { request } from './request';
@@ -12,7 +8,11 @@ import { request } from './request';
 const API_HOST =
   'https://files.xianqiao.wang/https://us-central1-spotify-lyrics-ef482.cloudfunctions.net';
 
-async function fetchData(pathname: string, params: Lyric | Lyric[], fetchOptions?: RequestInit) {
+async function fetchData(
+  pathname: string,
+  params: LyricRecord | LyricRecord[],
+  fetchOptions?: RequestInit,
+) {
   return await request(`${API_HOST}${pathname}`, {
     method: 'post',
     headers: { 'content-type': 'application/json' },
@@ -21,12 +21,15 @@ async function fetchData(pathname: string, params: Lyric | Lyric[], fetchOptions
   });
 }
 
-// Previously used localStorage
-// const KEY = 'spotify.lyrics.extension';
-
-export async function getSong(data: Query, fetchOptions: RequestInit) {
+export async function getSong(
+  data: {
+    name: string;
+    artists: string;
+  },
+  fetchOptions: RequestInit,
+) {
   const { cid } = await optionsPromise;
-  const res: LyricsResponse<Lyric | undefined> = await fetchData(
+  const res: LyricsResponse<LyricRecord | undefined> = await fetchData(
     '/getLyric',
     {
       name: data.name,
@@ -39,7 +42,12 @@ export async function getSong(data: Query, fetchOptions: RequestInit) {
   return res.data;
 }
 
-export async function setSong(data: Query & { id?: number; lyric?: string }) {
+export async function setSong(data: {
+  name: string;
+  artists: string;
+  id?: number;
+  lyric?: string;
+}) {
   const { cid } = await optionsPromise;
   await fetchData('/setLyric', {
     name: data.name,

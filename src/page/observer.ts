@@ -4,6 +4,7 @@ import { insetLyricsBtn } from './btn';
 import { sharedData } from './share-data';
 import { generateCover } from './cover';
 import { captureException, documentQueryHasSelector } from './utils';
+import { SpotifyTrackLyrics, SpotifyTrackMetadata } from './types';
 
 let loginResolve: (value?: unknown) => void;
 export const loggedPromise = new Promise((res) => (loginResolve = res));
@@ -74,13 +75,14 @@ configPromise.then(
       anonymous.src = this.currentSrc || this.src;
     }
 
-    const update = () => {
+    const infoElementUpdate = () => {
       // Assuming that cover is loaded after the song information is updated
       const cover = document.querySelector(ALBUM_COVER_SELECTOR) as HTMLImageElement | null;
       if (cover) {
         cover.addEventListener('load', coverUpdated);
       }
 
+      if (!lyricVideoIsOpen) return;
       const likeBtn = documentQueryHasSelector(BTN_LIKE_SELECTOR);
       const likeBtnRect = likeBtn?.getBoundingClientRect();
       if (!likeBtnRect?.width || !likeBtnRect.height) {
@@ -88,9 +90,9 @@ configPromise.then(
         return sharedData.resetData();
       }
 
-      sharedData.updateTrack();
+      sharedData.dispatchTrackElementUpdateEvent();
 
-      if (lyricVideoIsOpen && !cover) {
+      if (!cover) {
         captureException(new Error('Cover not found'));
       }
     };
@@ -104,10 +106,10 @@ configPromise.then(
       const prevInfoElement = infoElement;
       infoElement = document.querySelector(TRACK_INFO_SELECTOR);
       if (!infoElement) return;
-      if (!prevInfoElement || prevInfoElement !== infoElement) update();
+      if (!prevInfoElement || prevInfoElement !== infoElement) infoElementUpdate();
 
       if (!weakMap.has(infoElement)) {
-        const infoEleObserver = new MutationObserver(update);
+        const infoEleObserver = new MutationObserver(infoElementUpdate);
         infoEleObserver.observe(infoElement, {
           childList: true,
           characterData: true,
@@ -123,3 +125,47 @@ configPromise.then(
     htmlEleObserver.observe(document.documentElement, { childList: true, subtree: true });
   },
 );
+
+const originFetch = globalThis.fetch;
+
+let latestHeader = new Headers();
+
+// Priority to detect track switching through API
+// Priority to use build-in lyrics through API
+globalThis.fetch = async (...rest) => {
+  const res = await originFetch(...rest);
+  const url = new URL(rest[0] instanceof Request ? rest[0].url : rest[0], location.origin);
+  latestHeader = new Headers(rest[0] instanceof Request ? rest[0].headers : rest[1]?.headers);
+  const spotifyAPI = 'https://spclient.wg.spotify.com';
+  if (url.origin === spotifyAPI && url.pathname.startsWith('/metadata/4/track/')) {
+    const metadata: SpotifyTrackMetadata = await res.clone().json();
+    const { name = '', artist = [], duration = 0, canonical_uri, has_lyrics } = metadata || {};
+    const trackId = canonical_uri?.match(/spotify:track:([^:]*)/)?.[1];
+    // match artists element textContent
+    const artists = artist?.map((e) => e?.name).join(', ');
+    sharedData.cacheTrackAndLyrics({
+      name,
+      artists,
+      duration: duration / 1000,
+      getLyrics: has_lyrics
+        ? async () => {
+            const res = await fetch(`${spotifyAPI}/lyrics/v1/track/${trackId}?market=from_token`, {
+              headers: latestHeader,
+            });
+            const spLyrics: SpotifyTrackLyrics = await res.json();
+            if (spLyrics.kind === 'LINE') {
+              return spLyrics.lines
+                .map(({ time, words }) =>
+                  words.map(({ string }) => ({
+                    startTime: time / 1000,
+                    text: string,
+                  })),
+                )
+                .flat();
+            }
+          }
+        : undefined,
+    });
+  }
+  return res;
+};

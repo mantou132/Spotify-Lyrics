@@ -3,6 +3,7 @@ declare module 'chinese-conv' {
   export const tify: (s: string) => string;
 }
 
+// web api
 interface FontMetadata {
   family: string;
   fullName: string;

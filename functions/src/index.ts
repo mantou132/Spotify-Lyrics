@@ -1,7 +1,7 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
-import { Lyric, LyricsResponse, Config } from './type';
+import { LyricRecord, LyricsResponse, Config } from './type';
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -23,14 +23,14 @@ const corsHandler = (req: functions.https.Request, res: functions.Response) => {
   }
 };
 
-const isValidRequest = (params: Lyric) => {
+const isValidRequest = (params: LyricRecord) => {
   return params?.user && params.name && params.artists && params.platform;
 };
 
 export const getLyric = functions.https.onRequest(
   async (req, res: functions.Response<LyricsResponse<any>>) => {
     if (corsHandler(req, res)) return;
-    const params: Lyric = req.body;
+    const params: LyricRecord = req.body;
     if (!isValidRequest(params)) {
       res.status(400).send({ message: 'Params error' });
       return;
@@ -43,11 +43,11 @@ export const getLyric = functions.https.onRequest(
       .where('platform', '==', params.platform);
     let snapshot = await query.where('user', '==', params.user).get();
     let doc = snapshot.docs[0];
-    let data = doc?.data() as Lyric | undefined;
+    let data = doc?.data() as LyricRecord | undefined;
     if (snapshot.empty || (!data?.lyric && !data?.neteaseID)) {
       snapshot = await query.get();
       doc = snapshot.docs[0];
-      data = doc?.data() as Lyric | undefined;
+      data = doc?.data() as LyricRecord | undefined;
     }
     res.send({ data, message: 'OK' });
   },
@@ -56,7 +56,7 @@ export const getLyric = functions.https.onRequest(
 export const setLyric = functions.https.onRequest(
   async (req, res: functions.Response<LyricsResponse<any>>) => {
     if (corsHandler(req, res)) return;
-    const params: Lyric = req.body;
+    const params: LyricRecord = req.body;
     if (!isValidRequest(params)) {
       return;
     }
@@ -71,10 +71,10 @@ export const setLyric = functions.https.onRequest(
     if (snapshot.empty) {
       if (params.neteaseID || params.lyric) {
         await lyricsRef.add(
-          Object.assign({ neteaseID: 0, lyric: '' } as Lyric, params, {
+          Object.assign({ neteaseID: 0, lyric: '' } as LyricRecord, params, {
             reviewed,
             createdTime: Date.now(),
-          } as Lyric),
+          } as LyricRecord),
         );
       }
     } else {
@@ -82,10 +82,10 @@ export const setLyric = functions.https.onRequest(
       const data = Object.assign(doc.data(), params);
       if (data.neteaseID || data.lyric) {
         await doc.ref.update(
-          Object.assign({ neteaseID: 0, lyric: '' } as Lyric, params, {
+          Object.assign({ neteaseID: 0, lyric: '' } as LyricRecord, params, {
             reviewed,
             updatedTime: Date.now(),
-          } as Lyric),
+          } as LyricRecord),
         );
       } else {
         await doc.ref.delete();
