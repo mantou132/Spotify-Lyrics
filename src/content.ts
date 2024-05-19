@@ -8,25 +8,10 @@ runtime.onMessage.addListener((msg: Message) => {
 
 window.addEventListener('message', ({ data }) => {
   const { type } = data || {};
-  switch (type) {
-    case Event.GET_OPTIONS: {
-      return runtime
-        .sendMessage(data)
-        .then((options) => {
-          window.postMessage({ type: Event.SEND_OPTIONS, data: options }, '*');
-        })
-        .catch(() => {
-          //
-        });
-    }
-    case Event.SEND_REQUEST:
-    case Event.POPUP_ACTIVE:
-    case Event.CAPTURE_EXCEPTION:
-    case Event.SEND_SONGS: {
-      return runtime.sendMessage(data).catch(() => {
-        //
-      });
-    }
+  if (type in Event) {
+    runtime.sendMessage(data).catch(() => {
+      //
+    });
   }
 });
 

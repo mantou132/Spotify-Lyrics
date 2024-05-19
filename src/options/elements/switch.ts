@@ -3,19 +3,19 @@ import { customElement, attribute, refobject, RefObject } from '@mantou/gem/lib/
 
 import { theme } from '../../common/theme';
 
-export type Value = 'off' | 'on';
+export type SwitchValue = 'off' | 'on';
 
 @customElement('ele-switch')
 export class Switch extends GemElement {
   @attribute name: string;
-  @attribute defaultValue: Value;
+  @attribute defaultValue: SwitchValue;
 
   @refobject checkboxRef: RefObject<HTMLInputElement>;
 
   get control() {
     return this.checkboxRef.element!;
   }
-  get value(): Value {
+  get value(): SwitchValue {
     return this.control.checked ? 'on' : 'off';
   }
 

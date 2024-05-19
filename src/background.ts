@@ -56,14 +56,18 @@ function enableBrowserAction() {
 disableBrowserAction();
 
 browser.runtime.onMessage.addListener(async (msg: Message, sender) => {
+  const tabId = sender.tab?.id;
   const { type, data } = msg || {};
   switch (type) {
     case Event.GET_OPTIONS: {
       // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/onMessage#Parameters
-      return getOptions().then((options) => ({
-        ...options,
-        i18nMap,
-      }));
+      const options = await getOptions();
+      if (!tabId) return;
+
+      sendMessage(tabId, {
+        type: Event.SEND_OPTIONS,
+        data: { ...options, i18nMap },
+      });
     }
     case Event.POPUP_ACTIVE: {
       if (data === true) {
@@ -85,7 +89,6 @@ browser.runtime.onMessage.addListener(async (msg: Message, sender) => {
     }
     case Event.SEND_REQUEST: {
       const { reqId, uri, options } = data as Req;
-      const tabId = sender.tab?.id;
       if (!tabId) return;
 
       const sendRes = (data: Omit<Res, 'reqId'>) => {
@@ -119,8 +122,6 @@ browser.commands.onCommand.addListener((command) => {
   }
 });
 
-browser.runtime.setUninstallURL('https://forms.gle/bUWyEqfSTCU9NEwEA');
-
 browser.contextMenus.create({
   id: ContextItems.WELCOME,
   title: i18n.menusWelcome(),
@@ -133,22 +134,21 @@ browser.contextMenus.create({
   contexts: ['action'],
 });
 
-const storeLinkMap: Record<string, string> = {
+const storeLinkMap = {
   '{d5bcc68d-856a-41e2-8021-d4c51f3b8e4a}':
     'https://addons.mozilla.org/en-US/firefox/addon/spotify-lyrics/',
-  '{9bbdd06f-4fe2-4d05-8c2d-1ef6bf71f84d}': 'https://github.com/mantou132/Spotify-Lyrics',
   mkjfooclbdgjdclepjeepbmmjaclipod:
     'https://chrome.google.com/webstore/detail/spotify-lyrics/mkjfooclbdgjdclepjeepbmmjaclipod/reviews',
   aiehldpoaeaidnljjimhbojpblkbembm:
     'https://microsoftedge.microsoft.com/addons/detail/spotify-lyrics/aiehldpoaeaidnljjimhbojpblkbembm',
+  github: 'https://github.com/mantou132/Spotify-Lyrics',
 };
-if (storeLinkMap[browser.runtime.id]) {
-  browser.contextMenus.create({
-    id: ContextItems.RATE_ME,
-    title: i18n.menusRateMe(),
-    contexts: ['action'],
-  });
-}
+
+browser.contextMenus.create({
+  id: ContextItems.RATE_ME,
+  title: i18n.menusRateMe(),
+  contexts: ['action'],
+});
 
 const openPage = async (url: string) => {
   const { windowId } = await browser.tabs.create({ url });
@@ -164,10 +164,14 @@ browser.contextMenus.onClicked.addListener(async function (info) {
       openPage('https://github.com/mantou132/Spotify-Lyrics/issues');
       break;
     case ContextItems.RATE_ME:
-      openPage(storeLinkMap[browser.runtime.id]);
+      openPage(
+        storeLinkMap[browser.runtime.id as keyof typeof storeLinkMap] || storeLinkMap.github,
+      );
       break;
   }
 });
+
+browser.runtime.setUninstallURL('https://forms.gle/bUWyEqfSTCU9NEwEA');
 
 browser.runtime.onInstalled.addListener(({ reason }) => {
   if (reason === 'install') {

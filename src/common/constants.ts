@@ -1,4 +1,4 @@
-import type { Value } from '../options/elements/switch';
+import type { SwitchValue } from '../options/elements/switch';
 
 // Read package.json `version` field
 export const VERSION = process.env.VERSION || 'UNKNOWN';
@@ -14,25 +14,25 @@ export interface Message<T = any> {
 }
 
 export enum Event {
-  GET_SONGS = 'get-songs',
-  SEND_SONGS = 'send-songs',
-  SELECT_SONG = 'select-song',
-  CONFIRMED_SONG = 'confirmed-song',
-  GET_OPTIONS = 'get-options',
-  SEND_OPTIONS = 'send-options',
-  OPEN_OPTIONS = 'open-options',
-  POPUP_ACTIVE = 'popup-active',
-  CAPTURE_EXCEPTION = 'capture-exception',
-  SEND_REQUEST = 'send-request',
-  SEND_RESPONSE = 'send-response',
-  TOGGLE = 'toggle',
+  GET_SONGS = 100000,
+  SEND_SONGS,
+  SELECT_SONG,
+  CONFIRMED_SONG,
+  GET_OPTIONS,
+  SEND_OPTIONS,
+  OPEN_OPTIONS,
+  POPUP_ACTIVE,
+  CAPTURE_EXCEPTION,
+  SEND_REQUEST,
+  SEND_RESPONSE,
+  TOGGLE,
 }
 
-export const ContextItems = {
-  FEEDBACK: 'feedback',
-  RATE_ME: 'rate-me',
-  WELCOME: 'welcome',
-};
+export enum ContextItems {
+  FEEDBACK = 'feedback',
+  RATE_ME = 'rate-me',
+  WELCOME = 'welcome',
+}
 
 export const LyricsPositions = ['page', 'pip'] as const;
 export const LyricsAlign = ['left', 'center'] as const;
@@ -42,16 +42,16 @@ export interface Options {
   'font-size': string;
   'font-family': (typeof LyricsFontFamily)[number] | string;
   'toggle-shortcut': string;
-  'only-cover': Value;
-  'clean-lyrics': Value;
-  'hd-cover': Value;
-  'use-unreviewed-lyrics': Value;
+  'only-cover': SwitchValue;
+  'clean-lyrics': SwitchValue;
+  'hd-cover': SwitchValue;
+  'use-unreviewed-lyrics': SwitchValue;
   'show-on': (typeof LyricsPositions)[number];
   'lyrics-align': (typeof LyricsAlign)[number];
-  'traditional-chinese-lyrics': Value;
+  'traditional-chinese-lyrics': SwitchValue;
   // Deprecated
-  'lyrics-smooth-scroll'?: Value;
-  'strict-mode'?: Value;
+  'lyrics-smooth-scroll'?: SwitchValue;
+  'strict-mode'?: SwitchValue;
 }
 
 export type Platform = 'SPOTIFY' | 'YOUTUBE' | 'DEEZER' | 'TIDAL' | 'APPLE';

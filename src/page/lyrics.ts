@@ -27,7 +27,8 @@ export interface Song {
   name: string;
   artists: Artist[];
   album: Album;
-  duration?: number; // ms
+  /**ms */
+  duration?: number;
 }
 
 interface SearchSongsResult {
@@ -91,6 +92,7 @@ const simplifiedText = (s: string) => {
 const removeSongFeat = (s: string) => {
   return (
     s
+      .replace(/-\s+\d*\s*remaster(ed)?\s*\d*/, '')
       .replace(/-\s+(feat|with).*/i, '')
       .replace(/(\(|\[)(feat|with)\.?\s+.*(\)|\])$/i, '')
       .trim() || s
@@ -410,7 +412,7 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
   const otherInfoKeys = [
     '作?\\s*词|作?\\s*曲|编\\s*曲?|监\\s*制?',
     '.*编写|.*和音|.*和声|.*合声|.*提琴|.*录|.*工程|.*工作室|.*设计|.*剪辑|.*制作|.*发行|.*出品|.*后期|.*混音|.*缩混',
-    '原唱|翻唱|题字|文案|海报|古筝|二胡|钢琴|吉他|贝斯|笛子|鼓|弦乐',
+    '母带|原唱|翻唱|题字|文案|海报|古筝|二胡|钢琴|吉他|贝斯|笛子|鼓|弦乐',
     'lrc|publish|vocal|guitar|program|produce|write',
   ];
   const otherInfoRegexp = new RegExp(`^(${otherInfoKeys.join('|')}).*(:|：)`, 'i');

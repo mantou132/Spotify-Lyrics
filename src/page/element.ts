@@ -40,13 +40,15 @@ const setPopupState = (active: boolean) => {
 };
 
 lyricVideo.addEventListener('enterpictureinpicture', () => {
-  setPopupState(true);
   lyricVideoIsOpen = true;
 });
 lyricVideo.addEventListener('leavepictureinpicture', () => {
-  setPopupState(false);
   lyricVideoIsOpen = false;
 });
+
+// service worker active will disabled browser action
+setInterval(() => setPopupState(lyricVideoIsOpen), 1000);
+
 // When the lyrics are displayed on the page
 window.addEventListener('beforeunload', () => {
   if (lyricVideoIsOpen) setPopupState(false);
