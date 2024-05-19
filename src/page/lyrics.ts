@@ -1,6 +1,6 @@
 import { sify as toSimplified, tify as toTraditional } from 'chinese-conv';
 
-import { isProd } from '../common/constants';
+import { Options, isProd } from '../common/constants';
 
 import { configPromise } from './config';
 import { optionsPromise } from './options';
@@ -45,6 +45,9 @@ interface SearchArtistsResult {
 
 interface SongResult {
   lrc?: {
+    lyric?: string;
+  };
+  tlyric?: {
     lyric?: string;
   };
 }
@@ -378,11 +381,12 @@ export async function matchingLyrics(
 
 export async function fetchLyric(songId: number, fetchOptions?: RequestInit) {
   const { API_HOST } = await configPromise;
-  const { lrc }: SongResult = await request(
+  const { lrc, tlyric }: SongResult = await request(
     `${API_HOST}/lyric?${new URLSearchParams({ id: String(songId) })}`,
     fetchOptions,
   );
-  return lrc?.lyric || '';
+  const options = await optionsPromise;
+  return (options['lyrics-transform'] === 'Simplified' && tlyric?.lyric) || lrc?.lyric || '';
 }
 
 class Line {
@@ -399,7 +403,7 @@ export type Lyric = Line[] | null;
 
 export interface ParseLyricsOptions {
   cleanLyrics?: boolean;
-  useTChinese?: boolean;
+  lyricsTransform?: Options['lyrics-transform'];
   keepPlainText?: boolean;
 }
 
@@ -431,7 +435,7 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
       if (textIndex > -1) {
         text = matchResult.splice(textIndex, 1)[0];
         text = capitalize(normalize(text, false));
-        text = toSimplified(text).replace(/\.|,|\?|!|;$/u, '');
+        text = text.replace(/\.|,|\?|!|;$/u, '');
       }
       if (!matchResult.length && options.keepPlainText) {
         return [new Line(text)];
@@ -444,7 +448,19 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
         if (!isNaN(min)) {
           if (!options.cleanLyrics || !otherInfoRegexp.test(text)) {
             result.startTime = min * 60 + sec;
-            result.text = options.useTChinese ? toTraditional(text) : text;
+            switch (options.lyricsTransform) {
+              case 'Simplified': {
+                result.text = toSimplified(text);
+                break;
+              }
+              case 'Traditional': {
+                result.text = toTraditional(text);
+                break;
+              }
+              default:
+                result.text = text;
+                break;
+            }
           }
         } else if (!options.cleanLyrics && key && value) {
           result.text = `${key.toUpperCase()}: ${value}`;

@@ -136,7 +136,7 @@ export class SharedData {
       } else {
         this._lyrics = parseLyrics(lyricsStr, {
           cleanLyrics: options['clean-lyrics'] === 'on',
-          useTChinese: options['traditional-chinese-lyrics'] === 'on',
+          lyricsTransform: options['lyrics-transform'],
         });
       }
     }
@@ -167,14 +167,17 @@ export class SharedData {
     const options = await optionsPromise;
     const parseLyricsOptions = {
       cleanLyrics: options['clean-lyrics'] === 'on',
-      useTChinese: options['traditional-chinese-lyrics'] === 'on',
+      lyricsTransform: options['lyrics-transform'],
     };
-    const { list, id } = await matchingLyrics(this.req, {
-      getAudioElement: () => audio,
-      fetchOptions,
-    });
+    const [{ list, id }, remoteData] = await Promise.all([
+      matchingLyrics(this.req, {
+        getAudioElement: () => audio,
+        fetchOptions,
+      }),
+      getSong(this.req, fetchOptions),
+    ]);
+    if (id === 0 && (await this._restoreLyrics(true))) return;
     this._list = list;
-    const remoteData = await getSong(this.req, fetchOptions);
     const reviewed = options['use-unreviewed-lyrics'] === 'on' || remoteData?.reviewed;
     const isSelf = remoteData?.user === options.cid;
     if (isSelf && remoteData?.lyric) {
@@ -259,8 +262,7 @@ export class SharedData {
       this._name = name;
       this._artists = artists;
       // case1: spotify metadata API call before of UI update
-      const succuss = await this._restoreCurrentTrackAndLyrics();
-      if (!succuss) {
+      if (!(await this._restoreLyrics())) {
         await this._matching({ signal: this._abortController.signal });
       }
     } catch (e) {
@@ -276,15 +278,15 @@ export class SharedData {
     if (getCache(info.name, info.artists)) return;
     setCache(info);
     // case2: spotify metadata API call after of UI update
+    // current behavior
     if (this.name === info.name && this.artists === info.artists) {
-      const succuss = await this._restoreCurrentTrackAndLyrics();
-      if (succuss) {
+      if (await this._restoreLyrics()) {
         this._cancelRequest();
       }
     }
   }
 
-  private async _restoreCurrentTrackAndLyrics() {
+  private async _restoreLyrics(isForce = false) {
     const cache = getCache(this.name, this.artists);
     if (cache) {
       this._duration = cache.duration;
@@ -292,7 +294,10 @@ export class SharedData {
         try {
           const lyrics = cache.lyrics || (await (cache.promiseLyrics ||= cache.getLyrics?.()));
           if (lyrics) {
-            this._lyrics = cache.lyrics = lyrics;
+            cache.lyrics = lyrics;
+            // 如果使用简体歌词，那么只更新缓存
+            if (!isForce && (await optionsPromise)['lyrics-transform'] === 'Simplified') return;
+            this._lyrics = lyrics;
             return true;
           }
         } catch {

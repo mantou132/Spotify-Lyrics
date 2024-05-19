@@ -1,7 +1,13 @@
 import { customElement, refobject, RefObject } from '@mantou/gem/lib/decorators';
 import { GemElement, html } from '@mantou/gem/lib/element';
 
-import { Options, LyricsPositions, LyricsAlign, LyricsFontFamily } from '../common/constants';
+import {
+  Options,
+  LyricsPositions,
+  LyricsAlign,
+  LyricsFontFamily,
+  LyricsTransform,
+} from '../common/constants';
 import { sendEvent, events } from '../common/ga';
 import { theme } from '../common/theme';
 
@@ -131,11 +137,15 @@ export class OptionsApp extends GemElement<State> {
             default-value=${options['clean-lyrics']}
           ></ele-switch>
         </ele-form-item>
-        <ele-form-item label="${i18n.optionsTraditionalChineseLyrics()} *">
-          <ele-switch
-            name=${'traditional-chinese-lyrics' as keyof Options}
-            default-value=${options['traditional-chinese-lyrics']}
-          ></ele-switch>
+        <ele-form-item
+          label="${i18n.optionsLyricsTransform()} *"
+          description=${i18n.optionsLyricsTransformDetail()}
+        >
+          <ele-select
+            name=${'lyrics-transform' as keyof Options}
+            default-value=${options['lyrics-transform']}
+            .options=${LyricsTransform.map((e) => ({ label: e, value: e }))}
+          ></ele-select>
         </ele-form-item>
         <ele-form-item
           ?hidden=${!document.pictureInPictureEnabled}

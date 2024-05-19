@@ -17,6 +17,7 @@ const defaultOptions: Options = {
   'use-unreviewed-lyrics': 'on',
   'toggle-shortcut': 'l',
   'traditional-chinese-lyrics': uiLanguage === 'zh-TW' || uiLanguage === 'zh-HK' ? 'on' : 'off',
+  'lyrics-transform': 'Origin',
 };
 
 export async function getOptions() {

@@ -23,7 +23,7 @@ describe('parse lyrics', () => {
     expect(parseLyrics('[02:01]\n')).toEqual<Lyric>(null);
     expect(parseLyrics('[02:01]编')).toEqual<Lyric>([{ startTime: 121, text: '编' }]);
     expect(parseLyrics('[02:01]编：xx')).toEqual<Lyric>([{ startTime: 121, text: '编: xx' }]);
-    expect(parseLyrics('[02:01]编：', { useTChinese: true })).toEqual<Lyric>([
+    expect(parseLyrics('[02:01]编：', { lyricsTransform: 'Traditional' })).toEqual<Lyric>([
       { startTime: 121, text: '編:' },
     ]);
     expect(parseLyrics('[02:01]编：', { cleanLyrics: true })).toEqual<Lyric>(null);

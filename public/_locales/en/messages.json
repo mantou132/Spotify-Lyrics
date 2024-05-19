@@ -124,6 +124,14 @@
     "description": "Lyrics use traditional chinese"
   },
 
+  "optionsLyricsTransform": {
+    "message": "Lyrics transform"
+  },
+
+  "optionsLyricsTransformDetail": {
+    "message": "When using simplified Chinese, try to load the translated lyrics"
+  },
+
   "optionsLyricsPosition": {
     "message": "Where the lyrics show",
     "description": "Lyrics position option"

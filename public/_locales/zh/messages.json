@@ -95,6 +95,14 @@
     "message": "繁体中文歌词"
   },
 
+  "optionsLyricsTransform": {
+    "message": "歌词转换"
+  },
+
+  "optionsLyricsTransformDetail": {
+    "message": "当使用简体中文时会尝试加载翻译的歌词"
+  },
+
   "optionsLyricsPosition": {
     "message": "歌词显示位置"
   },
