@@ -267,16 +267,16 @@ const key = 'spotify.lyrics.test';
 
 const listPromise = new Promise<Query[]>((res, rej) => {
   const fn = () => {
-    const querys = [...document.querySelectorAll('.tracklist li')].map((item) => {
+    const queryList = [...document.querySelectorAll('.tracklist li')].map((item) => {
       return {
         name: item.querySelector('.tracklist-name')?.textContent || '',
         artists: item.querySelector('.TrackListRow__artists')?.textContent || '',
       };
     });
-    if (!querys.length) {
+    if (!queryList.length) {
       setTimeout(fn, 100);
     } else {
-      res(querys);
+      res(queryList);
     }
   };
   setTimeout(rej, 5000);
@@ -300,14 +300,14 @@ window.addEventListener('load', async () => {
         detail: [],
       };
 
-      const querys = await listPromise;
+      const queryList = await listPromise;
 
       // test
-      querys.length = 1;
+      queryList.length = 1;
 
       await Promise.all(
-        querys.map(async (query, i) => {
-          console.log(`${i + 1}/${querys.length} matching: `, query);
+        queryList.map(async (query, i) => {
+          console.log(`${i + 1}/${queryList.length} matching: `, query);
           const { id } = await matchingLyrics(query);
           if (id === 0) {
             data[location.pathname].noMatch++;

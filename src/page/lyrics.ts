@@ -10,8 +10,6 @@ import { captureException } from './utils';
 export interface Query {
   name: string;
   artists: string;
-  /**sec */
-  duration?: number;
 }
 
 export interface Artist {
@@ -177,7 +175,7 @@ async function fetchSongList(s: string, fetchOptions?: RequestInit): Promise<Son
 
 interface MatchingLyricsOptions {
   onlySearchName?: boolean;
-  getAudioElement?: () => HTMLAudioElement | Promise<HTMLAudioElement>;
+  getDuration?: () => Promise<number>;
   fetchData?: (s: string, fetchOptions?: RequestInit) => Promise<Song[]>;
   fetchTransName?: (s: string, fetchOptions?: RequestInit) => Promise<Record<string, string>>;
   fetchOptions?: RequestInit;
@@ -188,21 +186,14 @@ export async function matchingLyrics(
 ): Promise<{ list: Song[]; id: number; score: number }> {
   const { name = '', artists = '' } = query;
   const {
-    getAudioElement,
+    getDuration,
     onlySearchName = false,
     fetchData = fetchSongList,
     fetchTransName = fetchChineseName,
     fetchOptions,
   } = options;
 
-  let duration = query.duration || 0;
-  if (getAudioElement && !duration) {
-    const audio = await getAudioElement();
-    if (!audio.duration) {
-      await new Promise((res) => audio.addEventListener('loadedmetadata', res, { once: true }));
-      duration = audio.duration;
-    }
-  }
+  const duration = (await getDuration?.()) || 0;
 
   const queryName = normalize(name);
   const queryName1 = queryName.toLowerCase();
@@ -361,7 +352,7 @@ export async function matchingLyrics(
       list: listForMissingName,
       score: scoreForMissingName,
     } = await matchingLyrics(query, {
-      getAudioElement,
+      getDuration,
       onlySearchName: true,
       fetchData,
       fetchTransName: async () => singerAlias,

@@ -1,16 +1,6 @@
 /**
  * Used to update the data and synchronize with Popup and Lyrics Editor,
  * while the data is rendered into the PIP
- *
- * 1. The built -in lyrics cache through the API intercept
- *    (cannot be sure that this call is the current played song)
- * 2. Triggering lyrics update based on UI update
- *    1. get cache
- *    2. fetch NetEase data
- *    3. fetch Google Firebase data
- *    4. fetch Genius data
- * 3. Sync to popup，response popup user interaction
- * 4. Response lyrics editor user interaction
  */
 import { Cache } from 'duoyun-ui/lib/cache';
 
@@ -27,23 +17,39 @@ import { captureException } from './utils';
 import { audioPromise } from './element';
 import { configPromise } from './config';
 
-interface CacheItem {
+interface CacheReq {
   name: string;
   artists: string;
   duration: number;
-  lyrics?: Lyric;
-  promiseLyrics?: Promise<Lyric | undefined>;
-  getLyrics?: () => Promise<Lyric | undefined>;
+  getLyrics?: (fetchOptions: RequestInit) => Promise<string>;
+}
+
+interface CacheItem {
+  name: string;
+  artists: string;
+  resolveDuration: (duration: number) => void;
+  durationPromise: Promise<number>;
+  getLyrics: (fetchOptions: RequestInit) => Promise<string>;
 }
 
 const cacheStore = new Cache<CacheItem>({ max: 100, renewal: true });
-const setCache = (info: CacheItem) => cacheStore.set([info.name, info.artists].join(), info);
-const getCache = (name: string, artists: string) => cacheStore.get([name, artists].join());
+const getCache = (name: string, artists: string) => {
+  return cacheStore.get([name, artists].join(), () => {
+    let _resolveDuration = (_: number) => {
+      //
+    };
+    const _durationPromise = new Promise<number>((res) => (_resolveDuration = res));
+    return {
+      name,
+      artists,
+      resolveDuration: _resolveDuration,
+      durationPromise: _durationPromise,
+      getLyrics: async () => '',
+    };
+  });
+};
 
 export class SharedData {
-  // optional
-  private _duration = 0;
-
   // Popup data
   private _name = '';
   private _artists = '';
@@ -69,7 +75,7 @@ export class SharedData {
   }
 
   get req() {
-    return { name: this._name, artists: this._artists, duration: this._duration };
+    return { name: this._name, artists: this._artists };
   }
 
   get text() {
@@ -116,30 +122,38 @@ export class SharedData {
     this._id = 0;
     this._name = '';
     this._artists = '';
-    this._duration = 0;
     this._aId = 0;
     this._list = [];
     this._text = '';
     this._highlightLyrics = [];
   }
 
-  // can only modify `lyrics`
-  private async _updateLyrics(fetchOptions: RequestInit) {
+  private async _getParseLyricsOptions() {
+    const options = await optionsPromise;
+    return {
+      cleanLyrics: options['clean-lyrics'] === 'on',
+      lyricsTransform: options['lyrics-transform'],
+    };
+  }
+
+  private async _getLyricsFromNetEase(fetchOptions: RequestInit) {
     if (this._id === 0) {
-      this._lyrics = null;
-    } else {
-      const options = await optionsPromise;
-      const lyricsStr = await fetchLyric(this._id, fetchOptions);
-      if (lyricsStr === '') {
-        sendEvent(options.cid, events.noLyrics, { cd1: this.cd1, cd2: this.cd2 });
-        this._lyrics = null;
-      } else {
-        this._lyrics = parseLyrics(lyricsStr, {
-          cleanLyrics: options['clean-lyrics'] === 'on',
-          lyricsTransform: options['lyrics-transform'],
-        });
-      }
+      return null;
     }
+    const options = await optionsPromise;
+    const lyricsStr = await fetchLyric(this._id, fetchOptions);
+    if (lyricsStr === '') {
+      sendEvent(options.cid, events.noLyrics, { cd1: this.cd1, cd2: this.cd2 });
+      return null;
+    }
+    return parseLyrics(lyricsStr, await this._getParseLyricsOptions());
+  }
+
+  private async _getLyricsFromBuiltIn(fetchOptions: RequestInit) {
+    return parseLyrics(
+      await getCache(this.name, this.artists).getLyrics(fetchOptions),
+      await this._getParseLyricsOptions(),
+    );
   }
 
   private async _fetchHighlight(fetchOptions: RequestInit) {
@@ -160,23 +174,33 @@ export class SharedData {
     }
   }
 
+  cacheTrackAndLyrics(info: CacheReq) {
+    const cache = getCache(info.name, info.artists);
+    cache.resolveDuration(info.duration);
+    if (info.getLyrics) cache.getLyrics = info.getLyrics;
+  }
+
   // can only modify `lyrics`/`id`/`aId`/`list`
   private async _matching(fetchOptions: RequestInit) {
     const audio = await audioPromise;
     const startTime = audio.currentSrc ? performance.now() : null;
     const options = await optionsPromise;
-    const parseLyricsOptions = {
-      cleanLyrics: options['clean-lyrics'] === 'on',
-      lyricsTransform: options['lyrics-transform'],
-    };
+    const parseLyricsOptions = await this._getParseLyricsOptions();
     const [{ list, id }, remoteData] = await Promise.all([
       matchingLyrics(this.req, {
-        getAudioElement: () => audio,
+        getDuration: async () => {
+          const audioMetadataLoaded = new Promise<any>((res) =>
+            audio.addEventListener('loadedmetadata', res, { once: true }),
+          );
+          return Promise.any<number>([
+            getCache(this._name, this._artists).durationPromise,
+            audio.duration || (await audioMetadataLoaded) || audio.duration,
+          ]);
+        },
         fetchOptions,
       }),
       getSong(this.req, fetchOptions),
     ]);
-    if (id === 0 && (await this._restoreLyrics(true))) return;
     this._list = list;
     const reviewed = options['use-unreviewed-lyrics'] === 'on' || remoteData?.reviewed;
     const isSelf = remoteData?.user === options.cid;
@@ -186,14 +210,25 @@ export class SharedData {
     } else if (isSelf && remoteData?.neteaseID) {
       this._id = remoteData.neteaseID;
       this._aId = this._id;
-      await this._updateLyrics(fetchOptions);
+      this._lyrics = await this._getLyricsFromNetEase(fetchOptions);
     } else if (reviewed && remoteData?.lyric) {
       this._lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
       sendEvent(options.cid, events.useRemoteLyrics);
     } else {
       this._id = (reviewed ? remoteData?.neteaseID || id : id || remoteData?.neteaseID) || 0;
       this._aId = this._id;
-      await this._updateLyrics(fetchOptions);
+      const getLyricsList = [
+        this._getLyricsFromBuiltIn.bind(this),
+        this._getLyricsFromNetEase.bind(this),
+      ];
+      try {
+        this._lyrics = await getLyricsList[0](fetchOptions);
+      } catch {
+        //
+      }
+      if (this._lyrics === null) {
+        this._lyrics = await getLyricsList[1](fetchOptions);
+      }
     }
     if (this._lyrics && this._id !== id) {
       sendEvent(options.cid, events.useRemoteMatch);
@@ -234,7 +269,7 @@ export class SharedData {
         await this._matching(fetchOptions);
         this.sendToContentScript();
       } else {
-        await this._updateLyrics(fetchOptions);
+        this._lyrics = await this._getLyricsFromNetEase(fetchOptions);
       }
     } catch (e) {
       if (e.name !== 'AbortError') {
@@ -261,10 +296,7 @@ export class SharedData {
       this.resetData();
       this._name = name;
       this._artists = artists;
-      // case1: spotify metadata API call before of UI update
-      if (!(await this._restoreLyrics())) {
-        await this._matching({ signal: this._abortController.signal });
-      }
+      await this._matching({ signal: this._abortController.signal });
     } catch (e) {
       if (e.name !== 'AbortError') {
         this._error = e;
@@ -272,39 +304,6 @@ export class SharedData {
       }
     }
     this.sendToContentScript();
-  }
-
-  async cacheTrackAndLyrics(info: CacheItem) {
-    if (getCache(info.name, info.artists)) return;
-    setCache(info);
-    // case2: spotify metadata API call after of UI update
-    // current behavior
-    if (this.name === info.name && this.artists === info.artists) {
-      if (await this._restoreLyrics()) {
-        this._cancelRequest();
-      }
-    }
-  }
-
-  private async _restoreLyrics(isForce = false) {
-    const cache = getCache(this.name, this.artists);
-    if (cache) {
-      this._duration = cache.duration;
-      if (cache.lyrics || cache.getLyrics) {
-        try {
-          const lyrics = cache.lyrics || (await (cache.promiseLyrics ||= cache.getLyrics?.()));
-          if (lyrics) {
-            cache.lyrics = lyrics;
-            // 如果使用简体歌词，那么只更新缓存
-            if (!isForce && (await optionsPromise)['lyrics-transform'] === 'Simplified') return;
-            this._lyrics = lyrics;
-            return true;
-          }
-        } catch {
-          //
-        }
-      }
-    }
   }
 
   sendToContentScript() {

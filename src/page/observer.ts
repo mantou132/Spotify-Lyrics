@@ -130,42 +130,43 @@ const originFetch = globalThis.fetch;
 
 let latestHeader = new Headers();
 
-// Priority to detect track switching through API
-// Priority to use build-in lyrics through API
 globalThis.fetch = async (...rest) => {
   const res = await originFetch(...rest);
   const url = new URL(rest[0] instanceof Request ? rest[0].url : rest[0], location.origin);
-  latestHeader = new Headers(rest[0] instanceof Request ? rest[0].headers : rest[1]?.headers);
   const spotifyAPI = 'https://spclient.wg.spotify.com';
   if (url.origin === spotifyAPI && url.pathname.startsWith('/metadata/4/track/')) {
-    const metadata: SpotifyTrackMetadata = await res.clone().json();
-    const { name = '', artist = [], duration = 0, canonical_uri, has_lyrics } = metadata || {};
-    const trackId = canonical_uri?.match(/spotify:track:([^:]*)/)?.[1];
-    // match artists element textContent
-    const artists = artist?.map((e) => e?.name).join(', ');
-    sharedData.cacheTrackAndLyrics({
-      name,
-      artists,
-      duration: duration / 1000,
-      getLyrics: has_lyrics
-        ? async () => {
-            const res = await fetch(`${spotifyAPI}/lyrics/v1/track/${trackId}?market=from_token`, {
-              headers: latestHeader,
-            });
-            const spLyrics: SpotifyTrackLyrics = await res.json();
-            if (spLyrics.kind === 'LINE') {
-              return spLyrics.lines
-                .map(({ time, words }) =>
-                  words.map(({ string }) => ({
-                    startTime: time / 1000,
-                    text: string,
-                  })),
-                )
-                .flat();
-            }
-          }
-        : undefined,
-    });
+    latestHeader = new Headers(rest[0] instanceof Request ? rest[0].headers : rest[1]?.headers);
+
+    // const metadata: SpotifyTrackMetadata = await res.clone().json();
+    // const { name = '', artist = [], duration = 0, canonical_uri, has_lyrics } = metadata || {};
+    // const trackId = canonical_uri?.match(/spotify:track:([^:]*)/)?.[1];
+    // // match artists element textContent
+    // const artists = artist?.map((e) => e?.name).join(', ');
+    // sharedData.cacheTrackAndLyrics({
+    //   name,
+    //   artists,
+    //   duration: duration / 1000,
+    //   getLyrics: has_lyrics
+    //     ? async ({ signal }) => {
+    //         const res = await fetch(`${spotifyAPI}/lyrics/v1/track/${trackId}?market=from_token`, {
+    //           headers: latestHeader,
+    //           signal,
+    //         });
+    //         if (!res.ok) return '';
+    //         const spLyrics: SpotifyTrackLyrics = await res.json();
+    //         if (spLyrics.kind !== 'LINE') return '';
+    //         return spLyrics.lines
+    //           .map(({ time, words }) =>
+    //             words.map(({ string }) => {
+    //               const sec = time / 1000;
+    //               return `[${Math.floor(sec / 60)}:${sec % 60}]\n${string}`;
+    //             }),
+    //           )
+    //           .flat()
+    //           .join('\n');
+    //       }
+    //     : undefined,
+    // });
   }
   return res;
 };
