@@ -68,6 +68,7 @@ browser.runtime.onMessage.addListener(async (msg: Message, sender) => {
         type: Event.SEND_OPTIONS,
         data: { ...options, i18nMap },
       });
+      return;
     }
     case Event.POPUP_ACTIVE: {
       if (data === true) {
