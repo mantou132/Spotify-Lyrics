@@ -37,7 +37,7 @@ export enum ContextItems {
 export const LyricsPositions = ['page', 'pip'] as const;
 export const LyricsAlign = ['left', 'center'] as const;
 export const LyricsFontFamily = ['CircularSp', 'Sans-Serif', 'Serif', 'Cursive'] as const;
-export const LyricsTransform = ['Origin', 'Simplified', 'Traditional'] as const;
+export const LyricsTransform = ['Origin', 'Simplified', 'Traditional', 'Origin + Simplified', 'Origin + Traditional'] as const;
 export interface Options {
   cid: string;
   'font-size': string;
