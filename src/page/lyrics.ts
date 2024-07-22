@@ -413,6 +413,12 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
   const otherInfoRegexp = new RegExp(`^(${otherInfoKeys.join('|')}).*(:|：)`, 'i');
 
   const lines = lyricStr.split(/\r?\n/).map((line) => line.trim());
+
+  const transformKeepOriginal = (text:string, transformFunction:any) => {
+    const transformed = transformFunction(text);
+    return text === transformed? text: text + "\n" + transformed;
+  }
+  
   const lyrics = lines
     .map((line) => {
       // ["[ar:Beyond]"]
@@ -446,6 +452,14 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
               }
               case 'Traditional': {
                 result.text = toTraditional(text);
+                break;
+              }
+              case 'Origin + Simplified': {
+                result.text = transformKeepOriginal(text, toSimplified);
+                break;
+              }
+              case 'Origin + Traditional': {
+                result.text = transformKeepOriginal(text, toTraditional);
                 break;
               }
               default:
