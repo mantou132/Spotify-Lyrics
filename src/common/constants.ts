@@ -38,6 +38,7 @@ export const LyricsPositions = ['page', 'pip'] as const;
 export const LyricsAlign = ['left', 'center'] as const;
 export const LyricsFontFamily = ['CircularSp', 'Sans-Serif', 'Serif', 'Cursive'] as const;
 export const LyricsTransform = ['Origin', 'Simplified', 'Traditional'] as const;
+export const LyricsServer = ['NetEase', 'LRCLIB'] as const;
 export interface Options {
   cid: string;
   'font-size': string;
@@ -52,6 +53,7 @@ export interface Options {
   /**@deprecated */
   'traditional-chinese-lyrics': SwitchValue;
   'lyrics-transform': (typeof LyricsTransform)[number];
+  'lyrics-server': (typeof LyricsServer)[number];
   /**@deprecated */
   'lyrics-smooth-scroll'?: SwitchValue;
   'strict-mode'?: SwitchValue;

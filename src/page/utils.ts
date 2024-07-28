@@ -28,9 +28,10 @@ export function documentQueryHasSelector(s: string) {
 }
 
 export function querySelectorAll(selector: string) {
-  const [rootSelector, sub] = selector.split('>>');
-  if (sub) {
-    const root = querySelector(rootSelector);
+  const parts = selector.split('>>');
+  if (parts.length > 1) {
+    const sub = parts.pop()!;
+    const root = querySelector(parts.join('>>'));
     return root?.shadowRoot?.querySelectorAll(sub);
   }
   return document.querySelectorAll(selector);

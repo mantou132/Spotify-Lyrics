@@ -16,6 +16,8 @@ import { optionsPromise } from './options';
 import { captureException, querySelector } from './utils';
 import { audioPromise } from './element';
 import { configPromise } from './config';
+import { fetchNetEaseSongList } from './netease';
+import { fetchLRCLIBSongList } from './lrclib';
 
 interface CacheReq {
   name: string;
@@ -186,6 +188,8 @@ export class SharedData {
     const parseLyricsOptions = await this._getParseLyricsOptions();
     const [{ list, id }, remoteData] = await Promise.all([
       matchingLyrics(this.req, {
+        fetchSongList:
+          options['lyrics-server'] === 'NetEase' ? fetchNetEaseSongList : fetchLRCLIBSongList,
         getDuration: async () => {
           const audioMetadataLoaded = new Promise<any>((res) =>
             audio.addEventListener('loadedmetadata', res, { once: true }),

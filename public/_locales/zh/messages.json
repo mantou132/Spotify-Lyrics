@@ -99,6 +99,10 @@
     "message": "歌词转换"
   },
 
+  "optionsLyricsServer": {
+    "message": "歌词服务"
+  },
+
   "optionsLyricsTransformDetail": {
     "message": "当使用简体中文时会尝试加载翻译的歌词"
   },

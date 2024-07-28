@@ -128,6 +128,10 @@
     "message": "Lyrics transform"
   },
 
+  "optionsLyricsServer": {
+    "message": "Lyrics server"
+  },
+
   "optionsLyricsTransformDetail": {
     "message": "When using simplified Chinese, try to load the translated lyrics"
   },

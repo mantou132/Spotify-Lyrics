@@ -7,6 +7,7 @@ import {
   LyricsAlign,
   LyricsFontFamily,
   LyricsTransform,
+  LyricsServer,
 } from '../common/constants';
 import { sendEvent, events } from '../common/ga';
 import { theme } from '../common/theme';
@@ -195,6 +196,13 @@ export class OptionsApp extends GemElement<State> {
             name=${'use-unreviewed-lyrics' as keyof Options}
             default-value=${options['use-unreviewed-lyrics']}
           ></ele-switch>
+        </ele-form-item>
+        <ele-form-item label="${i18n.optionsLyricsServer()} *">
+          <ele-select
+            name=${'lyrics-server' as keyof Options}
+            default-value=${options['lyrics-server']}
+            .options=${LyricsServer.map((e) => ({ label: e, value: e }))}
+          ></ele-select>
         </ele-form-item>
       </ele-form>
       <ul class="tip">
