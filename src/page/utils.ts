@@ -19,11 +19,27 @@ export function getSVGDataUrl(s: string) {
  * ```
  */
 export function documentQueryHasSelector(s: string) {
+  if (s.includes('>>')) return querySelector(s);
   if (!s.includes(':has')) return document.querySelector(s);
   const parentSelector = s.replace(/:has\(.*\)/, '');
   const childSelector = s.replace(/:has\((.*)\)/, ' $1');
   const child = document.querySelector(childSelector);
   return child?.closest(parentSelector);
+}
+
+export function querySelectorAll(selector: string) {
+  const [rootSelector, sub] = selector.split('>>');
+  if (sub) {
+    const root = querySelector(rootSelector);
+    return root?.shadowRoot?.querySelectorAll(sub);
+  }
+  return document.querySelectorAll(selector);
+}
+
+export function querySelector(selector: string) {
+  return selector
+    .split('>>')
+    .reduce((p, c) => (p?.shadowRoot || p)?.querySelector(c), document as unknown as Element);
 }
 
 export const headReady = new Promise<void>((res) => {

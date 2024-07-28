@@ -1,6 +1,6 @@
 import { Message, Event } from '../common/constants';
 
-import { captureException, documentQueryHasSelector } from './utils';
+import { captureException, documentQueryHasSelector, querySelector } from './utils';
 import { getLyricsBtn } from './btn';
 import { loggedPromise } from './observer';
 import { configPromise, currentPlatform, localConfig } from './config';
@@ -84,7 +84,7 @@ export const audioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
   // Apple Music
   const queryAudio = async () => {
     const { AUDIO_SELECTOR } = await configPromise;
-    const element = document.querySelector(AUDIO_SELECTOR);
+    const element = querySelector(AUDIO_SELECTOR);
     if (element) {
       audio = element as HTMLAudioElement;
       resolveAudio(audio);
@@ -126,8 +126,8 @@ audioPromise.then((audio) => {
       const { BTN_WRAPPER_SELECTOR, BTN_LIKE_SELECTOR, TRACK_NAME_SELECTOR } = await configPromise;
       captureException(new Error('Lyrics button not found'), {
         duration: audio.duration,
-        TRACK_NAME: document.querySelector(TRACK_NAME_SELECTOR)?.textContent,
-        BTN_WRAPPER: !!document.querySelector(BTN_WRAPPER_SELECTOR),
+        TRACK_NAME: querySelector(TRACK_NAME_SELECTOR)?.textContent,
+        BTN_WRAPPER: !!querySelector(BTN_WRAPPER_SELECTOR),
         BTN_LIKE: !!documentQueryHasSelector(BTN_LIKE_SELECTOR),
       });
     }

@@ -3,7 +3,14 @@ import { Event, isProd, Message } from '../common/constants';
 
 import { configPromise, localConfig } from './config';
 import { lyricVideo, audioPromise, lyricVideoIsOpen } from './element';
-import { appendStyle, css, captureException, documentQueryHasSelector } from './utils';
+import {
+  appendStyle,
+  css,
+  captureException,
+  documentQueryHasSelector,
+  querySelector,
+  querySelectorAll,
+} from './utils';
 import { sharedData } from './share-data';
 import { optionsPromise } from './options';
 import { openEditor } from './editor';
@@ -23,7 +30,7 @@ configPromise.then(({ PIP_BTN_SELECTOR }) => {
 
 export async function getLyricsBtn() {
   const { BTN_WRAPPER_SELECTOR } = await configPromise;
-  const btnWrapper = document.querySelector(BTN_WRAPPER_SELECTOR);
+  const btnWrapper = querySelector(BTN_WRAPPER_SELECTOR);
   return btnWrapper?.getElementsByClassName(
     localConfig.LYRICS_CLASSNAME,
   )[0] as HTMLButtonElement | null;
@@ -66,7 +73,7 @@ export const insetLyricsBtn = async () => {
     console.log('===============================');
     Object.entries(await configPromise).forEach(([k, v]) => {
       if (k.includes('SELECTOR')) {
-        console.log(k, document.querySelector(`${v}`));
+        console.log(k, querySelector(`${v}`));
       }
     });
     Object.entries(localConfig).forEach(([k, v]) => {
@@ -74,17 +81,24 @@ export const insetLyricsBtn = async () => {
         const styleSheet = new CSSStyleSheet();
         styleSheet.replaceSync(v);
         [...styleSheet.cssRules].forEach((rule: CSSStyleRule) => {
-          console.log(rule.selectorText, document.querySelectorAll(rule.selectorText));
+          console.log(rule.selectorText, querySelectorAll(rule.selectorText));
         });
       }
     });
   }
 
-  const btnWrapper = document.querySelector(BTN_WRAPPER_SELECTOR) as HTMLDivElement;
+  const btnWrapper = querySelector(BTN_WRAPPER_SELECTOR) as HTMLDivElement;
   const likeBtn = documentQueryHasSelector(BTN_LIKE_SELECTOR) as HTMLButtonElement;
   if (!btnWrapper || !likeBtn) return;
 
   if (btnWrapper.getElementsByClassName(localConfig.LYRICS_CLASSNAME).length) return;
+
+  if (localConfig.BTN_CONTINER_STYLE) {
+    const root = btnWrapper.shadowRoot || (btnWrapper.getRootNode() as unknown as ShadowRoot);
+    const style = new CSSStyleSheet();
+    style.replaceSync(localConfig.BTN_CONTINER_STYLE);
+    root.adoptedStyleSheets.push(style);
+  }
 
   btnWrapper.style.display = 'flex';
   const lyricsBtn = likeBtn.cloneNode(true) as HTMLButtonElement;

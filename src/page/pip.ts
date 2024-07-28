@@ -1,7 +1,7 @@
 // https://w3c.github.io/picture-in-picture
 // https://bugzilla.mozilla.org/show_bug.cgi?id=pip
 import { configPromise, localConfig } from './config';
-import { appendStyle } from './utils';
+import { appendStyle, querySelector } from './utils';
 import { optionsPromise } from './options';
 import { lyricVideo } from './element';
 
@@ -23,7 +23,7 @@ export const openLyrics = async function () {
   }
 
   const { LYRICS_CONTAINER_SELECTOR, PAGE_PIP_STYLE } = await configPromise;
-  const container = document.querySelector(LYRICS_CONTAINER_SELECTOR);
+  const container = querySelector(LYRICS_CONTAINER_SELECTOR);
   if (container) {
     lyricVideo.setAttribute('style', PAGE_PIP_STYLE);
     container.append(lyricVideo);

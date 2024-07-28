@@ -3,7 +3,7 @@ import { coverCtx, coverHDCtx, lyricVideoIsOpen } from './element';
 import { insetLyricsBtn } from './btn';
 import { sharedData } from './share-data';
 import { generateCover } from './cover';
-import { captureException, documentQueryHasSelector } from './utils';
+import { captureException, documentQueryHasSelector, querySelector } from './utils';
 import type { SpotifyTrackMetadata, SpotifyTrackColorLyrics } from './types';
 
 let loginResolve: (value?: unknown) => void;
@@ -77,7 +77,7 @@ configPromise.then(
 
     const infoElementUpdate = () => {
       // Assuming that cover is loaded after the song information is updated
-      const cover = document.querySelector(ALBUM_COVER_SELECTOR) as HTMLImageElement | null;
+      const cover = querySelector(ALBUM_COVER_SELECTOR) as HTMLImageElement | null;
       if (cover) {
         cover.addEventListener('load', coverUpdated);
       }
@@ -100,11 +100,11 @@ configPromise.then(
     let infoElement: Element | null = null;
 
     const checkElement = () => {
-      if (document.querySelector(LOGGED_MARK_SELECTOR)) loginResolve();
+      if (querySelector(LOGGED_MARK_SELECTOR)) loginResolve();
       // https://github.com/mantou132/Spotify-Lyrics/issues/30
       insetLyricsBtn();
       const prevInfoElement = infoElement;
-      infoElement = document.querySelector(TRACK_INFO_SELECTOR);
+      infoElement = querySelector(TRACK_INFO_SELECTOR);
       if (!infoElement) return;
       if (!prevInfoElement || prevInfoElement !== infoElement) infoElementUpdate();
 

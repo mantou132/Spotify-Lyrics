@@ -39,6 +39,8 @@ interface LocalConfig {
   SERVICE_WORKER: string;
   // Some fixed styles, they will be inserted into the page as quickly as possible, avoid page flickering
   STATIC_STYLE: string;
+  // lyrics button host style
+  BTN_CONTINER_STYLE?: string;
   // The style that should be added when the lyrics will be displayed on the page
   NO_PIP_STYLE: string;
   // CSS class Name of the lyrics button
@@ -130,31 +132,41 @@ export const localConfig: LocalConfig = (() => {
       return {
         SERVICE_WORKER: '',
         STATIC_STYLE: css`
-          /* preview tag */
-          .web-chrome-playback-lcd__platter--preview,
           /* logo */
-          .web-navigation__logo-container,
+          .navigation__header .logo,
           /* nav native links */
-          nav .web-navigation__native-upsell,
+          .navigation__native-cta,
           /* page footer */
-          footer.dt-footer,
+          footer,
           /* footer banner */
           cwc-music-upsell-banner-web {
-            display: none;
+            display: none !important;
           }
-          .${LYRICS_CLASSNAME} svg path {
-            display: none;
-          }
+        `,
+        BTN_CONTINER_STYLE: css`
           .${LYRICS_CLASSNAME} {
-            background: transparent !important;
-          }
-          .${LYRICS_CLASSNAME} svg {
+            --playback-control-button-width: var(--shuffle-repeat-button-width, 32px);
+            --playback-control-icon-height: var(--shuffle-repeat-icon-height, 28px);
+            appearance: none;
+            width: var(--playback-control-button-width, 30px);
+            height: var(--playback-control-button-height, 30px);
+            display: flex;
+            flex: 0 0 auto;
+            align-items: stretch;
+            justify-content: stretch;
+            position: relative;
+            font-size: 0;
+            border: none;
+            padding: 0;
             background: var(--systemSecondary);
-            -webkit-mask: url(${microphoneIconUrl}) center / 65% no-repeat;
-            mask: url(${microphoneIconUrl}) center / 65% no-repeat;
+            -webkit-mask: url(${microphoneIconUrl}) center / 45% no-repeat;
+            mask: url(${microphoneIconUrl}) center / 45% no-repeat;
           }
-          .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} svg {
-            background: var(--playerPlatterButtonBGFill);
+          .${LYRICS_CLASSNAME} * {
+            display: none;
+          }
+          .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} {
+            background: var(--keyColor, var(--musicKeyColor, var(--systemBlue)));
           }
         `,
         NO_PIP_STYLE: '',

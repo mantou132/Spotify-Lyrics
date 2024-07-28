@@ -13,7 +13,7 @@ import { Song, Lyric, fetchLyric, parseLyrics, matchingLyrics, correctionLyrics 
 import { fetchSongList, fetchGeniusLyrics } from './genius';
 import { setSong, getSong } from './store';
 import { optionsPromise } from './options';
-import { captureException } from './utils';
+import { captureException, querySelector } from './utils';
 import { audioPromise } from './element';
 import { configPromise } from './config';
 
@@ -293,8 +293,8 @@ export class SharedData {
 
   async dispatchTrackElementUpdateEvent(isUserAction = false) {
     const { TRACK_NAME_SELECTOR, TRACK_ARTIST_SELECTOR } = await configPromise;
-    const name = document.querySelector(TRACK_NAME_SELECTOR)?.textContent;
-    const artists = document.querySelector(TRACK_ARTIST_SELECTOR)?.textContent;
+    const name = querySelector(TRACK_NAME_SELECTOR)?.textContent;
+    const artists = querySelector(TRACK_ARTIST_SELECTOR)?.textContent;
 
     try {
       if (this._name === name && this._artists === artists) {
