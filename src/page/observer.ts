@@ -4,7 +4,7 @@ import { insetLyricsBtn } from './btn';
 import { sharedData } from './share-data';
 import { generateCover } from './cover';
 import { captureException, documentQueryHasSelector } from './utils';
-import { SpotifyTrackLyrics, SpotifyTrackMetadata } from './types';
+import type { SpotifyTrackMetadata, SpotifyTrackColorLyrics } from './types';
 
 let loginResolve: (value?: unknown) => void;
 export const loggedPromise = new Promise((res) => (loginResolve = res));
@@ -133,40 +133,44 @@ let latestHeader = new Headers();
 globalThis.fetch = async (...rest) => {
   const res = await originFetch(...rest);
   const url = new URL(rest[0] instanceof Request ? rest[0].url : rest[0], location.origin);
+
   const spotifyAPI = 'https://spclient.wg.spotify.com';
   if (url.origin === spotifyAPI && url.pathname.startsWith('/metadata/4/track/')) {
     latestHeader = new Headers(rest[0] instanceof Request ? rest[0].headers : rest[1]?.headers);
 
-    // const metadata: SpotifyTrackMetadata = await res.clone().json();
-    // const { name = '', artist = [], duration = 0, canonical_uri, has_lyrics } = metadata || {};
-    // const trackId = canonical_uri?.match(/spotify:track:([^:]*)/)?.[1];
-    // // match artists element textContent
-    // const artists = artist?.map((e) => e?.name).join(', ');
-    // sharedData.cacheTrackAndLyrics({
-    //   name,
-    //   artists,
-    //   duration: duration / 1000,
-    //   getLyrics: has_lyrics
-    //     ? async ({ signal }) => {
-    //         const res = await fetch(`${spotifyAPI}/lyrics/v1/track/${trackId}?market=from_token`, {
-    //           headers: latestHeader,
-    //           signal,
-    //         });
-    //         if (!res.ok) return '';
-    //         const spLyrics: SpotifyTrackLyrics = await res.json();
-    //         if (spLyrics.kind !== 'LINE') return '';
-    //         return spLyrics.lines
-    //           .map(({ time, words }) =>
-    //             words.map(({ string }) => {
-    //               const sec = time / 1000;
-    //               return `[${Math.floor(sec / 60)}:${sec % 60}]\n${string}`;
-    //             }),
-    //           )
-    //           .flat()
-    //           .join('\n');
-    //       }
-    //     : undefined,
-    // });
+    const metadata: SpotifyTrackMetadata = await res.clone().json();
+    const { name = '', artist = [], duration = 0, canonical_uri, has_lyrics } = metadata || {};
+    const trackId = canonical_uri?.match(/spotify:track:([^:]*)/)?.[1];
+    // match artists element textContent
+    const artists = artist?.map((e) => e?.name).join(', ');
+    sharedData.cacheTrackAndLyrics({
+      name,
+      artists,
+      duration: duration / 1000,
+      getLyrics: has_lyrics
+        ? async ({ signal }) => {
+            // https://github.com/mantou132/Spotify-Lyrics/issues/55
+            const res = await fetch(
+              `${spotifyAPI}/color-lyrics/v2/track/${trackId}?format=json&vocalRemoval=false&market=from_token`,
+              {
+                headers: latestHeader,
+                signal,
+              },
+            );
+            if (!res.ok) return '';
+            const { lyrics: spLyrics }: SpotifyTrackColorLyrics = await res.json();
+            console.log(spLyrics);
+            if (spLyrics.syncType !== 'LINE_SYNCED') return '';
+            return spLyrics.lines
+              .map(({ startTimeMs, words }) => {
+                const sec = Number(startTimeMs) / 1000;
+                return `[${Math.floor(sec / 60)}:${sec % 60}]\n${words}`;
+              })
+              .flat()
+              .join('\n');
+          }
+        : undefined,
+    });
   }
   return res;
 };

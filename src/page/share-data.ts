@@ -150,10 +150,8 @@ export class SharedData {
   }
 
   private async _getLyricsFromBuiltIn(fetchOptions: RequestInit) {
-    return parseLyrics(
-      await getCache(this.name, this.artists).getLyrics(fetchOptions),
-      await this._getParseLyricsOptions(),
-    );
+    const lrc = await getCache(this.name, this.artists).getLyrics(fetchOptions);
+    return parseLyrics(lrc, await this._getParseLyricsOptions());
   }
 
   private async _fetchHighlight(fetchOptions: RequestInit) {
@@ -204,22 +202,35 @@ export class SharedData {
     this._list = list;
     const reviewed = options['use-unreviewed-lyrics'] === 'on' || remoteData?.reviewed;
     const isSelf = remoteData?.user === options.cid;
+
+    // 1. use uploaded lyrics
     if (isSelf && remoteData?.lyric) {
       this._lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
       sendEvent(options.cid, events.useRemoteLyrics);
-    } else if (isSelf && remoteData?.neteaseID) {
+    }
+
+    // 2. use selected lyrics
+    else if (isSelf && remoteData?.neteaseID) {
       this._id = remoteData.neteaseID;
       this._aId = this._id;
       this._lyrics = await this._getLyricsFromNetEase(fetchOptions);
-    } else if (reviewed && remoteData?.lyric) {
+    }
+
+    // 3. use other user upload lyrics
+    else if (reviewed && remoteData?.lyric) {
       this._lyrics = parseLyrics(remoteData.lyric, parseLyricsOptions);
       sendEvent(options.cid, events.useRemoteLyrics);
-    } else {
+    }
+
+    // **default behavior**
+    // 4. use build-in lyrics or netease lyrics
+    else {
       this._id = (reviewed ? remoteData?.neteaseID || id : id || remoteData?.neteaseID) || 0;
       this._aId = this._id;
+      // Allow adjustment order
       const getLyricsList = [
-        this._getLyricsFromBuiltIn.bind(this),
         this._getLyricsFromNetEase.bind(this),
+        this._getLyricsFromBuiltIn.bind(this),
       ];
       try {
         this._lyrics = await getLyricsList[0](fetchOptions);
@@ -240,6 +251,8 @@ export class SharedData {
       const ev = (performance.now() - startTime).toFixed();
       sendEvent(options.cid, { ev, ...events.loadLyrics }, { cd1: this.cd1 });
     }
+
+    // 5. use song highlight
     this._fetchHighlight(fetchOptions);
   }
 

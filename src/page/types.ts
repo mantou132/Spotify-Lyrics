@@ -419,3 +419,60 @@ const spotifyTrackLyrics = {
 };
 
 export type SpotifyTrackLyrics = typeof spotifyTrackLyrics;
+
+const spotifyTrackColorLyrics = {
+  lyrics: {
+    syncType: 'UNSYNCED',
+    lines: [
+      {
+        startTimeMs: '0',
+        words: 'Help me see',
+        syllables: [],
+        endTimeMs: '0',
+      },
+      {
+        startTimeMs: '0',
+        words: 'Maybe I should be my own thing',
+        syllables: [],
+        endTimeMs: '0',
+      },
+      {
+        startTimeMs: '0',
+        words: "'Cause I'm guessing",
+        syllables: [],
+        endTimeMs: '0',
+      },
+      {
+        startTimeMs: '0',
+        words: 'That time will pass',
+        syllables: [],
+        endTimeMs: '0',
+      },
+      {
+        startTimeMs: '0',
+        words: "There'll be nothing left inside me",
+        syllables: [],
+        endTimeMs: '0',
+      },
+    ],
+    provider: 'MusixMatch',
+    providerLyricsId: '95349346',
+    providerDisplayName: 'Musixmatch',
+    syncLyricsUri: '',
+    isDenseTypeface: false,
+    alternatives: [],
+    language: 'en',
+    isRtlLanguage: false,
+    showUpsell: true,
+    capStatus: 'NONE',
+    isSnippet: true,
+  },
+  colors: {
+    background: -9013642,
+    text: -16777216,
+    highlightText: -1,
+  },
+  hasVocalRemoval: false,
+};
+
+export type SpotifyTrackColorLyrics = typeof spotifyTrackColorLyrics;

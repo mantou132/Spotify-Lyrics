@@ -12,12 +12,12 @@ export interface Query {
   artists: string;
 }
 
-export interface Artist {
+interface Artist {
   name: string;
   alias: string[];
   transNames?: string[];
 }
-export interface Album {
+interface Album {
   name: string;
 }
 export interface Song {
@@ -159,15 +159,14 @@ async function fetchSongList(s: string, fetchOptions?: RequestInit): Promise<Son
     limit: '100',
   });
   const options = await optionsPromise;
-  const fetchPromise = request(`${API_HOST}/search?${searchQuery}`, fetchOptions);
-  if (!options['use-unreviewed-lyrics']) {
-    const { result }: SearchSongsResult = await fetchPromise;
-    return result?.songs || [];
-  }
+  const fetchPromise: Promise<SearchSongsResult> = request(
+    `${API_HOST}/search?${searchQuery}`,
+    fetchOptions,
+  );
   try {
-    const { result }: SearchSongsResult = await fetchPromise;
-    return result?.songs || [];
+    return (await fetchPromise).result?.songs || [];
   } catch (err) {
+    if (!options['use-unreviewed-lyrics']) throw err;
     console.error(err);
     return [];
   }
