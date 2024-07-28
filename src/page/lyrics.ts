@@ -4,50 +4,14 @@ import { Options, isProd } from '../common/constants';
 
 import { configPromise } from './config';
 import { optionsPromise } from './options';
-import { request } from './request';
-import { captureException } from './utils';
+import { fetchNetEaseChineseName, fetchNetEaseLyric, fetchNetEaseSongList, Song } from './netease';
+import { fetchLRCLIBLyric, LRCLIB_ID_TOKEN } from './lrclib';
+
+export { Song } from './netease';
 
 export interface Query {
   name: string;
   artists: string;
-}
-
-interface Artist {
-  name: string;
-  alias: string[];
-  transNames?: string[];
-}
-interface Album {
-  name: string;
-}
-export interface Song {
-  id: number;
-  name: string;
-  artists: Artist[];
-  album: Album;
-  /**ms */
-  duration?: number;
-}
-
-interface SearchSongsResult {
-  result?: {
-    songs?: Song[];
-  };
-}
-
-interface SearchArtistsResult {
-  result?: {
-    artists?: Artist[];
-  };
-}
-
-interface SongResult {
-  lrc?: {
-    lyric?: string;
-  };
-  tlyric?: {
-    lyric?: string;
-  };
 }
 
 // Convert all into English punctuation marks for processing
@@ -121,18 +85,9 @@ const buildInSingerAliasPromise = new Promise<Record<string, string>>(async (res
 });
 
 async function fetchChineseName(s: string, fetchOptions?: RequestInit) {
-  const { API_HOST } = await configPromise;
   const singerAlias: Record<string, string> = {};
-  const searchQuery = new URLSearchParams({
-    keywords: s,
-    type: '100',
-    limit: '100',
-  });
   try {
-    const { result }: SearchArtistsResult = await request(
-      `${API_HOST}/search?${searchQuery}`,
-      fetchOptions,
-    );
+    const { result } = await fetchNetEaseChineseName(s, fetchOptions);
     const artists = result?.artists || [];
     artists.forEach((artist) => {
       const alias = [...artist.alias, ...(artist.transNames || [])].map(simplifiedText).sort();
@@ -143,39 +98,14 @@ async function fetchChineseName(s: string, fetchOptions?: RequestInit) {
         }
       });
     });
-  } catch (e) {
-    if (e.name !== 'AbortError') {
-      captureException(e);
-    }
-  }
+  } catch {}
   return singerAlias;
-}
-
-async function fetchSongList(s: string, fetchOptions?: RequestInit): Promise<Song[]> {
-  const { API_HOST } = await configPromise;
-  const searchQuery = new URLSearchParams({
-    keywords: s,
-    type: '1',
-    limit: '100',
-  });
-  const options = await optionsPromise;
-  const fetchPromise: Promise<SearchSongsResult> = request(
-    `${API_HOST}/search?${searchQuery}`,
-    fetchOptions,
-  );
-  try {
-    return (await fetchPromise).result?.songs || [];
-  } catch (err) {
-    if (!options['use-unreviewed-lyrics']) throw err;
-    console.error(err);
-    return [];
-  }
 }
 
 interface MatchingLyricsOptions {
   onlySearchName?: boolean;
   getDuration?: () => Promise<number>;
-  fetchData?: (s: string, fetchOptions?: RequestInit) => Promise<Song[]>;
+  fetchSongList?: (s: string, fetchOptions?: RequestInit) => Promise<Song[]>;
   fetchTransName?: (s: string, fetchOptions?: RequestInit) => Promise<Record<string, string>>;
   fetchOptions?: RequestInit;
 }
@@ -185,10 +115,10 @@ export async function matchingLyrics(
 ): Promise<{ list: Song[]; id: number; score: number }> {
   const { name = '', artists = '' } = query;
   const {
-    getDuration,
     onlySearchName = false,
-    fetchData = fetchSongList,
     fetchTransName = fetchChineseName,
+    fetchSongList = fetchNetEaseSongList,
+    getDuration,
     fetchOptions,
   } = options;
 
@@ -222,7 +152,7 @@ export async function matchingLyrics(
   const searchString = onlySearchName
     ? removeSongFeat(name)
     : `${queryArtistsArr4.join()} ${removeSongFeat(name)}`;
-  const songs = await fetchData(searchString, fetchOptions);
+  const songs = await fetchSongList(searchString, fetchOptions);
   const list: Song[] = [];
   const listIdSet = new Set<number>();
 
@@ -351,10 +281,10 @@ export async function matchingLyrics(
       list: listForMissingName,
       score: scoreForMissingName,
     } = await matchingLyrics(query, {
-      getDuration,
       onlySearchName: true,
-      fetchData,
       fetchTransName: async () => singerAlias,
+      getDuration,
+      fetchSongList,
       fetchOptions,
     });
     listForMissingName.forEach((song) => {
@@ -370,11 +300,17 @@ export async function matchingLyrics(
 }
 
 export async function fetchLyric(songId: number, fetchOptions?: RequestInit) {
-  const { API_HOST } = await configPromise;
-  const { lrc, tlyric }: SongResult = await request(
-    `${API_HOST}/lyric?${new URLSearchParams({ id: String(songId) })}`,
-    fetchOptions,
-  );
+  const id = Math.floor(songId);
+  const token = Math.round((songId % 1) * 10) / 10;
+  const get = () => {
+    switch (token) {
+      case LRCLIB_ID_TOKEN:
+        return fetchLRCLIBLyric(id, fetchOptions);
+      default:
+        return fetchNetEaseLyric(id, fetchOptions);
+    }
+  };
+  const { lrc, tlyric } = await get();
   const options = await optionsPromise;
   return (options['lyrics-transform'] === 'Simplified' && tlyric?.lyric) || lrc?.lyric || '';
 }

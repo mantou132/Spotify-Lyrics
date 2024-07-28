@@ -136,7 +136,7 @@ export class SharedData {
     };
   }
 
-  private async _getLyricsFromNetEase(fetchOptions: RequestInit) {
+  private async _getLyricsFromAPI(fetchOptions: RequestInit) {
     if (this._id === 0) {
       return null;
     }
@@ -158,7 +158,7 @@ export class SharedData {
     const fetchTransName = async () => ({});
     const { id } = await matchingLyrics(this.req, {
       onlySearchName: false,
-      fetchData: fetchSongList,
+      fetchSongList,
       fetchTransName,
       fetchOptions,
     });
@@ -213,7 +213,7 @@ export class SharedData {
     else if (isSelf && remoteData?.neteaseID) {
       this._id = remoteData.neteaseID;
       this._aId = this._id;
-      this._lyrics = await this._getLyricsFromNetEase(fetchOptions);
+      this._lyrics = await this._getLyricsFromAPI(fetchOptions);
     }
 
     // 3. use other user upload lyrics
@@ -229,7 +229,7 @@ export class SharedData {
       this._aId = this._id;
       // Allow adjustment order
       const getLyricsList = [
-        this._getLyricsFromNetEase.bind(this),
+        this._getLyricsFromAPI.bind(this),
         this._getLyricsFromBuiltIn.bind(this),
       ];
       try {
@@ -282,7 +282,7 @@ export class SharedData {
         await this._matching(fetchOptions);
         this.sendToContentScript();
       } else {
-        this._lyrics = await this._getLyricsFromNetEase(fetchOptions);
+        this._lyrics = await this._getLyricsFromAPI(fetchOptions);
       }
     } catch (e) {
       if (e.name !== 'AbortError') {
