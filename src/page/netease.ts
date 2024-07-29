@@ -56,9 +56,9 @@ export async function fetchNetEaseChineseName(
 }
 
 // auto swtch to lrclib
-let down = false;
+let down = 0;
 export async function fetchNetEaseSongList(s: string, fetchOptions?: RequestInit) {
-  if (down) return fetchLRCLIBSongList(s, fetchOptions);
+  if (down > 3) return fetchLRCLIBSongList(s, fetchOptions);
 
   const { API_HOST } = await configPromise;
   const searchQuery = new URLSearchParams({
@@ -71,7 +71,7 @@ export async function fetchNetEaseSongList(s: string, fetchOptions?: RequestInit
     const res: SearchSongsResult = await request(`${API_HOST}/search?${searchQuery}`, fetchOptions);
     return res.result?.songs || [];
   } catch (err) {
-    down = true;
+    down++;
     return fetchLRCLIBSongList(s, fetchOptions);
   }
 }

@@ -65,7 +65,7 @@ export class OptionsApp extends GemElement<State> {
 
   copyIdHandler = (e: KeyboardEvent) => {
     const { options } = this.state;
-    if (e.key === 'c' && options) {
+    if (e.key.toLowerCase() === 'c' && options) {
       navigator.clipboard.writeText(options.cid);
     }
   };

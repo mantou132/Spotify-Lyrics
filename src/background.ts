@@ -10,7 +10,7 @@ import {
   isFirefox,
   isRateTest,
 } from './common/constants';
-import { sendMessage } from './common/bg';
+import { getTabs, sendMessage } from './common/bg';
 import { getOptions } from './options/store';
 import { i18n, i18nMap } from './i18n';
 import type { Req, Res } from './page/request';
@@ -118,7 +118,13 @@ browser.runtime.onMessage.addListener(async (msg: Message, sender) => {
 browser.commands.onCommand.addListener((command) => {
   switch (command) {
     case 'toggle': {
-      return sendMessage({ type: Event.TOGGLE });
+      return getTabs().then(async (tabs) => {
+        const tab = tabs.find((e) => !!e.id);
+        if (!tab) return;
+        await browser.windows.update(tab.windowId!, { focused: true });
+        await browser.tabs.update(tab.id!, { active: true });
+        sendMessage({ type: Event.TOGGLE });
+      });
     }
   }
 });

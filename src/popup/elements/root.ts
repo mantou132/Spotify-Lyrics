@@ -9,7 +9,7 @@ import { i18n } from '../../i18n';
 import './list';
 
 window.addEventListener('keydown', (e) => {
-  if (e.key === 'i') {
+  if (e.key.toLowerCase() === 'i') {
     const id = Number(prompt('Enter NetEase Cloud Music ID:'));
     if (id) changeSong(id);
   }

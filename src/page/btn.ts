@@ -50,7 +50,7 @@ window.addEventListener(
     ) {
       return;
     }
-    if (e.key === options['toggle-shortcut'] && !e.repeat) {
+    if (e.key.toLowerCase() === options['toggle-shortcut'] && !e.repeat) {
       // Execute in current microtask
       e.stopImmediatePropagation();
       e.stopPropagation();
@@ -102,6 +102,7 @@ export const insetLyricsBtn = async () => {
 
   btnWrapper.style.display = 'flex';
   const lyricsBtn = likeBtn.cloneNode(true) as HTMLButtonElement;
+  (window as any).lyricsBtn = lyricsBtn;
   lyricsBtn.classList.add(localConfig.LYRICS_CLASSNAME);
 
   lyricsBtn.disabled = false;
