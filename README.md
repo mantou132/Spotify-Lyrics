@@ -142,4 +142,4 @@ Fork it, submit PR.
 
 ## Privacy Policy
 
-[see](./public/privacy-policy.html).
+[see](./src/privacy-policy.html).
