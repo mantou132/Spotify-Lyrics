@@ -203,9 +203,9 @@ export const localConfig: LocalConfig = (() => {
           /* not logged in, cookie banner */
           #onetrust-consent-sdk,
           /* webpage: upgrade button */
-          .Root [data-testid="topbar"] [data-testid="upgrade-button"],
+          .Root #global-nav-bar [data-testid="upgrade-button"],
           /* webpage: download link */
-          .Root [data-testid="topbar"] [href*=download] {
+          .Root #global-nav-bar [href*=download] {
             display: none;
           }
           .${LYRICS_CLASSNAME} {

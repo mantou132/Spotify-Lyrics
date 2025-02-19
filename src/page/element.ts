@@ -1,4 +1,4 @@
-import { Message, Event } from '../common/constants';
+import { Message, Event, isProd } from '../common/constants';
 
 import { captureException, documentQueryHasSelector, querySelector } from './utils';
 import { getLyricsBtn } from './btn';
@@ -72,6 +72,7 @@ export const audioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
       // Spotify: <video>
       // Deezer: <audio>
       if ((tagName === 'video' || tagName === 'audio') && !audio) {
+        if (!isProd) console.log('capture_audio_element', audio);
         performance.measure('capture_audio_element');
         audio = element as HTMLAudioElement;
         resolveAudio(audio);

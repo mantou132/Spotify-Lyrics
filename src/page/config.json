@@ -1,6 +1,6 @@
 {
   "API_HOST": "https://music.xianqiao.wang/neteaseapiv2",
-  "LOGGED_MARK_SELECTOR": "header [data-testid=user-widget-link]",
+  "LOGGED_MARK_SELECTOR": "#global-nav-bar [data-testid=user-widget-link]",
   "LYRICS_CONTAINER_SELECTOR": "nav[aria-label] > div:last-of-type",
   "PAGE_PIP_STYLE": "position: relative; width: 100%; height: auto; border-radius: inherit;",
   "ALBUM_COVER_SELECTOR": "[role=contentinfo] > div:nth-child(1) img",
@@ -9,7 +9,7 @@
   "TRACK_NAME_SELECTOR": "[role=contentinfo] > div:nth-child(2) > div:nth-child(1)",
   "TRACK_ARTIST_SELECTOR": "[role=contentinfo] > div:nth-child(2) > div:last-of-type",
   "BTN_WRAPPER_SELECTOR": "[role=contentinfo]",
-  "BTN_LIKE_SELECTOR": "[role=contentinfo] > button:last-of-type",
+  "BTN_LIKE_SELECTOR": "[role=contentinfo] > div:last-of-type",
   "PIP_BTN_SELECTOR": "[role=contentinfo] button[data-testid*=pip], [data-testid=now-playing-bar] > div > div:last-of-type > div > :where(button[data-testid=lyrics-button], button[data-testid=pip-toggle-button])",
   "AUDIO_SELECTOR": "NONE",
   "YOUTUBE": {
@@ -98,6 +98,7 @@
     "chung ha": "金请夏",
     "hwa sa": "华莎",
     "bibi zhou": "周笔畅",
+    "steve chou": "周传雄",
     "chinoyang": "杨晓川",
     "koala liu": "刘思涵",
     "e.so": "瘦子e.so",
