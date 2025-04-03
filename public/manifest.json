@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/extend-chrome/manifest-json-schema/main/schema/manifest.schema.json",
   "name": "__MSG_extensionName__",
-  "version": "1.6.7",
+  "version": "1.6.8",
   "manifest_version": 3,
   "description": "__MSG_extensionDescription__",
   "default_locale": "en",
