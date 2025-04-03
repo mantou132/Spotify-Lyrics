@@ -22,7 +22,7 @@
     "TRACK_NAME_SELECTOR": "ytmusic-player-bar .content-info-wrapper .title",
     "TRACK_ARTIST_SELECTOR": "ytmusic-player-bar .content-info-wrapper .subtitle yt-formatted-string > :first-child",
     "BTN_WRAPPER_SELECTOR": "ytmusic-player-bar ytmusic-like-button-renderer",
-    "BTN_LIKE_SELECTOR": "ytmusic-like-button-renderer button[aria-label='Like']",
+    "BTN_LIKE_SELECTOR": "ytmusic-player-bar ytmusic-like-button-renderer yt-button-shape.like",
     "PIP_BTN_SELECTOR": "NONE",
     "AUDIO_SELECTOR": "video.html5-main-video"
   },
@@ -41,17 +41,17 @@
     "AUDIO_SELECTOR": "#apple-music-player"
   },
   "DEEZER": {
-    "LOGGED_MARK_SELECTOR": ".topbar-action .topbar-profile",
-    "LYRICS_CONTAINER_SELECTOR": "#page_sidebar",
+    "LOGGED_MARK_SELECTOR": ".topbar-action .chakra-avatar",
+    "LYRICS_CONTAINER_SELECTOR": ".page-topbar + div",
     "PAGE_PIP_STYLE": "position: relative; width: 100%; height: auto;",
-    "ALBUM_COVER_SELECTOR": "#page_player .player-options .thumbnail img",
+    "ALBUM_COVER_SELECTOR": ".page-player .chakra-image",
     "ALBUM_COVER_LARGE_REGEXP_REPLACE": ["(\\d.*)x\\1(?=-000000-80-0-0\\.jpg$)", "640x640"],
-    "TRACK_INFO_SELECTOR": "#page_player .player-track .track-title",
-    "TRACK_NAME_SELECTOR": "#page_player .player-track .track-title .marquee-content a:first-child",
-    "TRACK_ARTIST_SELECTOR": "#page_player .player-track .track-title .marquee-content a:last-child",
-    "BTN_WRAPPER_SELECTOR": "#page_player .player-track .track-actions ul",
-    "BTN_LIKE_SELECTOR": "#page_player .player-track .track-actions ul li:not([class*=lyrics i]):has(svg[class*=love i])",
-    "PIP_BTN_SELECTOR": ".svg-icon-group-btn[aria-label*=lyrics i], .datagrid-row.song .datagrid-cell-action[aria-label*=playlist i] ~ div ~ div.datagrid-cell-action",
+    "TRACK_INFO_SELECTOR": ".page-player > div > div:first-of-type",
+    "TRACK_NAME_SELECTOR": ".page-player .chakra-link:not(.track-link)",
+    "TRACK_ARTIST_SELECTOR": ".page-player .chakra-link.track-link",
+    "BTN_WRAPPER_SELECTOR": ".page-player > div > div:first-of-type .chakra-button__group",
+    "BTN_LIKE_SELECTOR": ".page-player > div > div:first-of-type .chakra-button__group > button:first-of-type",
+    "PIP_BTN_SELECTOR": "NONE",
     "AUDIO_SELECTOR": "NONE"
   },
   "TIDAL": {

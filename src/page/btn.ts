@@ -105,6 +105,7 @@ export const insetLyricsBtn = async () => {
   (window as any).lyricsBtn = lyricsBtn;
   lyricsBtn.classList.add(localConfig.LYRICS_CLASSNAME);
 
+  lyricsBtn.id = '';
   lyricsBtn.disabled = false;
   lyricsBtn.hidden = false;
   lyricsBtn.title = options.i18nMap.pageButtonTitle;
@@ -159,5 +160,8 @@ export const insetLyricsBtn = async () => {
       captureException(e);
     }
   });
+  const children = [...lyricsBtn.children];
   btnWrapper.append(lyricsBtn);
+  await Promise.resolve();
+  lyricsBtn.append(...children);
 };

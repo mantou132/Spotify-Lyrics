@@ -86,7 +86,7 @@ export const localConfig: LocalConfig = (() => {
             -webkit-mask: url(${iconUrl}) center / 100% no-repeat;
             mask: url(${iconUrl}) center / 100% no-repeat;
           }
-          .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} tp-yt-iron-icon {
+          .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} .yt-spec-button-shape-next__icon {
             background: var(--ytmusic-text-primary);
           }
         `,
@@ -99,27 +99,21 @@ export const localConfig: LocalConfig = (() => {
       return {
         SERVICE_WORKER: '',
         STATIC_STYLE: css`
-          main.has-ads-bottom .page-content,
-          main.has-ads-bottom-with-audio .page-content {
-            padding-bottom: 0;
-          }
-          .page-sidebar .sidebar-header,
-          .has-ads-bottom .ads.ads-bottom,
-          .has-ads-bottom-with-audio .ads.ads-bottom {
+          .page-topbar + div [data-testid='conversionBanner'] {
             display: none;
           }
           .${LYRICS_CLASSNAME} {
             order: 100;
           }
-          .${LYRICS_CLASSNAME} button svg path {
+          .${LYRICS_CLASSNAME} svg path {
             display: none;
           }
-          .${LYRICS_CLASSNAME} button svg {
+          .${LYRICS_CLASSNAME} svg {
             background: var(--text-primary);
-            -webkit-mask: url(${microphoneIconUrl}) center / 100% no-repeat;
-            mask: url(${microphoneIconUrl}) center / 100% no-repeat;
+            -webkit-mask: url(${microphoneIconUrl}) center / 66.7% no-repeat;
+            mask: url(${microphoneIconUrl}) center / 66.7% no-repeat;
           }
-          .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} button svg {
+          .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} svg {
             background: var(--color-accent);
           }
         `,
