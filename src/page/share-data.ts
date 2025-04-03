@@ -14,7 +14,7 @@ import { fetchSongList, fetchGeniusLyrics } from './genius';
 import { setSong, getSong } from './store';
 import { optionsPromise } from './options';
 import { captureException, querySelector } from './utils';
-import { audioPromise } from './element';
+import { getCurrentAudio } from './element';
 import { configPromise } from './config';
 import { fetchNetEaseSongList } from './netease';
 import { fetchLRCLIBSongList } from './lrclib';
@@ -182,7 +182,7 @@ export class SharedData {
 
   // can only modify `lyrics`/`id`/`aId`/`list`
   private async _matching(fetchOptions: RequestInit) {
-    const audio = await audioPromise;
+    const audio = await getCurrentAudio();
     const startTime = audio.currentSrc ? performance.now() : null;
     const options = await optionsPromise;
     const parseLyricsOptions = await this._getParseLyricsOptions();

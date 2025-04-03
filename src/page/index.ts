@@ -9,7 +9,7 @@ import {
   RenderLyricsOptions,
   RenderTextOptions,
 } from './canvas-renderer';
-import { coverCanvas, coverHDCanvas, lyricCtx, audioPromise, lyricVideoIsOpen } from './element';
+import { coverCanvas, coverHDCanvas, lyricCtx, lyricVideoIsOpen, getCurrentAudio } from './element';
 import { sharedData } from './share-data';
 import { optionsPromise, OptionsAndI18n } from './options';
 import { appendStyle } from './utils';
@@ -20,7 +20,7 @@ import { getLyricsBtn } from './btn';
 import './observer';
 
 const tick = async (options: OptionsAndI18n) => {
-  const audio = await audioPromise;
+  const audio = await getCurrentAudio();
   const i18nMap = options.i18nMap;
 
   const isOnlyCover = options['only-cover'] === 'on';

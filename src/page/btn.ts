@@ -2,7 +2,7 @@ import { sendEvent, events } from '../common/ga';
 import { Event, isProd, Message } from '../common/constants';
 
 import { configPromise, localConfig } from './config';
-import { lyricVideo, audioPromise, lyricVideoIsOpen } from './element';
+import { lyricVideo, getCurrentAudio, lyricVideoIsOpen } from './element';
 import {
   appendStyle,
   css,
@@ -63,7 +63,7 @@ window.addEventListener(
 );
 
 export const insetLyricsBtn = async () => {
-  await audioPromise;
+  await getCurrentAudio();
 
   const options = await optionsPromise;
   const { BTN_WRAPPER_SELECTOR, BTN_LIKE_SELECTOR } = await configPromise;

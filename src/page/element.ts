@@ -54,9 +54,9 @@ window.addEventListener('beforeunload', () => {
   if (lyricVideoIsOpen) setPopupState(false);
 });
 
-export const audioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
-  let audio: HTMLAudioElement | null = null;
+let audio: HTMLAudioElement | null = null;
 
+const firstAudioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
   const createElement: typeof document.createElement = document.createElement.bind(document);
 
   const elementCountOverrideBefore = document.querySelectorAll('*').length;
@@ -70,11 +70,11 @@ export const audioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
     ) {
       const element = createElement(tagName, options);
       // Spotify: <video>
-      // Deezer: <audio>
       if ((tagName === 'video' || tagName === 'audio') && !audio) {
-        if (!isProd) console.log('capture_audio_element', audio);
+        if (!isProd) console.log('capture_audio_element', element);
         performance.measure('capture_audio_element');
         audio = element as HTMLAudioElement;
+        handleAudio(audio);
         resolveAudio(audio);
       }
       return element;
@@ -88,12 +88,28 @@ export const audioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
     const element = querySelector(AUDIO_SELECTOR);
     if (element) {
       audio = element as HTMLAudioElement;
+      handleAudio(audio);
       resolveAudio(audio);
     } else {
       setTimeout(queryAudio, 100);
     }
   };
   queryAudio();
+
+  if (currentPlatform === 'DEEZER') {
+    const A = Audio;
+    (window as any).Audio = class {
+      constructor(src?: string) {
+        const element = new A(src);
+        element.addEventListener('play', () => {
+          audio = element;
+          handleAudio(audio);
+          resolveAudio(audio);
+        });
+        return element;
+      }
+    };
+  }
 
   // Apple music does not insert audio elements by default
   if (currentPlatform !== 'APPLE') {
@@ -118,8 +134,15 @@ export const audioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
   }
 });
 
-audioPromise.then((audio) => {
-  let reported = false;
+/**
+ * Some platforms (such as Deezer) keep changing Audio
+ */
+export async function getCurrentAudio() {
+  return audio || firstAudioPromise;
+}
+
+let reported = false;
+function handleAudio(audio: HTMLAudioElement) {
   audio.addEventListener('playing', async () => {
     const isMusic = audio.duration && audio.duration > 2.6 * 60 && audio.duration < 4 * 60;
     if (!reported && isMusic && !(await getLyricsBtn())) {
@@ -134,30 +157,29 @@ audioPromise.then((audio) => {
     }
   });
 
-  // safari not support media session, pip contorl video
-  // safari turning off pip will also cause the video to pause
-  let time = performance.now();
-  lyricVideo.addEventListener('pause', () => {
-    const now = performance.now();
-    if (now - time > 300) {
-      time = now;
-      audio.pause();
-    }
-  });
-  lyricVideo.addEventListener('play', () => {
-    // video need't seek, because it is stream
-    audio.play();
+  audio.addEventListener('play', () => {
+    lyricVideo.play();
+    navigator.mediaSession.playbackState = 'playing';
   });
 
-  if (navigator.mediaSession) {
-    const mediaSession = navigator.mediaSession;
-    audio.addEventListener('play', () => {
-      lyricVideo.play();
-      mediaSession.playbackState = 'playing';
-    });
-    audio.addEventListener('pause', () => {
-      lyricVideo.pause();
-      mediaSession.playbackState = 'paused';
-    });
+  audio.addEventListener('pause', () => {
+    lyricVideo.pause();
+    navigator.mediaSession.playbackState = 'paused';
+  });
+}
+
+// safari not support media session, pip control video
+// safari turning off pip will also cause the video to pause
+let time = performance.now();
+lyricVideo.addEventListener('pause', () => {
+  const now = performance.now();
+  if (now - time > 300) {
+    time = now;
+    audio?.pause();
   }
+});
+
+lyricVideo.addEventListener('play', () => {
+  // video need't seek, because it is stream
+  audio?.play();
 });

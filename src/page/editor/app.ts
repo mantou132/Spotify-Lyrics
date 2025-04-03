@@ -3,7 +3,7 @@ import { customElement, emitter, Emitter, refobject, RefObject } from '@mantou/g
 
 import { theme } from '../../common/theme';
 import { events, sendEvent } from '../../common/ga';
-import { audioPromise, lyricVideoIsOpen } from '../element';
+import { getCurrentAudio, lyricVideoIsOpen } from '../element';
 import { sharedData } from '../share-data';
 import { parseLyrics, Lyric } from '../lyrics';
 import { setSong } from '../store';
@@ -88,7 +88,7 @@ export class EditorApp extends GemElement<State> {
     const options = await optionsPromise;
     sendEvent(options.cid, events.openEditor);
 
-    const audio = await audioPromise;
+    const audio = await getCurrentAudio();
     this.originLoop = audio.loop;
     audio.loop = true;
     this.originPlaybackRate = audio.playbackRate;
@@ -97,7 +97,7 @@ export class EditorApp extends GemElement<State> {
   }
 
   async unmounted() {
-    const audio = await audioPromise;
+    const audio = await getCurrentAudio();
     audio.loop = this.originLoop;
     audio.playbackRate = this.originPlaybackRate;
     document.removeEventListener('paste', this.pasteHandler);
@@ -107,7 +107,7 @@ export class EditorApp extends GemElement<State> {
   changePlaybackRate = async () => {
     const { element } = this.playbackRateInput;
     if (!element) return;
-    const audio = await audioPromise;
+    const audio = await getCurrentAudio();
     audio.playbackRate = Number(element.value);
   };
 
@@ -132,7 +132,7 @@ export class EditorApp extends GemElement<State> {
   };
 
   mark = async () => {
-    const audio = await audioPromise;
+    const audio = await getCurrentAudio();
     const { lyrics, currentIndex } = this.state;
     this.scrollInto();
     lyrics[currentIndex + 1].startTime = audio.currentTime;
@@ -141,7 +141,7 @@ export class EditorApp extends GemElement<State> {
   };
 
   insertLine = async () => {
-    const audio = await audioPromise;
+    const audio = await getCurrentAudio();
     const { lyrics, currentIndex } = this.state;
     this.scrollInto();
     lyrics.splice(currentIndex + 1, 0, { startTime: audio.currentTime, text: '' });
@@ -177,7 +177,7 @@ export class EditorApp extends GemElement<State> {
   };
 
   resetLocal = async (state?: Partial<State>) => {
-    const audio = await audioPromise;
+    const audio = await getCurrentAudio();
     audio.currentTime = 0;
     this.setState({ ...state, currentIndex: -1 });
     setTimeout(this.scrollInto);
@@ -220,7 +220,7 @@ export class EditorApp extends GemElement<State> {
 
   jump = async (t: number | null, index: number) => {
     if (typeof t !== 'number') return;
-    const audio = await audioPromise;
+    const audio = await getCurrentAudio();
     audio.currentTime = t;
     this.setState({ currentIndex: index });
   };

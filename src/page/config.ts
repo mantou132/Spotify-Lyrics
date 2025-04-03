@@ -99,8 +99,10 @@ export const localConfig: LocalConfig = (() => {
       return {
         SERVICE_WORKER: '',
         STATIC_STYLE: css`
-          .page-topbar + div [data-testid='conversionBanner'] {
-            display: none;
+          .page-topbar + div [data-testid='conversionBanner'],
+          [data-testid='alert-StreamingNotAllowed'],
+          .ads {
+            display: none !important;
           }
           .${LYRICS_CLASSNAME} {
             order: 100;
