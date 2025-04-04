@@ -93,10 +93,10 @@ export const insetLyricsBtn = async () => {
 
   if (btnWrapper.getElementsByClassName(localConfig.LYRICS_CLASSNAME).length) return;
 
-  if (localConfig.BTN_CONTINER_STYLE) {
+  if (localConfig.BTN_CONTAINER_STYLE) {
     const root = btnWrapper.shadowRoot || (btnWrapper.getRootNode() as unknown as ShadowRoot);
     const style = new CSSStyleSheet();
-    style.replaceSync(localConfig.BTN_CONTINER_STYLE);
+    style.replaceSync(localConfig.BTN_CONTAINER_STYLE);
     root.adoptedStyleSheets.push(style);
   }
 
@@ -160,8 +160,5 @@ export const insetLyricsBtn = async () => {
       captureException(e);
     }
   });
-  const children = [...lyricsBtn.children];
   btnWrapper.append(lyricsBtn);
-  await Promise.resolve();
-  lyricsBtn.append(...children);
 };

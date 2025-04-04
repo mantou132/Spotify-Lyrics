@@ -18,7 +18,7 @@ const defaultOptions: Options = {
   'toggle-shortcut': 'l',
   'traditional-chinese-lyrics': uiLanguage === 'zh-TW' || uiLanguage === 'zh-HK' ? 'on' : 'off',
   'lyrics-transform': 'Origin',
-  'lyrics-server': 'NetEase',
+  'lyrics-server': 'LRCLIB',
 };
 
 export async function getOptions() {

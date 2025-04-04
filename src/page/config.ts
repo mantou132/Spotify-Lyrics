@@ -40,7 +40,7 @@ interface LocalConfig {
   // Some fixed styles, they will be inserted into the page as quickly as possible, avoid page flickering
   STATIC_STYLE: string;
   // lyrics button host style
-  BTN_CONTINER_STYLE?: string;
+  BTN_CONTAINER_STYLE?: string;
   // The style that should be added when the lyrics will be displayed on the page
   NO_PIP_STYLE: string;
   // CSS class Name of the lyrics button
@@ -139,7 +139,7 @@ export const localConfig: LocalConfig = (() => {
             display: none !important;
           }
         `,
-        BTN_CONTINER_STYLE: css`
+        BTN_CONTAINER_STYLE: css`
           .${LYRICS_CLASSNAME} {
             --playback-control-button-width: var(--shuffle-repeat-button-width, 32px);
             --playback-control-icon-height: var(--shuffle-repeat-icon-height, 28px);
