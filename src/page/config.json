@@ -1,5 +1,5 @@
 {
-  "API_HOST": "https://music.xianqiao.wang/neteaseapiv2",
+  "API_HOST": "https://neteasecloudmusic.api.soraharu.com",
   "LOGGED_MARK_SELECTOR": "#global-nav-bar [data-testid=user-widget-link]",
   "LYRICS_CONTAINER_SELECTOR": "nav[aria-label] > div:last-of-type",
   "PAGE_PIP_STYLE": "position: relative; width: 100%; height: auto; border-radius: inherit;",
