@@ -12,6 +12,9 @@
   "BTN_LIKE_SELECTOR": "[data-testid=now-playing-widget] > div:last-of-type",
   "PIP_BTN_SELECTOR": "[data-testid=now-playing-widget] button[data-testid*=pip], [data-testid=now-playing-bar] > div > div:last-of-type > div > :where(button[data-testid=lyrics-button], button[data-testid=pip-toggle-button]), main section + div[class*=footer]",
   "AUDIO_SELECTOR": "NONE",
+  "OTHER_DEVICE": "[data-testid=now-playing-bar] > div + div",
+  "OTHER_DEVICE_TOTAL": "[data-testid=playback-duration]",
+  "OTHER_DEVICE_CURRENT": "[data-testid=playback-position]",
   "YOUTUBE": {
     "LOGGED_MARK_SELECTOR": "ytmusic-settings-button",
     "LYRICS_CONTAINER_SELECTOR": "ytmusic-player",

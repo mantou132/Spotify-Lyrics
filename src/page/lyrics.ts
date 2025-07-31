@@ -337,6 +337,13 @@ function capitalize(s: string) {
   return s.replace(/^(\w)/, ($1) => $1.toUpperCase());
 }
 
+export function tryParseTimeStr(str?: string) {
+  const [key, value] = str?.split(':') || [];
+  // maybe is NaN
+  const [min, sec] = [parseFloat(key), parseFloat(value)];
+  return { key, value, time: min * 60 + sec };
+}
+
 export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) {
   if (!lyricStr) return null;
   const otherInfoKeys = [
@@ -369,11 +376,10 @@ export function parseLyrics(lyricStr: string, options: ParseLyricsOptions = {}) 
       return matchResult.map((slice) => {
         const result = new Line();
         const matchResult = slice.match(/[^\[\]]+/g);
-        const [key, value] = matchResult?.[0].split(':') || [];
-        const [min, sec] = [parseFloat(key), parseFloat(value)];
-        if (!isNaN(min)) {
+        const { key, value, time } = tryParseTimeStr(matchResult?.[0]);
+        if (!isNaN(time)) {
           if (!options.cleanLyrics || !otherInfoRegexp.test(text)) {
-            result.startTime = min * 60 + sec;
+            result.startTime = time;
             switch (options.lyricsTransform) {
               case 'Simplified': {
                 result.text = toSimplified(text);

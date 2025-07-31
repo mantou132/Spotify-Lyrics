@@ -66,7 +66,7 @@ export const insetLyricsBtn = async () => {
   await getCurrentAudio();
 
   const options = await optionsPromise;
-  const { BTN_WRAPPER_SELECTOR, BTN_LIKE_SELECTOR } = await configPromise;
+  const { BTN_WRAPPER_SELECTOR, BTN_LIKE_SELECTOR, OTHER_DEVICE } = await configPromise;
 
   // test selector
   if (!isProd) {
@@ -140,7 +140,7 @@ export const insetLyricsBtn = async () => {
   );
   lyricsBtn.addEventListener('auxclick', (e) => {
     // This event is first triggered when right-clicking in Firefox
-    if (e.button === 1) {
+    if (e.button === 1 && !querySelector(OTHER_DEVICE)) {
       lyricsBtn.blur();
       openEditor();
     }

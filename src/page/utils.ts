@@ -37,7 +37,12 @@ export function querySelectorAll(selector: string) {
   return document.querySelectorAll(selector);
 }
 
-export function querySelector(selector: string) {
+export function isValidSelector(selector?: string): selector is string {
+  return !!selector && selector !== 'NONE';
+}
+
+export function querySelector(selector?: string) {
+  if (!isValidSelector(selector)) return null;
   return selector
     .split('>>')
     .reduce((p, c) => (p?.shadowRoot || p)?.querySelector(c), document as unknown as Element);

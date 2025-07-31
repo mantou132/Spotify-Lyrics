@@ -1,9 +1,15 @@
 import { Message, Event, isProd } from '../common/constants';
 
-import { captureException, documentQueryHasSelector, querySelector } from './utils';
+import {
+  captureException,
+  documentQueryHasSelector,
+  isValidSelector,
+  querySelector,
+} from './utils';
 import { getLyricsBtn } from './btn';
 import { loggedPromise } from './observer';
 import { configPromise, currentPlatform, localConfig } from './config';
+import { tryParseTimeStr } from './lyrics';
 
 export const lyricVideo = document.createElement('video');
 lyricVideo.muted = true;
@@ -56,6 +62,8 @@ window.addEventListener('beforeunload', () => {
 
 let audio: HTMLAudioElement | null = null;
 
+const audioData = new WeakMap<HTMLAudioElement, { updateTime: number; currentTime: number }>();
+
 const firstAudioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
   const createElement: typeof document.createElement = document.createElement.bind(document);
 
@@ -81,10 +89,42 @@ const firstAudioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
     };
   }
 
+  // Spotify(or all player fallback method?) other device
+  const queryOtherDeviceMockAudio = async () => {
+    const { OTHER_DEVICE, OTHER_DEVICE_TOTAL, OTHER_DEVICE_CURRENT } = await configPromise;
+    if (!isValidSelector(OTHER_DEVICE)) return;
+    const playInOtherDevice = querySelector(OTHER_DEVICE);
+    const totalStr = querySelector(OTHER_DEVICE_TOTAL)?.textContent;
+    const currentStr = querySelector(OTHER_DEVICE_CURRENT)?.textContent;
+    if (playInOtherDevice && totalStr && currentStr) {
+      const { time: currentTime } = tryParseTimeStr(currentStr);
+      const { time: duration } = tryParseTimeStr(totalStr);
+      const data = audio && audioData.get(audio);
+      const updateTime = (data?.currentTime === currentTime && data.updateTime) || Date.now();
+      const offset = (Date.now() - updateTime) / 1000;
+      audio = {
+        ...audio,
+        addEventListener: (..._: any) => void 0,
+        currentSrc: 'mock',
+        currentTime: currentTime + (offset > 1 ? 0 : offset),
+        duration,
+      } as HTMLAudioElement;
+      audioData.set(audio, { currentTime, updateTime });
+      resolveAudio(audio);
+    }
+    if (playInOtherDevice) {
+      requestAnimationFrame(queryOtherDeviceMockAudio);
+    } else {
+      setTimeout(queryOtherDeviceMockAudio, 1000);
+    }
+  };
+  queryOtherDeviceMockAudio();
+
   // Youtube Music: without using `document.createElement`
   // Apple Music
   const queryAudio = async () => {
     const { AUDIO_SELECTOR } = await configPromise;
+    if (!isValidSelector(AUDIO_SELECTOR)) return;
     const element = querySelector(AUDIO_SELECTOR);
     if (element) {
       audio = element as HTMLAudioElement;
