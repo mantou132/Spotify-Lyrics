@@ -62,7 +62,10 @@ window.addEventListener('beforeunload', () => {
 
 let audio: HTMLAudioElement | null = null;
 
-const audioData = new WeakMap<HTMLAudioElement, { updateTime: number; currentTime: number }>();
+const audioData = new WeakMap<
+  HTMLAudioElement,
+  { updateTime: number; currentTime: number; oldAudio?: HTMLAudioElement | null }
+>();
 
 const firstAudioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
   const createElement: typeof document.createElement = document.createElement.bind(document);
@@ -96,12 +99,13 @@ const firstAudioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
     const playInOtherDevice = querySelector(OTHER_DEVICE);
     const totalStr = querySelector(OTHER_DEVICE_TOTAL)?.textContent;
     const currentStr = querySelector(OTHER_DEVICE_CURRENT)?.textContent;
+    const data = audio && audioData.get(audio);
     if (playInOtherDevice && totalStr && currentStr) {
       const { time: currentTime } = tryParseTimeStr(currentStr);
       const { time: duration } = tryParseTimeStr(totalStr);
-      const data = audio && audioData.get(audio);
       const updateTime = (data?.currentTime === currentTime && data.updateTime) || Date.now();
       const offset = (Date.now() - updateTime) / 1000;
+      const oldAudio = data?.oldAudio || audio;
       audio = {
         ...audio,
         addEventListener: (..._: any) => void 0,
@@ -109,12 +113,13 @@ const firstAudioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
         currentTime: currentTime + (offset > 1 ? 0 : offset),
         duration,
       } as HTMLAudioElement;
-      audioData.set(audio, { currentTime, updateTime });
+      audioData.set(audio, { currentTime, updateTime, oldAudio });
       resolveAudio(audio);
     }
     if (playInOtherDevice) {
       requestAnimationFrame(queryOtherDeviceMockAudio);
     } else {
+      audio = data?.oldAudio || null;
       setTimeout(queryOtherDeviceMockAudio, 1000);
     }
   };
