@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/extend-chrome/manifest-json-schema/main/schema/manifest.schema.json",
   "name": "__MSG_extensionName__",
-  "version": "1.6.11",
+  "version": "1.6.12",
   "manifest_version": 3,
   "description": "__MSG_extensionDescription__",
   "default_locale": "en",
@@ -21,7 +21,7 @@
   "permissions": ["scripting", "contextMenus", "storage", "tabs"],
   "browser_specific_settings": {
     "gecko": {
-      "id": "{9bbdd06f-4fe2-4d05-8c2d-1ef6bf71f84d}",
+      "id": "{d5bcc68d-856a-41e2-8021-d4c51f3b8e4a}",
       "strict_min_version": "78.0"
     }
   },

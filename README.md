@@ -13,7 +13,9 @@ If you have any questions, please submit an [issue](https://github.com/mantou132
 
 ## Install
 
-- Chrome/Chromium/Firefox: Download the zip on the [release](https://github.com/mantou132/Spotify-Lyrics/releases) page, and then load the extension on the extension management page of the browser. [reason](https://github.com/mantou132/Spotify-Lyrics/issues/68).
+- Chrome: https://chromewebstore.google.com/detail/slyrics/mkjfooclbdgjdclepjeepbmmjaclipod
+- Edge: https://microsoftedge.microsoft.com/addons/detail/slyrics/aiehldpoaeaidnljjimhbojpblkbembm
+- Firefox: https://addons.mozilla.org/en-US/firefox/addon/spotify-lyrics/
 - Safari(Soon)
 
 ## Features

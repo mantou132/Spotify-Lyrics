@@ -10,54 +10,64 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: 18.x
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18.x
 
-    - run: yarn
-    - run: yarn --cwd functions
+      - run: yarn
+      - run: yarn --cwd functions
 
-    # xpi
-    - run: yarn run build:firefox
-    - run: npx web-ext --config web-ext.config.js sign
-      env:
-        WEB_EXT_API_KEY: ${{ secrets.FIREFOX_API_KEY }}
-        WEB_EXT_API_SECRET: ${{ secrets.FIREFOX_API_SECRET }}
-    
-    # zip
-    - run: yarn run build
-    - run: npx web-ext --config web-ext.config.js build
+      - run: |
+          export NAME=slyrics-$(node -p "require('./package.json').version")
+          export DIST_PATH=build/${NAME}
+          echo "DIST_PATH=${DIST_PATH}" >> $GITHUB_ENV
+          echo ${DIST_PATH}
 
-    - name: Upload to release
-      uses: svenstaro/upload-release-action@v2
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: build/*
-        file_glob: true
-        tag: ${{ github.ref }}
-        overwrite: true
+      # firefox zip
+      - run: yarn run build:firefox
+      - run: npx web-ext --config web-ext.config.js build
 
-    - run: |
-        export NAME=slyrics-$(node -p "require('./package.json').version")
-        export PATH=build/${NAME}
-        echo "PATH=${PATH}" >> $GITHUB_ENV
-        echo ${PATH}
+      # # xpi
+      # - run: npx web-ext --config web-ext.config.js sign
+      #   env:
+      #     WEB_EXT_API_KEY: ${{ secrets.FIREFOX_API_KEY }}
+      #     WEB_EXT_API_SECRET: ${{ secrets.FIREFOX_API_SECRET }}
 
-    - uses: hocgin/action-edge-addone-upload@main
-      with:
-        product_id: ${{ secrets.EDGE_PRODUCT_ID }}
-        client_id: ${{ secrets.EDGE_CLIENT_ID }}
-        client_secret: ${{ secrets.EDGE_CLIENT_SECRET }}
-        access_token_url: ${{ secrets.EDGE_ACCESS_TOKEN_URL }}
-        addone_file: ${{ env.PATH }}.zip
+      - uses: wdzeng/firefox-addon@v1
+        with:
+          addon-guid: '{d5bcc68d-856a-41e2-8021-d4c51f3b8e4a}'
+          xpi-path: ${{ env.DIST_PATH }}.zip
+          jwt-issuer: ${{ secrets.FIREFOX_API_KEY }}
+          jwt-secret: ${{ secrets.FIREFOX_API_SECRET }}
 
-    - uses: trmcnvn/chrome-addon@v2
-      with:
-        extension: mkjfooclbdgjdclepjeepbmmjaclipod
-        zip: ${{ env.PATH }}.zip
-        client-id: ${{ secrets.CHROME_CLIENT_ID }}
-        client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
-        refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+      # chrome zip
+      - run: yarn run build
+      - run: npx web-ext --config web-ext.config.js build
+
+      # - name: Upload to release
+      #   uses: svenstaro/upload-release-action@v2
+      #   with:
+      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+      #     file: build/*
+      #     file_glob: true
+      #     tag: ${{ github.ref }}
+      #     overwrite: true
+
+      - uses: wdzeng/chrome-extension@v1
+        with:
+          extension-id: mkjfooclbdgjdclepjeepbmmjaclipod
+          zip-path: ${{ env.DIST_PATH }}.zip
+          client-id: ${{ secrets.CHROME_CLIENT_ID }}
+          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+
+      # https://github.com/wdzeng/edge-addon/issues/16
+      - uses: wdzeng/edge-addon@v2
+        with:
+          product-id: aiehldpoaeaidnljjimhbojpblkbembm
+          zip-path: ${{ env.DIST_PATH }}.zip
+          client-id: ${{ secrets.EDGE_CLIENT_ID }}
+          api-key: ${{ secrets.EDGE_CLIENT_SECRET }}

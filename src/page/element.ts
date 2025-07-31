@@ -114,7 +114,6 @@ const firstAudioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
         duration,
       } as HTMLAudioElement;
       audioData.set(audio, { currentTime, updateTime, oldAudio });
-      resolveAudio(audio);
     }
     if (playInOtherDevice) {
       requestAnimationFrame(queryOtherDeviceMockAudio);
