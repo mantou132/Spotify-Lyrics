@@ -62,10 +62,19 @@ function drawParagraph(ctx: CanvasRenderingContext2D, str = '', options: Options
   let textMeasures = ctx.measureText('');
   for (let i = 0; i < words.length; i++) {
     const word = words[i];
+    const nextWord = words[i + 1];
+    const nextIsLast = i === words.length - 2;
+    const lastWordIsShort = nextIsLast && nextWord.length === 1;
     const line = tempLine + word;
     const mea = ctx.measureText(line);
     const isSpace = /\s/.test(word);
-    if (mea.width > maxWidth && tempLine && !isSpace) {
+    if (
+      (mea.width > maxWidth ||
+        // https://github.com/mantou132/Spotify-Lyrics/issues/148
+        (lastWordIsShort && ctx.measureText(line + nextWord).width > maxWidth)) &&
+      tempLine &&
+      !isSpace
+    ) {
       actualWidth = Math.max(actualWidth, textMeasures.width);
       lines.push(tempLine);
       measures.push(textMeasures);
