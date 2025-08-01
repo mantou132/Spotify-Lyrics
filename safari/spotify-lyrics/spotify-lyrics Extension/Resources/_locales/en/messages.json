@@ -1,0 +1,279 @@
+{
+  "extensionName": {
+    "message": "SLyrics",
+    "description": "Name of the extension"
+  },
+
+  "extensionDescription": {
+    "message": "Instant synchronized lyrics display in picture-in-picture window",
+    "description": "Description of the extension"
+  },
+
+  "actionDisableTitle": {
+    "message": "View other lyrics after opening lyrics",
+    "description": "Browser action disable title"
+  },
+
+  "actionEnableTitle": {
+    "message": "Try other lyrics",
+    "description": "Browser action enable title"
+  },
+
+  "popupMissMatch": {
+    "message": "No songs currently available",
+    "description": "The currently playing song was not found on the lyrics service."
+  },
+
+  "popupConfirmTip": {
+    "message": "Save this change?",
+    "description": "Request confirmation from the user"
+  },
+
+  "popupConfirmSave" : {
+    "message": "Save",
+    "description": "Save user selection"
+  },
+
+  "popupConfirmCancel" : {
+    "message": "Cancel",
+    "description": "Cancel manually set lyrics"
+  },
+
+  "popupMatchDescription1": {
+    "message": "Try other lyrics or",
+    "description": "Lyric matching description1"
+  },
+
+  "popupMatchDescription2": {
+    "message": "use default",
+    "description": "Lyric matching use default"
+  },
+
+  "popupMatchDescription3": {
+    "message": "",
+    "description": "Lyric matching description3"
+  },
+
+  "optionsSaveTip1": {
+    "message": "Switch song to take effect",
+    "description": "Some tips for saving options"
+  },
+
+  "optionsSaveTip2": {
+    "message": "Reopen the lyrics to take effect",
+    "description": "Some tips for saving options"
+  },
+
+  "optionsFontSize": {
+    "message": "Lyrics font size",
+    "description": "Specify lyrics font size"
+  },
+
+  "optionsFontSizeDetail": {
+    "message": "This is a relative size, the width of the lyrics window is treated as 640px",
+    "description": "Specify font size detail"
+  },
+
+
+  "optionsFontFamily": {
+    "message": "Lyrics font family",
+    "description": "Specify lyrics font family"
+  },
+
+  "optionsLyricsAlign": {
+    "message": "Lyrics align",
+    "description": "Specify alignment"
+  },
+  "optionsHDCover": {
+    "message": "Use high-resolution cover as the lyrics background",
+    "description": "Use high-resolution cover as the lyrics background"
+  },
+
+  "optionsHDCoverDetail": {
+    "message": "Fall back to the blurred cover when the high-resolution cover fails to load",
+    "description": "Use high-resolution cover as the lyrics background detail"
+  },
+
+  "optionsUseUnreviewedLyrics": {
+    "message": "Use unreviewed lyrics",
+    "description": "Use unreviewed lyrics"
+  },
+
+  "optionsUseUnreviewedLyricsDetail": {
+    "message": "Use lyrics uploaded by other users but not reviewed",
+    "description": "Use unreviewed lyrics detail"
+  },
+
+  "optionsShowLyrics": {
+    "message": "Only show cover",
+    "description": "Only show cover option"
+  },
+
+  "optionsShowCleanLyrics": {
+    "message": "Show clean lyrics",
+    "description": "Show clean lyrics option"
+  },
+
+  "optionsShowCleanLyricsDetail": {
+    "message": "Hide composer and producer information",
+    "description": "Show clean lyrics option detail"
+  },
+
+  "optionsTraditionalChineseLyrics": {
+    "message": "Traditional chinese lyrics",
+    "description": "Lyrics use traditional chinese"
+  },
+
+  "optionsLyricsTransform": {
+    "message": "Lyrics transform"
+  },
+
+  "optionsLyricsServer": {
+    "message": "Lyrics server"
+  },
+
+  "optionsLyricsTransformDetail": {
+    "message": "When using simplified Chinese, try to load the translated lyrics"
+  },
+
+  "optionsLyricsPosition": {
+    "message": "Where the lyrics show",
+    "description": "Lyrics position option"
+  },
+
+  "optionsToggleShortcut": {
+    "message": "Shortcut",
+    "description": "Toggle show lyrics shortcut"
+  },
+
+  "optionsToggleShortcutDetail": {
+    "message": "When webapp is in focus, you can use shortcuts to open and close lyrics, global shortcut: chrome://extensions/shortcuts",
+    "description": "Toggle show lyrics shortcut detail"
+  },
+
+  "menusFeedback": {
+    "message": "Feedback",
+    "description": "Feedback context menus item"
+  },
+
+  "menusWelcome": {
+    "message": "Welcome",
+    "description": "Welcome menus item"
+  },
+
+  "menusRateMe": {
+    "message": "Rate this extension",
+    "description": "Rate me context menus item"
+  },
+
+  "pageButtonTitle": {
+    "message": "Lyrics",
+    "description": "Lyrics button title"
+  },
+
+  "pageTipError": {
+    "message": "Error",
+    "description": "Load lyrics error tip"
+  },
+
+  "pageTipNoLyrics": {
+    "message": "No lyrics",
+    "description": "No lyrics tip"
+  },
+
+  "pageTipLoading": {
+    "message": "Loading...",
+    "description": "Loading lyrics tip"
+  },
+
+  "pageTipWaiting": {
+    "message": "Waiting to play...",
+    "description": "Waiting for music tip"
+  },
+
+  "pageEditorOpenValid": {
+    "message": "Please open the lyrics first",
+    "description": "Open LRC editor fail tip"
+  },
+
+  "pageEditorTitle": {
+    "message": "LRC Editor",
+    "description": "LRC editor title"
+  },
+
+  "pageEditorSearch": {
+    "message": "Search lyrics",
+    "description": "Search lyrics tip"
+  },
+
+  "pageEditorPlaybackRate": {
+    "message": "Playback rate",
+    "description": "Audio playback rate"
+  },
+  
+  "pageEditorOffset": {
+    "message": "Global offset",
+    "description": "Lyrics offset lable"
+  },
+  
+  "pageEditorOffsetDetail": {
+    "message": "Offset 0.1s",
+    "description": "Lyrics offset button title"
+  },
+  
+  "pageEditorClearAll": {
+    "message": "Clear all",
+    "description": "Cleaer all lyrics"
+  },
+
+
+  "pageEditorSeek": {
+    "message": "Jump",
+    "description": "Track seek tip"
+  },
+
+  "pageEditorAddLyrics1": {
+    "message": "Paste or",
+    "description": "Paste or upload lyrics"
+  },
+
+  "pageEditorAddLyrics2": {
+    "message": "choose",
+    "description": "Paste or upload lyrics"
+  },
+
+  "pageEditorAddLyrics3": {
+    "message": "lyrics",
+    "description": "Paste or upload lyrics"
+  },
+
+  "pageEditorMarkLine": {
+    "message": "Mark Line",
+    "description": "Mark line"
+  },
+
+  "pageEditorInsetLine": {
+    "message": "Inset Line",
+    "description": "Inset line"
+  },
+
+  "pageEditorReset": {
+    "message": "Reset",
+    "description": "Reset remote and local lyrics"
+  },
+
+  "pageEditorDownload": {
+    "message": "Download",
+    "description": "Download lyrics"
+  },
+
+  "pageEditorSave": {
+    "message": "Save",
+    "description": "Save lyrics"
+  },
+
+  "pageEditorSaveValid": {
+    "message": "Please add a timestamp to each line of text",
+    "description": "Save lyrics valid tip"
+  }
+}

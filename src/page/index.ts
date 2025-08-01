@@ -16,6 +16,7 @@ import { appendStyle } from './utils';
 import { localConfig } from './config';
 import { getFPS } from './fps';
 import { getLyricsBtn } from './btn';
+import { delay, raf } from './timer';
 
 import './observer';
 
@@ -72,9 +73,9 @@ const tick = async (options: OptionsAndI18n) => {
     lyricVideoIsOpen &&
     (lyrics?.length || highlightLyrics?.length)
   ) {
-    requestAnimationFrame(() => tick(options));
+    raf(() => tick(options));
   } else {
-    setTimeout(() => tick(options), 80);
+    delay(() => tick(options), 80);
   }
 };
 

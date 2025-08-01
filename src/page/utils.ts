@@ -81,3 +81,4 @@ export function captureException(err: Error, extra?: any) {
   };
   window.postMessage(msg, '*');
 }
+export const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);

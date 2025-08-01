@@ -1,0 +1,78 @@
+{
+  "$schema": "https://raw.githubusercontent.com/extend-chrome/manifest-json-schema/main/schema/manifest.schema.json",
+  "name": "__MSG_extensionName__",
+  "version": "1.6.10",
+  "manifest_version": 3,
+  "description": "__MSG_extensionDescription__",
+  "default_locale": "en",
+  "web_accessible_resources": [
+    {
+      "resources": ["*"],
+      "matches": ["*://*/*"]
+    }
+  ],
+  "host_permissions": [
+    "*://open.spotify.com/*",
+    "*://www.deezer.com/*",
+    "*://music.youtube.com/*",
+    "*://music.apple.com/*",
+    "*://listen.tidal.com/*"
+  ],
+  "permissions": ["scripting", "contextMenus", "storage", "tabs"],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{9bbdd06f-4fe2-4d05-8c2d-1ef6bf71f84d}",
+      "strict_min_version": "78.0"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://open.spotify.com/*",
+        "*://www.deezer.com/*",
+        "*://music.youtube.com/*",
+        "*://music.apple.com/*",
+        "*://listen.tidal.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "*://open.spotify.com/*",
+        "*://www.deezer.com/*",
+        "*://music.youtube.com/*",
+        "*://music.apple.com/*",
+        "*://listen.tidal.com/*"
+      ],
+      "js": ["options/index.js"]
+    }
+  ],
+  "options_ui": {
+    "page": "options.html"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "48": "icons/48.png"
+    }
+  },
+  "commands": {
+    "toggle": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+L",
+        "mac": "Command+Shift+L"
+      },
+      "description": "Toggle lyrics",
+      "global": true
+    }
+  },
+  "icons": {
+    "48": "icons/48.png",
+    "96": "icons/96.png",
+    "128": "icons/128.png"
+  }
+}

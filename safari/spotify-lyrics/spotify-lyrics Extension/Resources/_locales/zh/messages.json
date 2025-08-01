@@ -1,0 +1,221 @@
+{
+  "extensionName": {
+    "message": "SLyrics"
+  },
+
+  "extensionDescription": {
+    "message": "在画中画窗口中显示即时同步的歌词"
+  },
+
+  "actionDisableTitle": {
+    "message": "开启歌词后查看其他歌词"
+  },
+
+  "actionEnableTitle": {
+    "message": "尝试其他歌词"
+  },
+
+  "popupMissMatch": {
+    "message": "目前没有可用的歌曲"
+  },
+
+  "popupConfirmTip": {
+    "message": "保存这个改动？"
+  },
+
+  "popupConfirmSave": {
+    "message": "保存"
+  },
+
+  "popupConfirmCancel": {
+    "message": "取消"
+  },
+
+  "popupMatchDescription1": {
+    "message": "尝试其他歌词或"
+  },
+
+  "popupMatchDescription2": {
+    "message": "使用默认歌词"
+  },
+
+  "optionsSaveTip1": {
+    "message": "切换歌曲生效"
+  },
+
+  "optionsSaveTip2": {
+    "message": "重新打开歌词生效"
+  },
+
+  "optionsFontSize": {
+    "message": "歌词字体大小"
+  },
+
+  "optionsFontSizeDetail": {
+    "message": "这是一个相对尺寸，将歌词窗口的宽度视为 640px"
+  },
+
+  "optionsFontFamily": {
+    "message": "歌词字体"
+  },
+
+  "optionsLyricsAlign": {
+    "message": "歌词对齐"
+  },
+
+  "optionsHDCover": {
+    "message": "使用高清封面"
+  },
+
+  "optionsHDCoverDetail": {
+    "message": "高清封面加载失败时回退到高斯模糊封面"
+  },
+
+  "optionsUseUnreviewedLyrics": {
+    "message": "使用未审核的歌词"
+  },
+
+  "optionsUseUnreviewedLyricsDetail": {
+    "message": "使用其他用户上传但没有经过审核的歌词"
+  },
+
+  "optionsShowLyrics": {
+    "message": "仅显示封面"
+  },
+
+  "optionsShowCleanLyrics": {
+    "message": "显示干净歌词"
+  },
+
+  "optionsShowCleanLyricsDetail": {
+    "message": "隐藏作词作曲等信息"
+  },
+
+  "optionsTraditionalChineseLyrics": {
+    "message": "繁体中文歌词"
+  },
+
+  "optionsLyricsTransform": {
+    "message": "歌词转换"
+  },
+
+  "optionsLyricsServer": {
+    "message": "歌词服务"
+  },
+
+  "optionsLyricsTransformDetail": {
+    "message": "当使用简体中文时会尝试加载翻译的歌词"
+  },
+
+  "optionsLyricsPosition": {
+    "message": "歌词显示位置"
+  },
+
+  "optionsToggleShortcut": {
+    "message": "显示歌词的快捷键"
+  },
+
+  "optionsToggleShortcutDetail": {
+    "message": "当 WebApp 处于焦点时，可以使用快捷方式来打开歌词和关闭歌词，全局快捷键：chrome://extensions/shortcuts"
+  },
+
+  "menusFeedback": {
+    "message": "反馈"
+  },
+
+  "menusWelcome": {
+    "message": "欢迎"
+  },
+
+  "menusRateMe": {
+    "message": "评价该扩展"
+  },
+
+  "pageButtonTitle": {
+    "message": "歌词"
+  },
+
+  "pageTipError": {
+    "message": "错误"
+  },
+
+  "pageTipNoLyrics": {
+    "message": "没有歌词"
+  },
+
+  "pageTipLoading": {
+    "message": "加载..."
+  },
+
+  "pageTipWaiting": {
+    "message": "等待播放..."
+  },
+
+  "pageEditorOpenValid": {
+    "message": "请首先打开歌词"
+  },
+
+  "pageEditorTitle": {
+    "message": "LRC 编辑器"
+  },
+
+  "pageEditorSearch": {
+    "message": "搜索歌词"
+  },
+
+  "pageEditorPlaybackRate": {
+    "message": "播放速率"
+  },
+
+  "pageEditorOffset": {
+    "message": "全局偏移"
+  },
+
+  "pageEditorOffsetDetail": {
+    "message": "偏移 0.1s"
+  },
+
+  "pageEditorClearAll": {
+    "message": "清空"
+  },
+
+  "pageEditorSeek": {
+    "message": "跳转"
+  },
+
+  "pageEditorAddLyrics1": {
+    "message": "粘贴或"
+  },
+
+  "pageEditorAddLyrics2": {
+    "message": "选择"
+  },
+
+  "pageEditorAddLyrics3": {
+    "message": "歌词"
+  },
+
+  "pageEditorMarkLine": {
+    "message": "标记行"
+  },
+
+  "pageEditorInsetLine": {
+    "message": "插入空行"
+  },
+
+  "pageEditorReset": {
+    "message": "重置"
+  },
+
+  "pageEditorDownload": {
+    "message": "下载"
+  },
+
+  "pageEditorSave": {
+    "message": "保存"
+  },
+
+  "pageEditorSaveValid": {
+    "message": "请为每一行标记时间戳"
+  }
+}

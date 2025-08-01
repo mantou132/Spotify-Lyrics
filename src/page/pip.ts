@@ -1,7 +1,7 @@
 // https://w3c.github.io/picture-in-picture
 // https://bugzilla.mozilla.org/show_bug.cgi?id=pip
 import { configPromise, localConfig } from './config';
-import { appendStyle, querySelector } from './utils';
+import { appendStyle, querySelector, isSafari } from './utils';
 import { optionsPromise } from './options';
 import { lyricVideo } from './element';
 
@@ -19,6 +19,11 @@ if (document.exitPictureInPicture) {
 export const openLyrics = async function () {
   const options = await optionsPromise;
   if (options['show-on'] === 'pip' && document.pictureInPictureEnabled) {
+    if (isSafari) {
+      const showLitter = 'position:absolute;left:calc(100% - 1px);bottom:calc(100% - 1px)';
+      lyricVideo.setAttribute('style', showLitter);
+      document.body.append(lyricVideo);
+    }
     return await lyricVideo.requestPictureInPicture();
   }
 
@@ -27,7 +32,6 @@ export const openLyrics = async function () {
   if (container) {
     lyricVideo.setAttribute('style', PAGE_PIP_STYLE);
     container.append(lyricVideo);
-    lyricVideo.hidden = false;
     lyricVideo.dispatchEvent(new CustomEvent('enterpictureinpicture'));
     return;
   } else {
@@ -36,13 +40,11 @@ export const openLyrics = async function () {
 };
 
 export const closeLyrics = async function () {
-  if (lyricVideo.getBoundingClientRect().width) {
-    lyricVideo.hidden = true;
-    lyricVideo.dispatchEvent(new CustomEvent('leavepictureinpicture'));
-    return;
+  if (document.pictureInPictureElement === lyricVideo) {
+    return await nativeExitPictureInPicture();
   }
 
-  return await nativeExitPictureInPicture();
+  lyricVideo.dispatchEvent(new CustomEvent('leavepictureinpicture'));
 };
 
 // https://github.com/mantou132/Spotify-Lyrics/issues/31

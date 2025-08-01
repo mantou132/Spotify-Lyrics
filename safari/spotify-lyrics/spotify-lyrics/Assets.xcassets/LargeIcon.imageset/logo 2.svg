@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 128 128">
+  <defs>
+    <style>.cls-1{fill:none;}.cls-2{fill:#10bc4c;fill-rule:evenodd;}.cls-3{fill:#cef4d9;}.cls-4{opacity:0.32;}</style>
+    <symbol id="icon-2" data-name="icon" viewBox="0 0 128 128">
+      <g id="_4_stroke" data-name="4 stroke">
+        <g id="Spotify">
+          <rect class="cls-1" x="8" y="8" width="112" height="112"/>
+          <path class="cls-2" d="M64,120A56,56,0,1,0,8,64a56.16,56.16,0,0,0,56,56"/>
+        </g>
+      </g>
+      <rect class="cls-3" x="30.5" y="60.7" width="6.5" height="6.5"/>
+      <rect class="cls-3" x="41.4" y="60.7" width="56" height="6.5"/>
+      <g class="cls-4">
+        <rect class="cls-3" x="30.5" y="35.3" width="6.5" height="6.5"/>
+        <rect class="cls-3" x="41.4" y="35.3" width="56" height="6.5"/>
+        <rect class="cls-3" x="30.5" y="48" width="6.5" height="6.5"/>
+        <rect class="cls-3" x="41.4" y="48" width="56" height="6.5"/>
+        <rect class="cls-3" x="30.5" y="73.5" width="6.5" height="6.5"/>
+        <rect class="cls-3" x="41.4" y="73.5" width="56" height="6.5"/>
+        <rect class="cls-3" x="30.5" y="86.2" width="6.5" height="6.5"/>
+        <rect class="cls-3" x="41.4" y="86.2" width="56" height="6.5"/>
+      </g>
+      <rect class="cls-1" width="128" height="128"/>
+    </symbol>
+  </defs>
+  <title>Asset 1</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="icon">
+      <use width="128" height="128" xlink:href="#icon-2"/>
+    </g>
+  </g>
+</svg>

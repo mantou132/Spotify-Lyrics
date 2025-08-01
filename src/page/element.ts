@@ -50,6 +50,7 @@ lyricVideo.addEventListener('enterpictureinpicture', () => {
 });
 lyricVideo.addEventListener('leavepictureinpicture', () => {
   lyricVideoIsOpen = false;
+  lyricVideo.remove();
 });
 
 // service worker active will disabled browser action

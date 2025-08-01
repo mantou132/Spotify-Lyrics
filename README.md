@@ -16,7 +16,7 @@ If you have any questions, please submit an [issue](https://github.com/mantou132
 - Chrome: https://chromewebstore.google.com/detail/slyrics/mkjfooclbdgjdclepjeepbmmjaclipod
 - Edge: https://microsoftedge.microsoft.com/addons/detail/slyrics/aiehldpoaeaidnljjimhbojpblkbembm
 - Firefox: https://addons.mozilla.org/en-US/firefox/addon/spotify-lyrics/
-- Safari(Soon)
+- Safari: https://github.com/mantou132/Spotify-Lyrics/issues/32#issuecomment-3145688314
 
 ## Features
 

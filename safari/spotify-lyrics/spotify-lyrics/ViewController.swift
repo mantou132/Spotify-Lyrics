@@ -2,50 +2,33 @@
 //  ViewController.swift
 //  spotify-lyrics
 //
-//  Created by Xianqiao Wang on 2020/6/26.
+//  Created by mantou on 2025/8/2.
 //
 
-import Cocoa
-import SafariServices.SFSafariApplication
-import SafariServices.SFSafariExtensionManager
+import UIKit
+import WebKit
 
-let appName = "spotify-lyrics"
-let extensionBundleIdentifier = "xianqiao.wang.spotify-lyrics-Extension"
+class ViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler {
 
-class ViewController: NSViewController {
+    @IBOutlet var webView: WKWebView!
 
-    @IBOutlet var appNameLabel: NSTextField!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.appNameLabel.stringValue = appName
-        SFSafariExtensionManager.getStateOfSafariExtension(withIdentifier: extensionBundleIdentifier) { (state, error) in
-            guard let state = state, error == nil else {
-                // Insert code to inform the user that something went wrong.
-                return
-            }
 
-            DispatchQueue.main.async {
-                if (state.isEnabled) {
-                    self.appNameLabel.stringValue = "\(appName)'s extension is currently on."
-                } else {
-                    self.appNameLabel.stringValue = "\(appName)'s extension is currently off. You can turn it on in Safari Extensions preferences."
-                }
-            }
-        }
+        self.webView.navigationDelegate = self
+        self.webView.scrollView.isScrollEnabled = false
+
+        self.webView.configuration.userContentController.add(self, name: "controller")
+
+        self.webView.loadFileURL(Bundle.main.url(forResource: "Main", withExtension: "html")!, allowingReadAccessTo: Bundle.main.resourceURL!)
     }
-    
-    @IBAction func openSafariExtensionPreferences(_ sender: AnyObject?) {
-        SFSafariApplication.showPreferencesForExtension(withIdentifier: extensionBundleIdentifier) { error in
-            guard error == nil else {
-                // Insert code to inform the user that something went wrong.
-                return
-            }
 
-            DispatchQueue.main.async {
-                NSApplication.shared.terminate(nil)
-            }
-        }
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        // Override point for customization.
+    }
+
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        // Override point for customization.
     }
 
 }
