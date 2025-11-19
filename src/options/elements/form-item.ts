@@ -1,6 +1,8 @@
 import { customElement, attribute, boolattribute } from '@mantou/gem/lib/decorators';
 import { GemElement, html } from '@mantou/gem/lib/element';
 
+import { theme } from '../../common/theme';
+
 @customElement('ele-form-item')
 export class FormItem extends GemElement {
   @attribute label: string;
@@ -21,6 +23,9 @@ export class FormItem extends GemElement {
         :host([disabled]) {
           pointer-events: none;
           opacity: 0.3;
+        }
+        :host(:not(:disabled):hover) {
+          background: rgba(${theme.backgroundRGB}, 0.02);
         }
         .text {
           display: flex;

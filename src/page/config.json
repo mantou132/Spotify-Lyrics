@@ -15,6 +15,20 @@
   "OTHER_DEVICE": "[data-testid=now-playing-bar] > div + div",
   "OTHER_DEVICE_TOTAL": "[data-testid=playback-duration]",
   "OTHER_DEVICE_CURRENT": "[data-testid=playback-position]",
+  "NETEASE": {
+    "LOGGED_MARK_SELECTOR": "#page_pc_main_nav [class^=Name_]",
+    "LYRICS_CONTAINER_SELECTOR": "#contentContainer",
+    "PAGE_PIP_STYLE": "position: sticky; width: 100%; height: auto; bottom: 80px; object-fit: cover;",
+    "ALBUM_COVER_SELECTOR": ".miniVinylWrapper img",
+    "ALBUM_COVER_LARGE_REGEXP_REPLACE": ["(?<=thumbnail=)44y44", "640y640"],
+    "TRACK_INFO_SELECTOR": "footer [class*=songPlayInfo_] .info-wrapper",
+    "TRACK_NAME_SELECTOR": "footer [class*=songPlayInfo_] .info-wrapper .title > span:first-child",
+    "TRACK_ARTIST_SELECTOR": "footer [class*=songPlayInfo_] .info-wrapper .title > span:last-child",
+    "BTN_WRAPPER_SELECTOR": "footer [class*=songPlayInfo_] .info-wrapper + div",
+    "BTN_LIKE_SELECTOR": "footer [class*=songPlayInfo_] .info-wrapper + div > button",
+    "PIP_BTN_SELECTOR": "NONE",
+    "AUDIO_SELECTOR": "NONE"
+  },
   "YOUTUBE": {
     "LOGGED_MARK_SELECTOR": "ytmusic-settings-button",
     "LYRICS_CONTAINER_SELECTOR": "ytmusic-player",

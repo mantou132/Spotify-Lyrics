@@ -141,12 +141,17 @@ const firstAudioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
   };
   queryAudio();
 
-  if (currentPlatform === 'DEEZER') {
-    const A = Audio;
+  if (currentPlatform === 'DEEZER' || currentPlatform === 'NETEASE') {
+    const NativeAudio = Audio;
+    // cause instanceof error
     (window as any).Audio = class {
       constructor(src?: string) {
-        const element = new A(src);
+        const element = new NativeAudio(src);
+        // TODO: no play has button?
         element.addEventListener('play', () => {
+          if (currentPlatform === 'NETEASE' && element.preload === 'auto') {
+            return;
+          }
           audio = element;
           handleAudio(audio);
           resolveAudio(audio);

@@ -298,7 +298,7 @@ export class SharedData {
   async dispatchTrackElementUpdateEvent(isUserAction = false) {
     const { TRACK_NAME_SELECTOR, TRACK_ARTIST_SELECTOR } = await configPromise;
     const name = querySelector(TRACK_NAME_SELECTOR)?.textContent;
-    const artists = querySelector(TRACK_ARTIST_SELECTOR)?.textContent;
+    const artists = querySelector(TRACK_ARTIST_SELECTOR)?.textContent?.replaceAll(/\s+\/\s+/g, ',');
 
     try {
       if (this._name === name && this._artists === artists) {

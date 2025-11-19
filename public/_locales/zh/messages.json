@@ -1,4 +1,8 @@
 {
+  "sponsorsText": {
+    "message": "如果这个扩展对你有帮助，欢迎支持作者:"
+  },
+
   "extensionName": {
     "message": "SLyrics"
   },

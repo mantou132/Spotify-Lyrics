@@ -1,4 +1,8 @@
 {
+  "sponsorsText": {
+    "message": "If this extension is helpful to you, please support the author:"
+  },
+
   "extensionName": {
     "message": "SLyrics",
     "description": "Name of the extension"
@@ -29,12 +33,12 @@
     "description": "Request confirmation from the user"
   },
 
-  "popupConfirmSave" : {
+  "popupConfirmSave": {
     "message": "Save",
     "description": "Save user selection"
   },
 
-  "popupConfirmCancel" : {
+  "popupConfirmCancel": {
     "message": "Cancel",
     "description": "Cancel manually set lyrics"
   },
@@ -73,7 +77,6 @@
     "message": "This is a relative size, the width of the lyrics window is treated as 640px",
     "description": "Specify font size detail"
   },
-
 
   "optionsFontFamily": {
     "message": "Lyrics font family",
@@ -210,22 +213,21 @@
     "message": "Playback rate",
     "description": "Audio playback rate"
   },
-  
+
   "pageEditorOffset": {
     "message": "Global offset",
     "description": "Lyrics offset lable"
   },
-  
+
   "pageEditorOffsetDetail": {
     "message": "Offset 0.1s",
     "description": "Lyrics offset button title"
   },
-  
+
   "pageEditorClearAll": {
     "message": "Clear all",
     "description": "Cleaer all lyrics"
   },
-
 
   "pageEditorSeek": {
     "message": "Jump",

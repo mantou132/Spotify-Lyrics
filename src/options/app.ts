@@ -20,6 +20,7 @@ import './elements/form';
 import './elements/form-item';
 import './elements/select';
 import './elements/switch';
+import './elements/sponsor';
 
 import { getOptions, updateOptions } from './store';
 
@@ -75,6 +76,7 @@ export class OptionsApp extends GemElement<State> {
     if (!options) return null;
 
     return html`
+      <ele-sponsor></ele-sponsor>
       <style>
         :host {
           display: block;

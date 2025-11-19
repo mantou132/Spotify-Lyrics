@@ -59,4 +59,4 @@ export interface Options {
   'strict-mode'?: SwitchValue;
 }
 
-export type Platform = 'SPOTIFY' | 'YOUTUBE' | 'DEEZER' | 'TIDAL' | 'APPLE';
+export type Platform = 'SPOTIFY' | 'YOUTUBE' | 'DEEZER' | 'TIDAL' | 'APPLE' | 'NETEASE';

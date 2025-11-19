@@ -15,6 +15,7 @@ export const currentPlatform: Platform = (() => {
   if (host.includes('deezer')) return 'DEEZER';
   if (host.includes('tidal')) return 'TIDAL';
   if (host.includes('apple')) return 'APPLE';
+  if (host.includes('163')) return 'NETEASE';
   return 'SPOTIFY';
 })();
 
@@ -85,6 +86,9 @@ export const localConfig: LocalConfig = (() => {
             transform: rotate(90deg) scale(1.1);
             -webkit-mask: url(${iconUrl}) center / 100% no-repeat;
             mask: url(${iconUrl}) center / 100% no-repeat;
+            & > * {
+              display: none;
+            }
           }
           .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} .yt-spec-button-shape-next__icon {
             background: var(--ytmusic-text-primary);
@@ -192,6 +196,34 @@ export const localConfig: LocalConfig = (() => {
         LYRICS_ACTIVE_CLASSNAME,
       };
     }
+    case 'NETEASE': {
+      return {
+        SERVICE_WORKER: '',
+        STATIC_STYLE: css`
+          /* logo */
+          #contentContainer [class^='BackContainer_'],
+          /* vip */
+          #page_pc_main_nav [class^=Content_] {
+            display: none;
+          }
+          .${LYRICS_CLASSNAME} svg path {
+            display: none;
+          }
+          .${LYRICS_CLASSNAME} svg {
+            fill: transparent;
+            background: var(--colorBlack5, rgba(255, 255, 255, 0.6));
+            -webkit-mask: url(${microphoneIconUrl}) center / 100% no-repeat;
+            mask: url(${microphoneIconUrl}) center / 100% no-repeat;
+          }
+          .${LYRICS_CLASSNAME}.${LYRICS_ACTIVE_CLASSNAME} svg {
+            background: var(--colorSidebar11, rgba(252, 59, 91, 1));
+          }
+        `,
+        NO_PIP_STYLE: '',
+        LYRICS_CLASSNAME,
+        LYRICS_ACTIVE_CLASSNAME,
+      };
+    }
     default: {
       return {
         SERVICE_WORKER: 'https://open.spotify.com/service-worker.js',
@@ -201,7 +233,8 @@ export const localConfig: LocalConfig = (() => {
           /* webpage: upgrade button */
           .Root #global-nav-bar [data-testid="upgrade-button"],
           /* webpage: download link */
-          .Root #global-nav-bar [href*=download] {
+          .Root #global-nav-bar [href*=download],
+          .Root #global-nav-bar [href="/"]:has(> svg) {
             display: none;
           }
           .${LYRICS_CLASSNAME} {
