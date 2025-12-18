@@ -90,7 +90,7 @@ export class Modal extends GemElement {
           transform: rotate(45deg);
         }
         .body > :first-child {
-          width: 45em;
+          width: 56em;
           max-height: 90vh;
           overflow: auto;
         }
