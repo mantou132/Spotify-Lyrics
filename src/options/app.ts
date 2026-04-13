@@ -103,7 +103,7 @@ export class OptionsApp extends GemElement<State> {
           <ele-select
             name=${'font-size' as keyof Options}
             default-value=${options['font-size']}
-            .options=${new Array(9).fill(null).map((_, index) => ({
+            .options=${new Array(12).fill(null).map((_, index) => ({
               label: String(index * 2 + 32) + 'px',
               value: String(index * 2 + 32),
             }))}
