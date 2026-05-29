@@ -64,10 +64,9 @@ jobs:
           client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
           refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
 
-      # https://github.com/wdzeng/edge-addon/issues/16
       - uses: wdzeng/edge-addon@v2
         with:
-          product-id: aiehldpoaeaidnljjimhbojpblkbembm
+          product-id: ae604b3f-753e-4731-80e9-e2bf7193ffd5
           zip-path: ${{ env.DIST_PATH }}.zip
           client-id: ${{ secrets.EDGE_CLIENT_ID }}
           api-key: ${{ secrets.EDGE_CLIENT_SECRET }}
