@@ -37,7 +37,7 @@ If you have any questions, please submit an [issue](https://github.com/mantou132
 
 ## Compatibility
 
-- Firefox [78+](https://bugzilla.mozilla.org/show_bug.cgi?id=1361876) (Not support [PiP](https://bugzilla.mozilla.org/show_bug.cgi?id=1463402))
+- Firefox [78+](https://bugzilla.mozilla.org/show_bug.cgi?id=1361876) (153+ [PiP](https://bugzilla.mozilla.org/show_bug.cgi?id=1463402))
 - Edge [79+](https://blogs.windows.com/msedgedev/2020/01/15/upgrading-new-microsoft-edge-79-chromium/)
 - Chrome [70+](https://caniuse.com/#feat=picture-in-picture)
 - Safari [14+](https://developer.apple.com/documentation/safariservices/safari_web_extensions)
