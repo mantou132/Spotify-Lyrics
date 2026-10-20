@@ -9,7 +9,7 @@
   "TRACK_NAME_SELECTOR": "[data-testid=now-playing-widget] > div:nth-child(2) > div:nth-child(1)",
   "TRACK_ARTIST_SELECTOR": "[data-testid=now-playing-widget] > div:nth-child(2) > div:last-of-type",
   "BTN_WRAPPER_SELECTOR": "[data-testid=now-playing-widget]",
-  "BTN_LIKE_SELECTOR": "[data-testid=now-playing-widget] > div:last-of-type",
+  "BTN_LIKE_SELECTOR": "[data-testid=now-playing-widget] > div:last-of-type:has(button)",
   "PIP_BTN_SELECTOR": "[data-testid=now-playing-widget] button[data-testid*=pip], [data-testid=now-playing-bar] > div > div:last-of-type > div > :where(button[data-testid=lyrics-button], button[data-testid=pip-toggle-button]), main section + div[class*=footer]",
   "AUDIO_SELECTOR": "NONE",
   "OTHER_DEVICE": "[data-testid=now-playing-bar] > div + div",
