@@ -1,15 +1,7 @@
 import browser from 'webextension-polyfill';
 import * as Sentry from '@sentry/browser';
 
-import {
-  Message,
-  Event,
-  ContextItems,
-  isProd,
-  VERSION,
-  isFirefox,
-  isRateTest,
-} from './common/constants';
+import { Message, Event, ContextItems, isProd, VERSION, isRateTest } from './common/constants';
 import { getTabs, sendMessage } from './common/bg';
 import { getOptions } from './options/store';
 import { i18n, i18nMap } from './i18n';
@@ -24,23 +16,6 @@ Sentry.init({
   environment: isProd ? 'prod' : 'dev',
 });
 getOptions().then(({ cid }) => Sentry.setUser({ id: cid }));
-
-// firefox mv2
-if (!browser.action) {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  browser.action = browser.browserAction;
-
-  const oCreate = browser.contextMenus.create;
-  browser.contextMenus.create = (arg) => {
-    return oCreate({
-      ...arg,
-      contexts: arg.contexts?.map((e) =>
-        e === 'action' ? 'browser_action' : '',
-      ) as browser.Menus.ContextType[],
-    });
-  };
-}
 
 function disableBrowserAction() {
   browser.action.disable();
@@ -186,7 +161,7 @@ browser.runtime.onInstalled.addListener(({ reason }) => {
   }
 });
 
-if (isProd && !isFirefox) {
+if (isProd) {
   browser.scripting
     .registerContentScripts([
       {

@@ -6,7 +6,6 @@
     "lint": "tsc --noEmit && eslint --ext .ts --fix src/",
     "test": "vitest",
     "build": "vite build",
-    "build:firefox": "yarn run build && node ./scripts/mv2.js",
     "watch": "cross-env NODE_ENV=development yarn build --watch",
     "serve": "web-ext --config web-ext.config.js run --start-url open.spotify.com",
     "serve:chromium": "yarn run serve -- -t chromium",

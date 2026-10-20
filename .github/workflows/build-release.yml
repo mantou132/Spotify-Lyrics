@@ -26,8 +26,8 @@ jobs:
           echo "DIST_PATH=${DIST_PATH}" >> $GITHUB_ENV
           echo ${DIST_PATH}
 
-      # firefox zip
-      - run: yarn run build:firefox
+      # one zip for firefox, chrome and edge
+      - run: yarn run build
       - run: npx web-ext --config web-ext.config.js build
 
       # # xpi
@@ -42,10 +42,6 @@ jobs:
           xpi-path: ${{ env.DIST_PATH }}.zip
           jwt-issuer: ${{ secrets.FIREFOX_API_KEY }}
           jwt-secret: ${{ secrets.FIREFOX_API_SECRET }}
-
-      # chrome zip
-      - run: yarn run build
-      - run: npx web-ext --config web-ext.config.js build
 
       # - name: Upload to release
       #   uses: svenstaro/upload-release-action@v2

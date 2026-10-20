@@ -31,11 +31,14 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "{d5bcc68d-856a-41e2-8021-d4c51f3b8e4a}",
-      "strict_min_version": "86.0"
+      "strict_min_version": "128.0"
     }
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "scripts": [
+      "background.js"
+    ]
   },
   "content_scripts": [
     {

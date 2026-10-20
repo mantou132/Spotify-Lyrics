@@ -1,6 +1,6 @@
 import { runtime } from 'webextension-polyfill';
 
-import { Message, Event, isFirefox, isRateTest, isProd } from './common/constants';
+import { Message, Event, isRateTest, isProd } from './common/constants';
 
 runtime.onMessage.addListener((msg: Message) => {
   window.postMessage(msg, '*');
@@ -15,8 +15,7 @@ window.addEventListener('message', ({ data }) => {
   }
 });
 
-if (!isProd || isFirefox) {
-  // Firefox CSP Issue: https://bugzilla.mozilla.org/show_bug.cgi?id=1267027
+if (!isProd) {
   const script = document.createElement('script');
   script.src = runtime.getURL(isRateTest ? 'page/rate.js' : 'page/index.js');
   document.documentElement.append(script);

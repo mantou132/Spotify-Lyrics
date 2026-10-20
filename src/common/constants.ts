@@ -6,7 +6,6 @@ export const VERSION = process.env.VERSION || 'UNKNOWN';
 export const isProd = process.env.NODE_ENV === 'production';
 export const isRateTest = process.env.TEST === 'rate';
 export const isWebApp = location.protocol.startsWith('http');
-export const isFirefox = navigator.userAgent.includes('Firefox');
 
 export interface Message<T = any> {
   type: Event;
