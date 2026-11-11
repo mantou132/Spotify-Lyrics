@@ -82,12 +82,24 @@ const firstAudioPromise = new Promise<HTMLAudioElement>((resolveAudio) => {
     ) {
       const element = createElement(tagName, options);
       // Spotify: <video>
-      if ((tagName === 'video' || tagName === 'audio') && !audio) {
-        if (!isProd) console.log('capture_audio_element', element);
-        performance.measure('capture_audio_element');
-        audio = element as HTMLAudioElement;
-        handleAudio(audio);
-        resolveAudio(audio);
+      if (tagName === 'video' || tagName === 'audio') {
+        const media = element as HTMLAudioElement;
+        if (!audio) {
+          if (!isProd) console.log('capture_audio_element', media);
+          performance.measure('capture_audio_element');
+          audio = media;
+          handleAudio(audio);
+          resolveAudio(audio);
+        }
+        // Spotify may create other media elements (e.g. probe) before the player,
+        // switch to the element that actually plays
+        media.addEventListener('play', () => {
+          if (audio === media || audio?.currentSrc === 'mock') return;
+          if (!isProd) console.log('switch_audio_element', media);
+          audio = media;
+          handleAudio(audio);
+          resolveAudio(audio);
+        });
       }
       return element;
     };
@@ -192,7 +204,10 @@ export async function getCurrentAudio() {
 }
 
 let reported = false;
+const handledAudios = new WeakSet<HTMLAudioElement>();
 function handleAudio(audio: HTMLAudioElement) {
+  if (handledAudios.has(audio)) return;
+  handledAudios.add(audio);
   audio.addEventListener('playing', async () => {
     const isMusic = audio.duration && audio.duration > 2.6 * 60 && audio.duration < 4 * 60;
     if (!reported && isMusic && !(await getLyricsBtn())) {
